@@ -3,6 +3,11 @@
   "version": "0.1.0",
   "description": "Linter for OpenAPI definitions to check compliance to AEPs",
   "main": "dist/ruleset.js",
+  "module": "dist/ruleset.mjs",
+  "types": "dist/ruleset.d.ts",
+  "files": [
+      "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "type-check": "tsc --noEmit --noErrorTruncation --pretty false --incremental false",
