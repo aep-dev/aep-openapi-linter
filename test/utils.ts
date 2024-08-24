@@ -61,6 +61,9 @@ export function createWithRules(rules: (keyof Ruleset["rules"])[]): Spectral {
     if(e instanceof AggregateError) {
       console.log("Ruleset contains errors");
       console.log(e.errors);
+    }else {
+      console.log("Ruleset contains errors");
+      console.log(e)
     }
   }
 }
