@@ -8,3 +8,71 @@ rules:
       - $.paths[?(!@path.match(/\}']$/))].get.requestBody
     then:
       function: falsy
+
+  aep-132-request-field-types:
+    description:
+      List operation must use the correct type for any optional parameters.
+    severity: error
+    formats: ['oas3']
+    given:
+      # Only run this rule on paths that do not end in a path param
+      - $.paths[?(!@path.match(/\}']$/))].get.parameters
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: array
+          items:
+            oneOf:
+              - type: object
+                properties:
+                  name:
+                    type: string
+                    enum: ['filter']
+                  in:
+                    type: string
+                    enum: ['query']
+                  schema:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        enum: ['string']
+                required: ['name']
+              - type: object
+                properties:
+                  name:
+                    type: string
+                    enum: ['order_by']
+                  in:
+                    type: string
+                    enum: ['query']
+                  schema:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        enum: ['string']
+                required: ['name']
+              - type: object
+                properties:
+                  name:
+                    type: string
+                    enum: ['show_deleted']
+                  in:
+                    type: string
+                    enum: ['query']
+                  schema:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        enum: ['boolean']
+                    required: ['name']
+              - type: object
+                properties:
+                  name:
+                    type: string
+                    not:
+                      enum: ['filter', 'order_by', 'show_deleted']
+                required: ['name']
