@@ -4,6 +4,7 @@ rules:
     severity: error
     formats: ['oas3']
     given:
-      - $.paths[*].get.requestBody
+      # Only run this rule on paths that do not end in a path param
+      - $.paths[?(!@path.match(/\}']$/))].get.requestBody
     then:
       function: falsy
