@@ -1,11 +1,18 @@
+aliases:
+  ListOperation:
+    description:
+      A list operation is a get on path that does not end in a path parameter
+    targets:
+      - formats: ['oas2', 'oas3']
+        given:
+          - $.paths[?(!@path.match(/\}']$/))].get
 rules:
   aep-132-http-body:
     description: A list operation must not accept a request body.
     severity: error
     formats: ['oas3']
     given:
-      # Only run this rule on paths that do not end in a path param
-      - $.paths[?(!@path.match(/\}']$/))].get.requestBody
+      - '#ListOperation.requestBody'
     then:
       function: falsy
 
@@ -15,8 +22,7 @@ rules:
     severity: error
     formats: ['oas3']
     given:
-      # Only run this rule on paths that do not end in a path param
-      - $.paths[?(!@path.match(/\}']$/))].get.parameters
+      - '#ListOperation.parameters'
     then:
       function: schema
       functionOptions:
