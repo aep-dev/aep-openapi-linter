@@ -3,11 +3,11 @@ const { linterForAepRule } = require('../utils');
 let linter;
 
 beforeAll(async () => {
-  linter = await linterForAepRule('0132', 'aep-132-request-field-types');
+  linter = await linterForAepRule('0132', 'aep-132-request-required-params');
   return linter;
 });
 
-test('aep-132-request-field-types should find errors', () => {
+test('aep-132-request-required-params should find errors', () => {
   const oasDoc = {
     openapi: '3.0.3',
     paths: {
@@ -15,10 +15,11 @@ test('aep-132-request-field-types should find errors', () => {
         get: {
           parameters: [
             {
-              name: 'filter',
+              name: 'force',
               in: 'query',
+              required: true,
               schema: {
-                type: 'object',
+                type: 'boolean',
               },
             },
           ],
@@ -27,15 +28,13 @@ test('aep-132-request-field-types should find errors', () => {
     },
   };
   return linter.run(oasDoc).then((results) => {
-    // This rule currently triggers multiple times on the same parameter
-    // That isn't ideal but it does trigger so for now we'll let this pass
-    expect(results.length).toBeGreaterThan(1);
+    expect(results.length).toBe(1);
     const paths = results.map(({ path }) => path.join('.'));
-    expect(paths).toContain('paths./test1.get.parameters.0');
+    expect(paths).toContain('paths./test1.get.parameters.0.required');
   });
 });
 
-test('aep-132-request-field-types should find no errors', () => {
+test('aep-132-request-required-params should find no errors', () => {
   const oasDoc = {
     openapi: '3.0.3',
     paths: {
