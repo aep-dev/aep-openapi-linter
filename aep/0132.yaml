@@ -16,7 +16,7 @@ rules:
     then:
       function: falsy
 
-  aep-132-request-field-types:
+  aep-132-request-param-types:
     description:
       List operation must use the correct type for any optional parameters.
     severity: error
@@ -82,3 +82,13 @@ rules:
                     not:
                       enum: ['filter', 'order_by', 'show_deleted']
                 required: ['name']
+
+  aep-132-request-required-params:
+    description: List operation should have no required parameters
+    severity: error
+    formats: ['oas3']
+    given:
+      - '#ListOperation.parameters[*]'
+    then:
+      field: required
+      function: falsy
