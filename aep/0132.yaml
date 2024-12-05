@@ -1,0 +1,9 @@
+rules:
+  aep-132-http-body:
+    description: A list operation must not accept a request body.
+    severity: error
+    formats: ['oas3']
+    given:
+      - $.paths[*].get.requestBody
+    then:
+      function: falsy

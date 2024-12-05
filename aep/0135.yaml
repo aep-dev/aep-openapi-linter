@@ -1,0 +1,23 @@
+rules:
+  aep-135-http-body:
+    description: A delete operation must not accept a request body.
+    severity: error
+    formats: ['oas3']
+    given:
+      - $.paths[*].delete.requestBody
+    then:
+      function: falsy
+
+  aep-135-response-204:
+    description: A delete operation should have a 204 response.
+    message: A delete operation should have a `204` response.
+    severity: warn
+    formats: ['oas2', 'oas3']
+    given: $.paths[*].delete.responses
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          oneOf:
+            - required: ['204']
+            - required: ['202']
