@@ -38,43 +38,70 @@ test('aep-132-request-required-params should find no errors', () => {
   const oasDoc = {
     openapi: '3.0.3',
     paths: {
+      // No parameters
       '/test1': {
         get: {},
       },
-      '/test3': {
-        post: {
-          requestBody: {
-            content: {
-              'application/json': {
-                schema: {
-                  type: 'string',
-                },
+      // required path parameters, optional query parameters
+      '/test1/{id}/test2': {
+        get: {
+          parameters: [
+            {
+              name: 'id',
+              in: 'path',
+              required: true,
+              schema: {
+                type: 'string',
               },
             },
-          },
-        },
-        put: {
-          requestBody: {
-            content: {
-              'application/json': {
-                schema: {
-                  type: 'string',
-                },
+            {
+              name: 'force',
+              in: 'query',
+              schema: {
+                type: 'boolean',
               },
             },
-          },
+          ],
         },
-        patch: {
-          requestBody: {
-            content: {
-              'application/json': {
-                schema: {
-                  type: 'string',
-                },
-              },
+      },
+    },
+    // required params in other methods are not flagged
+    '/test3': {
+      post: {
+        parameters: [
+          {
+            name: 'q',
+            in: 'query',
+            required: true,
+            schema: {
+              type: 'string',
             },
           },
-        },
+        ],
+      },
+      put: {
+        parameters: [
+          {
+            name: 'q',
+            in: 'query',
+            required: true,
+            schema: {
+              type: 'string',
+            },
+          },
+        ],
+      },
+      patch: {
+        parameters: [
+          {
+            name: 'q',
+            in: 'query',
+            required: true,
+            schema: {
+              type: 'string',
+            },
+          },
+        ],
       },
     },
   };

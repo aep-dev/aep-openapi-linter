@@ -1,7 +1,6 @@
 aliases:
   ListOperation:
-    description:
-      A list operation is a get on path that does not end in a path parameter
+    description: A list operation is a get on path that does not end in a path parameter
     targets:
       - formats: ['oas2', 'oas3']
         given:
@@ -17,8 +16,7 @@ rules:
       function: falsy
 
   aep-132-request-param-types:
-    description:
-      List operation must use the correct type for any optional parameters.
+    description: List operation must use the correct type for any optional parameters.
     severity: error
     formats: ['oas3']
     given:
@@ -84,11 +82,11 @@ rules:
                 required: ['name']
 
   aep-132-request-required-params:
-    description: List operation should have no required parameters
+    description: List operation should have no required parameters (except path parameters)
     severity: error
     formats: ['oas3']
     given:
-      - '#ListOperation.parameters[*]'
+      - '#ListOperation.parameters[?(@.in != "path")]'
     then:
       field: required
       function: falsy
