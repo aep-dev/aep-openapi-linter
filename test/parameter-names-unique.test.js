@@ -22,7 +22,7 @@ test('aep-parameter-names-unique should find errors', () => {
             in: 'path',
             type: 'string',
           },
-          // Legal in OAS2 for same name w/ different in
+          // Legal in OAS3 for same name w/ different in
           {
             name: 'p1',
             in: 'query',
@@ -68,18 +68,11 @@ test('aep-parameter-names-unique should find errors', () => {
   };
   return linter.run(oasDoc).then((results) => {
     expect(results.length).toBe(4);
-    expect(results[0].path.join('.')).toBe(
-      'paths./test1/{p1}.parameters.1.name'
-    );
-    expect(results[1].path.join('.')).toBe(
-      'paths./test1/{p1}.get.parameters.0.name'
-    );
-    expect(results[2].path.join('.')).toBe(
-      'paths./test1/{p1}.get.parameters.1.name'
-    );
-    expect(results[3].path.join('.')).toBe(
-      'paths./test1/{p1}.get.parameters.3.name'
-    );
+    const paths = results.map(({ path }) => path.join('.'));
+    expect(paths).toContain('paths./test1/{p1}.parameters.1.name');
+    expect(paths).toContain('paths./test1/{p1}.get.parameters.0.name');
+    expect(paths).toContain('paths./test1/{p1}.get.parameters.1.name');
+    expect(paths).toContain('paths./test1/{p1}.get.parameters.3.name');
   });
 });
 

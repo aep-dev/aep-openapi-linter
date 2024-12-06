@@ -1,9 +1,92 @@
+aliases:
+  ListOperation:
+    description: A list operation is a get on path that does not end in a path parameter
+    targets:
+      - formats: ['oas2', 'oas3']
+        given:
+          - $.paths[?(!@path.match(/\}']$/))].get
 rules:
   aep-132-http-body:
     description: A list operation must not accept a request body.
     severity: error
     formats: ['oas3']
     given:
-      - $.paths[*].get.requestBody
+      - '#ListOperation.requestBody'
     then:
+      function: falsy
+
+  aep-132-request-param-types:
+    description: List operation must use the correct type for any optional parameters.
+    severity: error
+    formats: ['oas3']
+    given:
+      - '#ListOperation.parameters'
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: array
+          items:
+            oneOf:
+              - type: object
+                properties:
+                  name:
+                    type: string
+                    enum: ['filter']
+                  in:
+                    type: string
+                    enum: ['query']
+                  schema:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        enum: ['string']
+                required: ['name']
+              - type: object
+                properties:
+                  name:
+                    type: string
+                    enum: ['order_by']
+                  in:
+                    type: string
+                    enum: ['query']
+                  schema:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        enum: ['string']
+                required: ['name']
+              - type: object
+                properties:
+                  name:
+                    type: string
+                    enum: ['show_deleted']
+                  in:
+                    type: string
+                    enum: ['query']
+                  schema:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                        enum: ['boolean']
+                    required: ['name']
+              - type: object
+                properties:
+                  name:
+                    type: string
+                    not:
+                      enum: ['filter', 'order_by', 'show_deleted']
+                required: ['name']
+
+  aep-132-request-required-params:
+    description: List operation should have no required parameters (except path parameters)
+    severity: error
+    formats: ['oas3']
+    given:
+      - '#ListOperation.parameters[?(@.in != "path")]'
+    then:
+      field: required
       function: falsy
