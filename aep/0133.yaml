@@ -1,0 +1,19 @@
+aliases:
+  CreateOperation:
+    description: A create operation is a post on path without a ":" in the final segment
+    targets:
+      - formats: ['oas2', 'oas3']
+        given:
+          # @property is the key of the object in the paths object
+          - $.paths[?(!@property.match(/:[^/]*$/))].post
+
+rules:
+  aep-133-required-params:
+    description: A create operation must not have any required parameters other than path parameters.
+    severity: error
+    formats: ['oas2', 'oas3']
+    given:
+      - '#CreateOperation.parameters[?(@.in != "path")]'
+    then:
+      field: required
+      function: falsy
