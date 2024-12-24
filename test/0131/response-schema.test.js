@@ -28,14 +28,43 @@ test('aep-131-response-schema should find errors', () => {
           },
         },
       },
+      '/test2/{id}': {
+        get: {
+          responses: {
+            200: {
+              description: 'success',
+              content: {
+                'application/json': {
+                  // no x-aep-extension
+                  schema: {
+                    $ref: '#/components/schemas/Test2',
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    components: {
+      schemas: {
+        Test2: {
+          type: 'object',
+          // no x-aep-extension
+          properties: {
+            name: {
+              type: 'string',
+            },
+          },
+        },
+      },
     },
   };
   return linter.run(oasDoc).then((results) => {
-    expect(results.length).toBe(1);
+    expect(results.length).toBe(2);
     const paths = results.map(({ path }) => path.join('.'));
-    expect(paths).toContain(
-      'paths./test1/{id}.get.responses.200.content.application/json.schema'
-    );
+    expect(paths).toContain('paths./test1/{id}.get.responses.200.content.application/json.schema');
+    expect(paths).toContain('paths./test2/{id}.get.responses.200.content.application/json.schema');
   });
 });
 

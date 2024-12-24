@@ -29,7 +29,7 @@ rules:
           properties:
             operationId:
               type: string
-              pattern: '^(:|[Gg][Ee][Tt][A-Z]).*$'
+              pattern: '^[Gg][Ee][Tt][A-Z].*$'
           required: ['operationId']
 
   aep-131-response-schema:

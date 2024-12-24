@@ -49,7 +49,12 @@ test('aep-131-operation-id should find no errors', () => {
           operationId: 'GetTest',
         },
       },
-      '/test3/{id}': {
+      '/test3': {
+        get: {
+          operationId: 'ListTest',
+        },
+      },
+      '/test4/{id}:fetch': {
         get: {
           operationId: ':fetch',
         },

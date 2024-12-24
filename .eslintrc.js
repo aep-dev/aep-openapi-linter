@@ -9,5 +9,8 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 12,
   },
-  rules: {},
+  rules: {
+    // set max line length to 120
+    'max-len': ['error', { code: 120 }],
+  },
 };
