@@ -14,6 +14,24 @@ rules:
     formats: ['oas2', 'oas3']
     given:
       - '#CreateOperation.parameters[?(@.in != "path")]'
+      - '#CreateOperation^.parameters[?(@.in != "path")]' # parameters at path item level
     then:
       field: required
       function: falsy
+
+  aep-133-unknown-optional-params:
+    description: A create operation should not have unknown optional parameters.
+    severity: warn
+    formats: ['oas2', 'oas3']
+    given:
+      - '#CreateOperation.parameters[?(@.in == "query")]' # only check query parameters
+      - '#CreateOperation^.parameters[?(@.in == "query")]' # parameters at path item level
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+              enum: ['id']

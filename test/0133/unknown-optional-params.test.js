@@ -3,11 +3,11 @@ const { linterForAepRule } = require('../utils');
 let linter;
 
 beforeAll(async () => {
-  linter = await linterForAepRule('0133', 'aep-133-required-params');
+  linter = await linterForAepRule('0133', 'aep-133-unknown-optional-params');
   return linter;
 });
 
-test('aep-133-required-params should find errors', () => {
+test('aep-133-unknown-optional-params should find errors', () => {
   const oasDoc = {
     openapi: '3.0.3',
     paths: {
@@ -17,7 +17,6 @@ test('aep-133-required-params should find errors', () => {
             {
               name: 'force',
               in: 'query',
-              required: true,
               schema: {
                 type: 'boolean',
               },
@@ -30,7 +29,6 @@ test('aep-133-required-params should find errors', () => {
           {
             name: 'force',
             in: 'query',
-            required: true,
             schema: {
               type: 'boolean',
             },
@@ -49,12 +47,12 @@ test('aep-133-required-params should find errors', () => {
   return linter.run(oasDoc).then((results) => {
     expect(results.length).toBe(2);
     const paths = results.map(({ path }) => path.join('.'));
-    expect(paths).toContain('paths./test1.post.parameters.0.required');
-    expect(paths).toContain('paths./test2.parameters.0.required');
+    expect(paths).toContain('paths./test1.post.parameters.0.name');
+    expect(paths).toContain('paths./test2.parameters.0.name');
   });
 });
 
-test('aep-133-required-params should find no errors', () => {
+test('aep-133-unknown-optional-params should find no errors', () => {
   const oasDoc = {
     openapi: '3.0.3',
     paths: {
@@ -63,11 +61,11 @@ test('aep-133-required-params should find no errors', () => {
         get: {},
       },
       // required path parameters, optional query parameters
-      '/test1/{id}/test2': {
+      '/test1/{testId}/test2': {
         post: {
           parameters: [
             {
-              name: 'id',
+              name: 'testId',
               in: 'path',
               required: true,
               schema: {
@@ -75,24 +73,23 @@ test('aep-133-required-params should find no errors', () => {
               },
             },
             {
-              name: 'force',
+              name: 'id',
               in: 'query',
               schema: {
-                type: 'boolean',
+                type: 'string',
               },
             },
           ],
         },
       },
     },
-    // required params in other methods are not flagged
+    // optional params in other methods are not flagged
     '/test3': {
       get: {
         parameters: [
           {
             name: 'q',
             in: 'query',
-            required: true,
             schema: {
               type: 'string',
             },
@@ -104,7 +101,6 @@ test('aep-133-required-params should find no errors', () => {
           {
             name: 'q',
             in: 'query',
-            required: true,
             schema: {
               type: 'string',
             },
@@ -116,7 +112,6 @@ test('aep-133-required-params should find no errors', () => {
           {
             name: 'q',
             in: 'query',
-            required: true,
             schema: {
               type: 'string',
             },
