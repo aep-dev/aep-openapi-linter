@@ -1,0 +1,46 @@
+aliases:
+  GetOperation:
+    description: A Get operation is a get on path that ends in a path parameter
+    targets:
+      - formats: ['oas2', 'oas3']
+        given:
+          - $.paths[?(@path.match(/\}']$/))].get
+rules:
+  aep-131-http-body:
+    description: A get operation must not accept a request body.
+    severity: error
+    formats: ['oas3']
+    given:
+      - '#GetOperation.requestBody'
+    then:
+      function: falsy
+
+  aep-131-operation-id:
+    description: Verifies that the operation ID is of the form getresource
+    message: The operation ID does not conform to AEP-131
+    severity: error
+    formats: ['oas2', 'oas3']
+    given: '#GetOperation'
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          properties:
+            operationId:
+              type: string
+              pattern: '^[Gg][Ee][Tt][A-Z].*$'
+          required: ['operationId']
+
+  aep-131-response-schema:
+    description: Verifies that the response is an AEP resource.
+    message: The response body is not an AEP resource.
+    severity: error
+    formats: ['oas3']
+    given: '#GetOperation.responses.200.content[*].schema'
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          required: ['x-aep-resource']

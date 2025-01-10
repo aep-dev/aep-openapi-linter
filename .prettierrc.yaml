@@ -1,12 +1,9 @@
 ---
-printWidth: 79
+printWidth: 120
 proseWrap: always
 overrides:
   - files: '*.md.j2'
     options:
       parser: markdown
-  - files: '*.yaml'
-    options:
-      printWidth: 120
 singleQuote: true
 trailingComma: es5
