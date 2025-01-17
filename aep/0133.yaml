@@ -1,0 +1,148 @@
+aliases:
+  CreateOperation:
+    description: A create operation is a post on path without a ":" in the final segment
+    targets:
+      - formats: ['oas2', 'oas3']
+        given:
+          # @property is the key of the object in the paths object
+          - $.paths[?(!@property.match(/:[^/]*$/))].post
+
+rules:
+  aep-133-id-parameter:
+    description: A create operation should have an id parameter.
+    message: The id parameter is missing.
+    severity: warn
+    formats: ['oas2', 'oas3']
+    given:
+      - '#CreateOperation'
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          required: ['parameters']
+          properties:
+            parameters:
+              type: array
+              contains:
+                type: object
+                required: ['name']
+                properties:
+                  name:
+                    enum: ['id']
+
+  aep-133-param-types:
+    description: The id parameter should be a query parameter of type string.
+    severity: error
+    formats: ['oas2', 'oas3']
+    given:
+      - '#CreateOperation.parameters[?(@.name == "id")]'
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          required: ['in', 'schema']
+          properties:
+            in:
+              enum: ['query']
+            schema:
+              type: object
+              required: ['type']
+              properties:
+                type:
+                  type: string
+                  enum: ['string']
+
+  aep-133-request-body:
+    description: A standard create method must accept the resource in the request body.
+    message: The request body is not an AEP resource.
+    severity: error
+    formats: ['oas3']
+    given: '#CreateOperation'
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          required: ['requestBody']
+          properties:
+            requestBody:
+              type: object
+              required: ['content']
+              properties:
+                content:
+                  type: object
+                  additionalProperties:
+                    type: object
+                    required: ['schema']
+                    properties:
+                      schema:
+                        type: object
+                        required: ['x-aep-resource']
+
+  aep-133-required-params:
+    description: A create operation must not have any required parameters other than path parameters.
+    severity: error
+    formats: ['oas2', 'oas3']
+    given:
+      - '#CreateOperation.parameters[?(@.in != "path")]'
+      - '#CreateOperation^.parameters[?(@.in != "path")]' # parameters at path item level
+    then:
+      field: required
+      function: falsy
+
+  aep-133-response-body:
+    description: The success response for a create operation must be the created AEP resource.
+    message: The response body is not an AEP resource.
+    severity: error
+    formats: ['oas3']
+    given: '#CreateOperation'
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          required: ['responses']
+          properties:
+            responses:
+              type: object
+              anyOf:
+                - required: ['200']
+                - required: ['201']
+              properties:
+                '200':
+                  $ref: '#/definitions/response'
+                '201':
+                  $ref: '#/definitions/response'
+          definitions:
+            response:
+              type: object
+              required: ['content']
+              properties:
+                content:
+                  type: object
+                  additionalProperties:
+                    type: object
+                    required: ['schema']
+                    properties:
+                      schema:
+                        type: object
+                        required: ['x-aep-resource']
+
+  aep-133-unknown-optional-params:
+    description: A create operation should not have unknown optional parameters.
+    severity: warn
+    formats: ['oas2', 'oas3']
+    given:
+      - '#CreateOperation.parameters[?(@.in == "query")]' # only check query parameters
+      - '#CreateOperation^.parameters[?(@.in == "query")]' # parameters at path item level
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          properties:
+            name:
+              type: string
+              enum: ['id']
