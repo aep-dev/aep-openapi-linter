@@ -1,19 +1,45 @@
+aliases:
+  DeleteOperation:
+    description: A Delete operation is a delete on path that ends in a path parameter
+    targets:
+      - formats: ['oas2', 'oas3']
+        given:
+          # first condition excludes custom methods and second condition matches paths ending in a path parameter
+          - $.paths[?(!@property.match(/:[^/]*$/) && @property.match(/\}$/))].delete
+
 rules:
   aep-135-http-body:
     description: A delete operation must not accept a request body.
     severity: error
     formats: ['oas3']
     given:
-      - $.paths[*].delete.requestBody
+      - '#DeleteOperation.requestBody'
     then:
       function: falsy
+
+  aep-135-operation-id:
+    description: The operation ID should be delete{resource-singular}.
+    message: The operation ID does not conform to AEP-135
+    severity: error
+    formats: ['oas2', 'oas3']
+    given: '#DeleteOperation'
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          properties:
+            operationId:
+              type: string
+              pattern: '^[Dd][Ee][Ll][Ee][Tt][Ee][A-Z].*$'
+          required: ['operationId']
 
   aep-135-response-204:
     description: A delete operation should have a 204 response.
     message: A delete operation should have a `204` response.
     severity: warn
     formats: ['oas2', 'oas3']
-    given: $.paths[*].delete.responses
+    given: '#DeleteOperation.responses'
     then:
       function: schema
       functionOptions:
