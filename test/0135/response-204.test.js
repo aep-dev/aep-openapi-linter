@@ -11,7 +11,7 @@ test('aep-135-response-204 should find errors', () => {
   const myOpenApiDocument = {
     openapi: '3.0.3',
     paths: {
-      '/api/Paths': {
+      '/api/Paths/{id}': {
         delete: {
           responses: {
             200: {
@@ -24,9 +24,7 @@ test('aep-135-response-204 should find errors', () => {
   };
   return linter.run(myOpenApiDocument).then((results) => {
     expect(results.length).toBe(1);
-    expect(results[0].path.join('.')).toBe(
-      'paths./api/Paths.delete.responses'
-    );
+    expect(results[0].path.join('.')).toBe('paths./api/Paths/{id}.delete.responses');
   });
 });
 
@@ -34,7 +32,7 @@ test('aep-135-response-204 should find no errors', () => {
   const myOpenApiDocument = {
     openapi: '3.0.3',
     paths: {
-      '/api/Paths': {
+      '/api/Paths/{id}': {
         delete: {
           responses: {
             204: {
@@ -43,7 +41,7 @@ test('aep-135-response-204 should find no errors', () => {
           },
         },
       },
-      '/test202': {
+      '/test202/{id}': {
         delete: {
           responses: {
             202: {

@@ -4,7 +4,9 @@ aliases:
     targets:
       - formats: ['oas2', 'oas3']
         given:
-          - $.paths[?(!@path.match(/\}']$/))].get
+          # first condition excludes custom methods and second condition excludes paths ending in a path parameter
+          - $.paths[?(!@property.match(/:[^/]*$/) && !@property.match(/\}$/))].get
+
 rules:
   aep-132-http-body:
     description: A list operation must not accept a request body.
@@ -15,7 +17,24 @@ rules:
     then:
       function: falsy
 
-  aep-132-request-param-types:
+  aep-132-operation-id:
+    description: The operation ID should be List{resource-singular}.
+    message: The operation ID does not conform to AEP-132
+    severity: error
+    formats: ['oas2', 'oas3']
+    given: '#ListOperation'
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          properties:
+            operationId:
+              type: string
+              pattern: '^[Ll][Ii][Ss][Tt][A-Z].*$'
+          required: ['operationId']
+
+  aep-132-param-types:
     description: List operation must use the correct type for any optional parameters.
     severity: error
     formats: ['oas3']
@@ -81,7 +100,7 @@ rules:
                       enum: ['filter', 'order_by', 'show_deleted']
                 required: ['name']
 
-  aep-132-request-required-params:
+  aep-132-required-params:
     description: List operation should have no required parameters (except path parameters)
     severity: error
     formats: ['oas3']

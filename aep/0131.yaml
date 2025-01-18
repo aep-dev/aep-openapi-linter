@@ -4,7 +4,9 @@ aliases:
     targets:
       - formats: ['oas2', 'oas3']
         given:
-          - $.paths[?(@path.match(/\}']$/))].get
+          # first condition excludes custom methods and second condition matches paths ending in a path parameter
+          - $.paths[?(!@property.match(/:[^/]*$/) && @property.match(/\}$/))].get
+
 rules:
   aep-131-http-body:
     description: A get operation must not accept a request body.
@@ -16,7 +18,7 @@ rules:
       function: falsy
 
   aep-131-operation-id:
-    description: Verifies that the operation ID is of the form getresource
+    description: The operation ID should be Get{resource-singular}.
     message: The operation ID does not conform to AEP-131
     severity: error
     formats: ['oas2', 'oas3']
@@ -33,7 +35,7 @@ rules:
           required: ['operationId']
 
   aep-131-response-schema:
-    description: Verifies that the response is an AEP resource.
+    description: The response should include the AEP resource.
     message: The response body is not an AEP resource.
     severity: error
     formats: ['oas3']

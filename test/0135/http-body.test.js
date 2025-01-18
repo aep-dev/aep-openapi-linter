@@ -11,7 +11,7 @@ test('aep-135-http-body should find errors', () => {
   const oasDoc = {
     openapi: '3.0.3',
     paths: {
-      '/test1': {
+      '/test1/{id}': {
         delete: {
           requestBody: {
             content: {
@@ -28,7 +28,7 @@ test('aep-135-http-body should find errors', () => {
   };
   return linter.run(oasDoc).then((results) => {
     expect(results.length).toBe(1);
-    expect(results[0].path.join('.')).toBe('paths./test1.delete.requestBody');
+    expect(results[0].path.join('.')).toBe('paths./test1/{id}.delete.requestBody');
   });
 });
 
@@ -36,10 +36,10 @@ test('aep-135-http-body should find no errors', () => {
   const oasDoc = {
     openapi: '3.0.3',
     paths: {
-      '/test1': {
+      '/test1/{id}': {
         delete: {},
       },
-      '/test3': {
+      '/test3/{id}': {
         post: {
           requestBody: {
             content: {

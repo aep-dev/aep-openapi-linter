@@ -3,11 +3,11 @@ const { linterForAepRule } = require('../utils');
 let linter;
 
 beforeAll(async () => {
-  linter = await linterForAepRule('0132', 'aep-132-request-param-types');
+  linter = await linterForAepRule('0132', 'aep-132-param-types');
   return linter;
 });
 
-test('aep-132-request-param-types should find errors', () => {
+test('aep-132-param-types should find errors', () => {
   const oasDoc = {
     openapi: '3.0.3',
     paths: {
@@ -35,7 +35,7 @@ test('aep-132-request-param-types should find errors', () => {
   });
 });
 
-test('aep-132-request-param-types should find no errors', () => {
+test('aep-132-param-types should find no errors', () => {
   const oasDoc = {
     openapi: '3.0.3',
     paths: {
