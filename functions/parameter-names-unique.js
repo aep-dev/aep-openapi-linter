@@ -19,7 +19,8 @@ function dupIgnoreCase(arr) {
   return [...new Set(arr.map((v) => canonical(v)).filter(isDup))];
 }
 
-// targetVal should be a [path item object](https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md#pathItemObject).
+// targetVal should be a
+// [path item object](https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md#pathItemObject).
 // The code assumes it is running on a resolved doc
 module.exports = (pathItem, _opts, paths) => {
   if (pathItem === null || typeof pathItem !== 'object') {
