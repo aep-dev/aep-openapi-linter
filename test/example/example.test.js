@@ -16,6 +16,9 @@ test('aep-linter should find no errors in example', async () => {
   );
   const linter = await linterForRuleset(aepRulesetFile);
   return linter.run(myDocument).then((results) => {
+    if (results.length > 0) {
+      console.warn(results);
+    }
     expect(results.length).toBe(0);
   });
 });
