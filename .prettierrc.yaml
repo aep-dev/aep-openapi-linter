@@ -5,5 +5,8 @@ overrides:
   - files: '*.yaml'
     options:
       printWidth: 120
+  - files: '*.js'
+    options:
+      printWidth: 120
 singleQuote: true
 trailingComma: es5
