@@ -60,7 +60,7 @@ test('aep-133-required-params should find no errors', () => {
     paths: {
       // No parameters
       '/test1': {
-        get: {},
+        post: {},
       },
       // required path parameters, optional query parameters
       '/test1/{id}/test2': {

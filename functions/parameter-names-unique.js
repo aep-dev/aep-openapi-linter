@@ -30,9 +30,7 @@ module.exports = (pathItem, _opts, paths) => {
 
   const errors = [];
 
-  const pathParams = pathItem.parameters
-    ? pathItem.parameters.map((p) => p.name)
-    : [];
+  const pathParams = pathItem.parameters ? pathItem.parameters.map((p) => p.name) : [];
 
   // Check path params for dups
   const pathDups = dupIgnoreCase(pathParams);
@@ -40,9 +38,7 @@ module.exports = (pathItem, _opts, paths) => {
   // Report all dups
   pathDups.forEach((dup) => {
     // get the index of all names that match dup
-    const dupKeys = [...pathParams.keys()].filter(
-      (k) => canonical(pathParams[k]) === dup
-    );
+    const dupKeys = [...pathParams.keys()].filter((k) => canonical(pathParams[k]) === dup);
     // Refer back to the first one
     const first = `parameters.${dupKeys[0]}`;
     // Report errors for all the others
@@ -54,49 +50,36 @@ module.exports = (pathItem, _opts, paths) => {
     });
   });
 
-  ['get', 'post', 'put', 'patch', 'delete', 'options', 'head'].forEach(
-    (method) => {
-      // If this method exists and it has parameters, check them
-      if (pathItem[method] && Array.isArray(pathItem[method].parameters)) {
-        const allParams = [
-          ...pathParams,
-          ...pathItem[method].parameters.map((p) => p.name),
-        ];
+  ['get', 'post', 'put', 'patch', 'delete', 'options', 'head'].forEach((method) => {
+    // If this method exists and it has parameters, check them
+    if (pathItem[method] && Array.isArray(pathItem[method].parameters)) {
+      const allParams = [...pathParams, ...pathItem[method].parameters.map((p) => p.name)];
 
-        // Check method params for dups -- including path params
-        const dups = dupIgnoreCase(allParams);
+      // Check method params for dups -- including path params
+      const dups = dupIgnoreCase(allParams);
 
-        // Report all dups
-        dups.forEach((dup) => {
-          // get the index of all names that match dup
-          const dupKeys = [...allParams.keys()].filter(
-            (k) => canonical(allParams[k]) === dup
-          );
-          // Refer back to the first one - could be path or method
-          const first =
-            dupKeys[0] < pathParams.length
-              ? `parameters.${dupKeys[0]}`
-              : `${method}.parameters.${dupKeys[0] - pathParams.length}`;
-          // Report errors for any others that are method parameters
-          dupKeys
-            .slice(1)
-            .filter((k) => k >= pathParams.length)
-            .forEach((key) => {
-              errors.push({
-                message: `Duplicate parameter name (ignoring case) with ${first}.`,
-                path: [
-                  ...path,
-                  method,
-                  'parameters',
-                  key - pathParams.length,
-                  'name',
-                ],
-              });
+      // Report all dups
+      dups.forEach((dup) => {
+        // get the index of all names that match dup
+        const dupKeys = [...allParams.keys()].filter((k) => canonical(allParams[k]) === dup);
+        // Refer back to the first one - could be path or method
+        const first =
+          dupKeys[0] < pathParams.length
+            ? `parameters.${dupKeys[0]}`
+            : `${method}.parameters.${dupKeys[0] - pathParams.length}`;
+        // Report errors for any others that are method parameters
+        dupKeys
+          .slice(1)
+          .filter((k) => k >= pathParams.length)
+          .forEach((key) => {
+            errors.push({
+              message: `Duplicate parameter name (ignoring case) with ${first}.`,
+              path: [...path, method, 'parameters', key - pathParams.length, 'name'],
             });
-        });
-      }
+          });
+      });
     }
-  );
+  });
 
   return errors;
 };

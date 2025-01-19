@@ -58,7 +58,7 @@ test('aep-133-unknown-optional-params should find no errors', () => {
     paths: {
       // No parameters
       '/test1': {
-        get: {},
+        post: {},
       },
       // required path parameters, optional query parameters
       '/test1/{testId}/test2': {
