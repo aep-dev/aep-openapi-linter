@@ -4,20 +4,21 @@ require('../matchers');
 let linter;
 
 beforeAll(async () => {
-  linter = await linterForAepRule('0133', 'aep-133-unknown-optional-params');
+  linter = await linterForAepRule('0134', 'aep-134-required-params');
   return linter;
 });
 
-test('aep-133-unknown-optional-params should find errors', () => {
+test('aep-134-required-params should find errors', () => {
   const oasDoc = {
     openapi: '3.0.3',
     paths: {
-      '/test1': {
-        post: {
+      '/test1/{id}': {
+        patch: {
           parameters: [
             {
               name: 'force',
               in: 'query',
+              required: true,
               schema: {
                 type: 'boolean',
               },
@@ -25,17 +26,18 @@ test('aep-133-unknown-optional-params should find errors', () => {
           ],
         },
       },
-      '/test2': {
+      '/test2/{id}': {
         parameters: [
           {
             name: 'force',
             in: 'query',
+            required: true,
             schema: {
               type: 'boolean',
             },
           },
         ],
-        post: {
+        patch: {
           responses: {
             200: {
               description: 'OK',
@@ -48,30 +50,30 @@ test('aep-133-unknown-optional-params should find errors', () => {
   return linter.run(oasDoc).then((results) => {
     expect(results.length).toBe(2);
     expect(results).toContainMatch({
-      path: ['paths', '/test1', 'post', 'parameters', '0', 'name'],
-      message: 'A create operation should not have unknown optional parameters.',
+      path: ['paths', '/test1/{id}', 'patch', 'parameters', '0', 'required'],
+      message: 'A standard update method must not have any required parameters other than path parameters.',
     });
     expect(results).toContainMatch({
-      path: ['paths', '/test2', 'parameters', '0', 'name'],
-      message: 'A create operation should not have unknown optional parameters.',
+      path: ['paths', '/test2/{id}', 'parameters', '0', 'required'],
+      message: 'A standard update method must not have any required parameters other than path parameters.',
     });
   });
 });
 
-test('aep-133-unknown-optional-params should find no errors', () => {
+test('aep-134-required-params should find no errors', () => {
   const oasDoc = {
     openapi: '3.0.3',
     paths: {
       // No parameters
-      '/test1': {
-        post: {},
+      '/test1/{id}': {
+        patch: {},
       },
-      // required path parameters, optional header parameters
-      '/test1/{testId}/test2': {
-        post: {
+      // required path parameters, optional query parameters
+      '/test1/{id1}/test2/{id2}': {
+        patch: {
           parameters: [
             {
-              name: 'testId',
+              name: 'id1',
               in: 'path',
               required: true,
               schema: {
@@ -79,15 +81,16 @@ test('aep-133-unknown-optional-params should find no errors', () => {
               },
             },
             {
-              name: 'id',
-              in: 'query',
+              name: 'id2',
+              in: 'path',
+              required: true,
               schema: {
                 type: 'string',
               },
             },
             {
               name: 'force',
-              in: 'header',
+              in: 'query',
               schema: {
                 type: 'boolean',
               },
@@ -96,13 +99,26 @@ test('aep-133-unknown-optional-params should find no errors', () => {
         },
       },
     },
-    // optional params in other methods are not flagged
-    '/test3': {
+    // required params in other methods are not flagged
+    '/test3/{id}': {
       get: {
         parameters: [
           {
             name: 'q',
             in: 'query',
+            required: true,
+            schema: {
+              type: 'string',
+            },
+          },
+        ],
+      },
+      post: {
+        parameters: [
+          {
+            name: 'q',
+            in: 'query',
+            required: true,
             schema: {
               type: 'string',
             },
@@ -114,17 +130,7 @@ test('aep-133-unknown-optional-params should find no errors', () => {
           {
             name: 'q',
             in: 'query',
-            schema: {
-              type: 'string',
-            },
-          },
-        ],
-      },
-      patch: {
-        parameters: [
-          {
-            name: 'q',
-            in: 'query',
+            required: true,
             schema: {
               type: 'string',
             },

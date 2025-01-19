@@ -1,0 +1,123 @@
+aliases:
+  UpdateOperation:
+    description: An Update method is a patch on path that ends in a path parameter
+    targets:
+      - formats: ['oas2', 'oas3']
+        given:
+          - $.paths[?(@property.match(/\}$/))].patch
+
+rules:
+  aep-134-content-type:
+    description: The request body content type should be "application/merge-patch+json"
+    severity: warn
+    formats: ['oas3']
+    given: '#UpdateOperation'
+    then:
+      field: requestBody.content.application/merge-patch+json
+      function: truthy
+
+  aep-134-operation-id:
+    description: The operation ID should be Update{resource-singular}.
+    message: The operation ID does not conform to AEP-134
+    severity: error
+    formats: ['oas2', 'oas3']
+    given: '#UpdateOperation'
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          properties:
+            operationId:
+              type: string
+              pattern: '^[Uu][Pp][Dd][Aa][Tt][Ee][A-Z].*$'
+          required: ['operationId']
+
+  aep-134-request-body:
+    description: A standard update method must accept the resource in the request body.
+    message: The request body is not an AEP resource.
+    severity: error
+    formats: ['oas3']
+    given: '#UpdateOperation'
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          required: ['requestBody']
+          properties:
+            requestBody:
+              # I tried putting this schema is a separate file and $ref'ing it, but it didn't work
+              description: A content object with an AEP resource schema.
+              type: object
+              required: ['content']
+              properties:
+                content:
+                  type: object
+                  additionalProperties:
+                    type: object
+                    required: ['schema']
+                    properties:
+                      schema:
+                        type: object
+                        required: ['x-aep-resource']
+
+  aep-134-required-params:
+    description: A standard update method must not have any required parameters other than path parameters.
+    severity: error
+    formats: ['oas2', 'oas3']
+    given:
+      - '#UpdateOperation.parameters[?(@.in != "path")]'
+      - '#UpdateOperation^.parameters[?(@.in != "path")]' # parameters at path item level
+    then:
+      field: required
+      function: falsy
+
+  aep-134-response-body:
+    description: The success response for a standard Update method must be the updated AEP resource.
+    message: The response body is not an AEP resource.
+    severity: error
+    formats: ['oas3']
+    given: '#UpdateOperation'
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          required: ['responses']
+          properties:
+            responses:
+              type: object
+              # don't require a 200 response, since it's possible to have a 202
+              properties:
+                '200':
+                  description: A content object with an AEP resource schema.
+                  type: object
+                  required: ['content']
+                  properties:
+                    content:
+                      type: object
+                      additionalProperties:
+                        type: object
+                        required: ['schema']
+                        properties:
+                          schema:
+                            type: object
+                            required: ['x-aep-resource']
+
+  aep-134-unknown-optional-params:
+    description: A standard Update method should not have unknown optional parameters.
+    severity: warn
+    formats: ['oas2', 'oas3']
+    given:
+      - '#UpdateOperation.parameters[?(@.in == "query")]' # only check query parameters
+      - '#UpdateOperation^.parameters[?(@.in == "query")]' # parameters at path item level
+    then:
+      # Use schema function on name so that the error points to the name field
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          properties:
+            name:
+              enum: [nul]
