@@ -63,12 +63,8 @@ test('aep-131-response-schema should find errors', () => {
   return linter.run(oasDoc).then((results) => {
     expect(results.length).toBe(2);
     const paths = results.map(({ path }) => path.join('.'));
-    expect(paths).toContain(
-      'paths./test1/{id}.get.responses.200.content.application/json.schema'
-    );
-    expect(paths).toContain(
-      'paths./test2/{id}.get.responses.200.content.application/json.schema'
-    );
+    expect(paths).toContain('paths./test1/{id}.get.responses.200.content.application/json.schema');
+    expect(paths).toContain('paths./test2/{id}.get.responses.200.content.application/json.schema');
   });
 });
 

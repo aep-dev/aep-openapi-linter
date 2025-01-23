@@ -71,8 +71,7 @@ test('aep-133-response-body should find errors', () => {
       },
       '/test6': {
         post: {
-          description:
-            'Response body is $ref to schema without x-aep-resource extension',
+          description: 'Response body is $ref to schema without x-aep-resource extension',
           responses: {
             201: {
               description: 'OK',
@@ -103,15 +102,9 @@ test('aep-133-response-body should find errors', () => {
     expect(paths).toContain('paths./test1.post');
     expect(paths).toContain('paths./test2.post.responses');
     expect(paths).toContain('paths./test3.post.responses.201');
-    expect(paths).toContain(
-      'paths./test4.post.responses.200.content.application/json'
-    );
-    expect(paths).toContain(
-      'paths./test5.post.responses.200.content.application/json.schema'
-    );
-    expect(paths).toContain(
-      'paths./test6.post.responses.201.content.application/json.schema'
-    );
+    expect(paths).toContain('paths./test4.post.responses.200.content.application/json');
+    expect(paths).toContain('paths./test5.post.responses.200.content.application/json.schema');
+    expect(paths).toContain('paths./test6.post.responses.201.content.application/json.schema');
   });
 });
 

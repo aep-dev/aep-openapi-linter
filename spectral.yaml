@@ -2,6 +2,7 @@ extends:
   - spectral:oas
   - ./aep/0131.yaml
   - ./aep/0132.yaml
+  - ./aep/0133.yaml
   - ./aep/0135.yaml
 functionsDir: './functions'
 functions:

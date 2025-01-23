@@ -1,13 +1,13 @@
 {
-  'openapi': '3.1.0',
-  'servers': [{ 'url': 'http://localhost:8081' }],
   'info':
     {
       'title': 'bookstore.example.com',
       'description': 'An API for bookstore.example.com',
       'version': 'version not set',
-      'contact': { 'name': 'API Support', 'email': 'aepsupport@aep.dev' },
+      'contact': { 'name': 'API support', 'email': 'aepsupport@aep.dev' },
     },
+  'openapi': '3.1.0',
+  'servers': [{ 'url': 'http://localhost:8081' }],
   'paths':
     {
       '/isbns':
@@ -18,8 +18,16 @@
               'operationId': 'ListIsbn',
               'parameters':
                 [
-                  { 'name': 'max_page_size', 'in': 'query', 'schema': { 'type': 'integer' } },
-                  { 'name': 'page_token', 'in': 'query', 'schema': { 'type': 'string' } },
+                  {
+                    'name': 'max_page_size',
+                    'in': 'query',
+                    'schema': { 'type': 'integer' },
+                  },
+                  {
+                    'name': 'page_token',
+                    'in': 'query',
+                    'schema': { 'type': 'string' },
+                  },
                 ],
               'responses':
                 {
@@ -35,7 +43,14 @@
                                   'type': 'object',
                                   'properties':
                                     {
-                                      'results': { 'type': 'array', 'items': { '$ref': '#/components/schemas/isbn' } },
+                                      'results':
+                                        {
+                                          'type': 'array',
+                                          'items':
+                                            {
+                                              '$ref': '#/components/schemas/isbn',
+                                            },
+                                        },
                                     },
                                 },
                             },
@@ -47,17 +62,36 @@
             {
               'description': 'Create method for isbn',
               'operationId': 'CreateIsbn',
+              'parameters':
+                [
+                  {
+                    'name': 'id',
+                    'in': 'query',
+                    'schema': { 'type': 'string' },
+                  },
+                ],
               'responses':
                 {
                   '200':
                     {
                       'description': 'Successful response',
-                      'content': { 'application/json': { 'schema': { '$ref': '#/components/schemas/isbn' } } },
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                { '$ref': '#/components/schemas/isbn' },
+                            },
+                        },
                     },
                 },
               'requestBody':
                 {
-                  'content': { 'application/json': { 'schema': { '$ref': '#/components/schemas/isbn' } } },
+                  'content':
+                    {
+                      'application/json':
+                        { 'schema': { '$ref': '#/components/schemas/isbn' } },
+                    },
                   'required': true,
                 },
             },
@@ -68,13 +102,28 @@
             {
               'description': 'Get method for isbn',
               'operationId': 'GetIsbn',
-              'parameters': [{ 'name': 'isbn', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } }],
+              'parameters':
+                [
+                  {
+                    'name': 'isbn',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                ],
               'responses':
                 {
                   '200':
                     {
                       'description': 'Successful response',
-                      'content': { 'application/json': { 'schema': { '$ref': '#/components/schemas/isbn' } } },
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                { '$ref': '#/components/schemas/isbn' },
+                            },
+                        },
                     },
                 },
             },
@@ -87,8 +136,26 @@
               'operationId': 'ListPublisher',
               'parameters':
                 [
-                  { 'name': 'max_page_size', 'in': 'query', 'schema': { 'type': 'integer' } },
-                  { 'name': 'page_token', 'in': 'query', 'schema': { 'type': 'string' } },
+                  {
+                    'name': 'max_page_size',
+                    'in': 'query',
+                    'schema': { 'type': 'integer' },
+                  },
+                  {
+                    'name': 'page_token',
+                    'in': 'query',
+                    'schema': { 'type': 'string' },
+                  },
+                  {
+                    'name': 'skip',
+                    'in': 'query',
+                    'schema': { 'type': 'integer' },
+                  },
+                  {
+                    'name': 'filter',
+                    'in': 'query',
+                    'schema': { 'type': 'string' },
+                  },
                 ],
               'responses':
                 {
@@ -105,7 +172,13 @@
                                   'properties':
                                     {
                                       'results':
-                                        { 'type': 'array', 'items': { '$ref': '#/components/schemas/publisher' } },
+                                        {
+                                          'type': 'array',
+                                          'items':
+                                            {
+                                              '$ref': '#/components/schemas/publisher',
+                                            },
+                                        },
                                     },
                                 },
                             },
@@ -117,17 +190,39 @@
             {
               'description': 'Create method for publisher',
               'operationId': 'CreatePublisher',
+              'parameters':
+                [
+                  {
+                    'name': 'id',
+                    'in': 'query',
+                    'schema': { 'type': 'string' },
+                  },
+                ],
               'responses':
                 {
                   '200':
                     {
                       'description': 'Successful response',
-                      'content': { 'application/json': { 'schema': { '$ref': '#/components/schemas/publisher' } } },
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                { '$ref': '#/components/schemas/publisher' },
+                            },
+                        },
                     },
                 },
               'requestBody':
                 {
-                  'content': { 'application/json': { 'schema': { '$ref': '#/components/schemas/publisher' } } },
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            { '$ref': '#/components/schemas/publisher' },
+                        },
+                    },
                   'required': true,
                 },
             },
@@ -138,13 +233,28 @@
             {
               'description': 'Get method for publisher',
               'operationId': 'GetPublisher',
-              'parameters': [{ 'name': 'publisher', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } }],
+              'parameters':
+                [
+                  {
+                    'name': 'publisher',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                ],
               'responses':
                 {
                   '200':
                     {
                       'description': 'Successful response',
-                      'content': { 'application/json': { 'schema': { '$ref': '#/components/schemas/publisher' } } },
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                { '$ref': '#/components/schemas/publisher' },
+                            },
+                        },
                     },
                 },
             },
@@ -152,18 +262,40 @@
             {
               'description': 'Update method for publisher',
               'operationId': 'UpdatePublisher',
-              'parameters': [{ 'name': 'publisher', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } }],
+              'parameters':
+                [
+                  {
+                    'name': 'publisher',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                ],
               'responses':
                 {
                   '200':
                     {
                       'description': 'Successful response',
-                      'content': { 'application/json': { 'schema': { '$ref': '#/components/schemas/publisher' } } },
+                      'content':
+                        {
+                          'application/merge-patch+json':
+                            {
+                              'schema':
+                                { '$ref': '#/components/schemas/publisher' },
+                            },
+                        },
                     },
                 },
               'requestBody':
                 {
-                  'content': { 'application/json': { 'schema': { '$ref': '#/components/schemas/publisher' } } },
+                  'content':
+                    {
+                      'application/merge-patch+json':
+                        {
+                          'schema':
+                            { '$ref': '#/components/schemas/publisher' },
+                        },
+                    },
                   'required': true,
                 },
             },
@@ -171,18 +303,40 @@
             {
               'description': 'Apply method for publisher',
               'operationId': 'ApplyPublisher',
-              'parameters': [{ 'name': 'publisher', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } }],
+              'parameters':
+                [
+                  {
+                    'name': 'publisher',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                ],
               'responses':
                 {
                   '200':
                     {
                       'description': 'Successful response',
-                      'content': { 'application/json': { 'schema': { '$ref': '#/components/schemas/publisher' } } },
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                { '$ref': '#/components/schemas/publisher' },
+                            },
+                        },
                     },
                 },
               'requestBody':
                 {
-                  'content': { 'application/json': { 'schema': { '$ref': '#/components/schemas/publisher' } } },
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            { '$ref': '#/components/schemas/publisher' },
+                        },
+                    },
                   'required': true,
                 },
             },
@@ -192,12 +346,25 @@
               'operationId': 'DeletePublisher',
               'parameters':
                 [
-                  { 'name': 'publisher', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } },
-                  { 'name': 'force', 'in': 'query', 'schema': { 'type': 'boolean' } },
+                  {
+                    'name': 'publisher',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                  {
+                    'name': 'force',
+                    'in': 'query',
+                    'schema': { 'type': 'boolean' },
+                  },
                 ],
               'responses':
                 {
-                  '204': { 'description': 'Successful response', 'content': { 'application/json': { 'schema': {} } } },
+                  '204':
+                    {
+                      'description': 'Successful response',
+                      'content': { 'application/json': { 'schema': {} } },
+                    },
                 },
             },
         },
@@ -209,9 +376,22 @@
               'operationId': 'ListBook',
               'parameters':
                 [
-                  { 'name': 'publisher', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } },
-                  { 'name': 'max_page_size', 'in': 'query', 'schema': { 'type': 'integer' } },
-                  { 'name': 'page_token', 'in': 'query', 'schema': { 'type': 'string' } },
+                  {
+                    'name': 'publisher',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                  {
+                    'name': 'max_page_size',
+                    'in': 'query',
+                    'schema': { 'type': 'integer' },
+                  },
+                  {
+                    'name': 'page_token',
+                    'in': 'query',
+                    'schema': { 'type': 'string' },
+                  },
                 ],
               'responses':
                 {
@@ -227,8 +407,19 @@
                                   'type': 'object',
                                   'properties':
                                     {
-                                      'results': { 'type': 'array', 'items': { '$ref': '#/components/schemas/book' } },
-                                      'unreachable': { 'type': 'array', 'items': { 'type': 'string' } },
+                                      'results':
+                                        {
+                                          'type': 'array',
+                                          'items':
+                                            {
+                                              '$ref': '#/components/schemas/book',
+                                            },
+                                        },
+                                      'unreachable':
+                                        {
+                                          'type': 'array',
+                                          'items': { 'type': 'string' },
+                                        },
                                     },
                                 },
                             },
@@ -240,18 +431,42 @@
             {
               'description': 'Create method for book',
               'operationId': 'CreateBook',
-              'parameters': [{ 'name': 'publisher', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } }],
+              'parameters':
+                [
+                  {
+                    'name': 'publisher',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                  {
+                    'name': 'id',
+                    'in': 'query',
+                    'schema': { 'type': 'string' },
+                  },
+                ],
               'responses':
                 {
                   '200':
                     {
                       'description': 'Successful response',
-                      'content': { 'application/json': { 'schema': { '$ref': '#/components/schemas/book' } } },
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                { '$ref': '#/components/schemas/book' },
+                            },
+                        },
                     },
                 },
               'requestBody':
                 {
-                  'content': { 'application/json': { 'schema': { '$ref': '#/components/schemas/book' } } },
+                  'content':
+                    {
+                      'application/json':
+                        { 'schema': { '$ref': '#/components/schemas/book' } },
+                    },
                   'required': true,
                 },
             },
@@ -264,15 +479,32 @@
               'operationId': 'GetBook',
               'parameters':
                 [
-                  { 'name': 'publisher', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } },
-                  { 'name': 'book', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } },
+                  {
+                    'name': 'publisher',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                  {
+                    'name': 'book',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
                 ],
               'responses':
                 {
                   '200':
                     {
                       'description': 'Successful response',
-                      'content': { 'application/json': { 'schema': { '$ref': '#/components/schemas/book' } } },
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                { '$ref': '#/components/schemas/book' },
+                            },
+                        },
                     },
                 },
             },
@@ -282,20 +514,41 @@
               'operationId': 'UpdateBook',
               'parameters':
                 [
-                  { 'name': 'publisher', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } },
-                  { 'name': 'book', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } },
+                  {
+                    'name': 'publisher',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                  {
+                    'name': 'book',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
                 ],
               'responses':
                 {
                   '200':
                     {
                       'description': 'Successful response',
-                      'content': { 'application/json': { 'schema': { '$ref': '#/components/schemas/book' } } },
+                      'content':
+                        {
+                          'application/merge-patch+json':
+                            {
+                              'schema':
+                                { '$ref': '#/components/schemas/book' },
+                            },
+                        },
                     },
                 },
               'requestBody':
                 {
-                  'content': { 'application/json': { 'schema': { '$ref': '#/components/schemas/book' } } },
+                  'content':
+                    {
+                      'application/merge-patch+json':
+                        { 'schema': { '$ref': '#/components/schemas/book' } },
+                    },
                   'required': true,
                 },
             },
@@ -305,20 +558,41 @@
               'operationId': 'ApplyBook',
               'parameters':
                 [
-                  { 'name': 'publisher', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } },
-                  { 'name': 'book', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } },
+                  {
+                    'name': 'publisher',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                  {
+                    'name': 'book',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
                 ],
               'responses':
                 {
                   '200':
                     {
                       'description': 'Successful response',
-                      'content': { 'application/json': { 'schema': { '$ref': '#/components/schemas/book' } } },
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                { '$ref': '#/components/schemas/book' },
+                            },
+                        },
                     },
                 },
               'requestBody':
                 {
-                  'content': { 'application/json': { 'schema': { '$ref': '#/components/schemas/book' } } },
+                  'content':
+                    {
+                      'application/json':
+                        { 'schema': { '$ref': '#/components/schemas/book' } },
+                    },
                   'required': true,
                 },
             },
@@ -328,13 +602,31 @@
               'operationId': 'DeleteBook',
               'parameters':
                 [
-                  { 'name': 'publisher', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } },
-                  { 'name': 'book', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } },
-                  { 'name': 'force', 'in': 'query', 'schema': { 'type': 'boolean' } },
+                  {
+                    'name': 'publisher',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                  {
+                    'name': 'book',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                  {
+                    'name': 'force',
+                    'in': 'query',
+                    'schema': { 'type': 'boolean' },
+                  },
                 ],
               'responses':
                 {
-                  '204': { 'description': 'Successful response', 'content': { 'application/json': { 'schema': {} } } },
+                  '204':
+                    {
+                      'description': 'Successful response',
+                      'content': { 'application/json': { 'schema': {} } },
+                    },
                 },
             },
         },
@@ -346,10 +638,28 @@
               'operationId': 'ListBookEdition',
               'parameters':
                 [
-                  { 'name': 'publisher', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } },
-                  { 'name': 'book', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } },
-                  { 'name': 'max_page_size', 'in': 'query', 'schema': { 'type': 'integer' } },
-                  { 'name': 'page_token', 'in': 'query', 'schema': { 'type': 'string' } },
+                  {
+                    'name': 'publisher',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                  {
+                    'name': 'book',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                  {
+                    'name': 'max_page_size',
+                    'in': 'query',
+                    'schema': { 'type': 'integer' },
+                  },
+                  {
+                    'name': 'page_token',
+                    'in': 'query',
+                    'schema': { 'type': 'string' },
+                  },
                 ],
               'responses':
                 {
@@ -366,7 +676,13 @@
                                   'properties':
                                     {
                                       'results':
-                                        { 'type': 'array', 'items': { '$ref': '#/components/schemas/book-edition' } },
+                                        {
+                                          'type': 'array',
+                                          'items':
+                                            {
+                                              '$ref': '#/components/schemas/book-edition',
+                                            },
+                                        },
                                     },
                                 },
                             },
@@ -380,20 +696,51 @@
               'operationId': 'CreateBookEdition',
               'parameters':
                 [
-                  { 'name': 'publisher', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } },
-                  { 'name': 'book', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } },
+                  {
+                    'name': 'publisher',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                  {
+                    'name': 'book',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                  {
+                    'name': 'id',
+                    'in': 'query',
+                    'schema': { 'type': 'string' },
+                  },
                 ],
               'responses':
                 {
                   '200':
                     {
                       'description': 'Successful response',
-                      'content': { 'application/json': { 'schema': { '$ref': '#/components/schemas/book-edition' } } },
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  '$ref': '#/components/schemas/book-edition',
+                                },
+                            },
+                        },
                     },
                 },
               'requestBody':
                 {
-                  'content': { 'application/json': { 'schema': { '$ref': '#/components/schemas/book-edition' } } },
+                  'content':
+                    {
+                      'application/json':
+                        {
+                          'schema':
+                            { '$ref': '#/components/schemas/book-edition' },
+                        },
+                    },
                   'required': true,
                 },
             },
@@ -406,16 +753,40 @@
               'operationId': 'GetBookEdition',
               'parameters':
                 [
-                  { 'name': 'publisher', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } },
-                  { 'name': 'book', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } },
-                  { 'name': 'book-edition', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } },
+                  {
+                    'name': 'publisher',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                  {
+                    'name': 'book',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                  {
+                    'name': 'book-edition',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
                 ],
               'responses':
                 {
                   '200':
                     {
                       'description': 'Successful response',
-                      'content': { 'application/json': { 'schema': { '$ref': '#/components/schemas/book-edition' } } },
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  '$ref': '#/components/schemas/book-edition',
+                                },
+                            },
+                        },
                     },
                 },
             },
@@ -425,13 +796,32 @@
               'operationId': 'DeleteBookEdition',
               'parameters':
                 [
-                  { 'name': 'publisher', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } },
-                  { 'name': 'book', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } },
-                  { 'name': 'book-edition', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } },
+                  {
+                    'name': 'publisher',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                  {
+                    'name': 'book',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                  {
+                    'name': 'book-edition',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
                 ],
               'responses':
                 {
-                  '204': { 'description': 'Successful response', 'content': { 'application/json': { 'schema': {} } } },
+                  '204':
+                    {
+                      'description': 'Successful response',
+                      'content': { 'application/json': { 'schema': {} } },
+                    },
                 },
             },
         },
@@ -443,18 +833,45 @@
               'operationId': ':ArchiveBook',
               'parameters':
                 [
-                  { 'name': 'publisher', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } },
-                  { 'name': 'book', 'in': 'path', 'required': true, 'schema': { 'type': 'string' } },
+                  {
+                    'name': 'publisher',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
+                  {
+                    'name': 'book',
+                    'in': 'path',
+                    'required': true,
+                    'schema': { 'type': 'string' },
+                  },
                 ],
               'responses':
                 {
                   '200':
                     {
                       'description': 'Successful response',
-                      'content': { 'application/json': { 'schema': { '$ref': '#/components/schemas/book' } } },
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  'type': 'object',
+                                  'properties':
+                                    { 'success': { 'type': 'boolean' } },
+                                  'x-aep-field-numbers': { '0': 'success' },
+                                },
+                            },
+                        },
                     },
                 },
-              'requestBody': { 'content': { 'application/json': { 'schema': {} } }, 'required': true },
+              'requestBody':
+                {
+                  'content':
+                    { 'application/json': { 'schema': { 'type': 'object' } } },
+                  'required': true,
+                },
             },
         },
     },
@@ -473,8 +890,13 @@
                       'items':
                         {
                           'type': 'object',
-                          'properties': { 'firstName': { 'type': 'string' }, 'lastName': { 'type': 'string' } },
-                          'x-aep-field-numbers': { '1': 'firstName', '2': 'lastName' },
+                          'properties':
+                            {
+                              'firstName': { 'type': 'string' },
+                              'lastName': { 'type': 'string' },
+                            },
+                          'x-aep-field-numbers':
+                            { '1': 'firstName', '2': 'lastName' },
                         },
                     },
                   'edition': { 'type': 'integer', 'format': 'int32' },
@@ -491,18 +913,32 @@
                   'parents': ['publisher'],
                 },
               'x-aep-field-numbers':
-                { '0': 'author', '1': 'isbn', '10018': 'path', '2': 'price', '3': 'published', '4': 'edition' },
+                {
+                  '0': 'author',
+                  '1': 'isbn',
+                  '10018': 'path',
+                  '2': 'price',
+                  '3': 'published',
+                  '4': 'edition',
+                },
               'required': ['isbn', 'price', 'published'],
             },
           'book-edition':
             {
               'type': 'object',
-              'properties': { 'displayname': { 'type': 'string' }, 'path': { 'type': 'string', 'readOnly': true } },
+              'properties':
+                {
+                  'displayname': { 'type': 'string' },
+                  'path': { 'type': 'string', 'readOnly': true },
+                },
               'x-aep-resource':
                 {
                   'singular': 'book-edition',
                   'plural': 'book-editions',
-                  'patterns': ['publishers/{publisher}/books/{book}/editions/{book-edition}'],
+                  'patterns':
+                    [
+                      'publishers/{publisher}/books/{book}/editions/{book-edition}',
+                    ],
                   'parents': ['book'],
                 },
               'x-aep-field-numbers': { '1': 'displayname', '10018': 'path' },
@@ -512,15 +948,28 @@
             {
               'type': 'object',
               'properties': { 'path': { 'type': 'string', 'readOnly': true } },
-              'x-aep-resource': { 'singular': 'isbn', 'plural': 'isbns', 'patterns': ['isbns/{isbn}'] },
+              'x-aep-resource':
+                {
+                  'singular': 'isbn',
+                  'plural': 'isbns',
+                  'patterns': ['isbns/{isbn}'],
+                },
               'x-aep-field-numbers': { '10018': 'path' },
             },
           'publisher':
             {
               'type': 'object',
-              'properties': { 'description': { 'type': 'string' }, 'path': { 'type': 'string', 'readOnly': true } },
+              'properties':
+                {
+                  'description': { 'type': 'string' },
+                  'path': { 'type': 'string', 'readOnly': true },
+                },
               'x-aep-resource':
-                { 'singular': 'publisher', 'plural': 'publishers', 'patterns': ['publishers/{publisher}'] },
+                {
+                  'singular': 'publisher',
+                  'plural': 'publishers',
+                  'patterns': ['publishers/{publisher}'],
+                },
               'x-aep-field-numbers': { '1': 'description', '10018': 'path' },
             },
         },

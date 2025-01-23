@@ -50,8 +50,7 @@ test('aep-133-request-body should find errors', () => {
       },
       '/test4': {
         post: {
-          description:
-            'Request body is $ref to schema without x-aep-resource extension',
+          description: 'Request body is $ref to schema without x-aep-resource extension',
           requestBody: {
             content: {
               'application/json': {
@@ -78,12 +77,8 @@ test('aep-133-request-body should find errors', () => {
     const paths = results.map(({ path }) => path.join('.'));
     expect(paths).toContain('paths./test1.post');
     expect(paths).toContain('paths./test2.post.requestBody');
-    expect(paths).toContain(
-      'paths./test3.post.requestBody.content.application/json.schema'
-    );
-    expect(paths).toContain(
-      'paths./test4.post.requestBody.content.application/json.schema'
-    );
+    expect(paths).toContain('paths./test3.post.requestBody.content.application/json.schema');
+    expect(paths).toContain('paths./test4.post.requestBody.content.application/json.schema');
   });
 });
 
