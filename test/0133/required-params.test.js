@@ -1,4 +1,5 @@
 const { linterForAepRule } = require('../utils');
+require('../matchers');
 
 let linter;
 
@@ -48,9 +49,14 @@ test('aep-133-required-params should find errors', () => {
   };
   return linter.run(oasDoc).then((results) => {
     expect(results.length).toBe(2);
-    const paths = results.map(({ path }) => path.join('.'));
-    expect(paths).toContain('paths./test1.post.parameters.0.required');
-    expect(paths).toContain('paths./test2.parameters.0.required');
+    expect(results).toContainMatch({
+      path: ['paths', '/test1', 'post', 'parameters', '0', 'required'],
+      message: 'A create operation must not have any required parameters other than path parameters.',
+    });
+    expect(results).toContainMatch({
+      path: ['paths', '/test2', 'parameters', '0', 'required'],
+      message: 'A create operation must not have any required parameters other than path parameters.',
+    });
   });
 });
 

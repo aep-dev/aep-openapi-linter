@@ -1,4 +1,5 @@
 const { linterForAepRule } = require('../utils');
+require('../matchers');
 
 let linter;
 
@@ -29,9 +30,14 @@ test('aep-135-operation-id should find errors', () => {
   };
   return linter.run(oasDoc).then((results) => {
     expect(results.length).toBe(2);
-    const paths = results.map(({ path }) => path.join('.'));
-    expect(paths).toContain('paths./test1/{id}.delete');
-    expect(paths).toContain('paths./test2/{id}.delete.operationId');
+    expect(results).toContainMatch({
+      path: ['paths', '/test1/{id}', 'delete'],
+      message: 'The operation ID does not conform to AEP-135',
+    });
+    expect(results).toContainMatch({
+      path: ['paths', '/test2/{id}', 'delete', 'operationId'],
+      message: 'The operation ID does not conform to AEP-135',
+    });
   });
 });
 

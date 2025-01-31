@@ -1,4 +1,5 @@
 const { linterForAepRule } = require('../utils');
+require('../matchers');
 
 let linter;
 
@@ -29,8 +30,10 @@ test('aep-132-required-params should find errors', () => {
   };
   return linter.run(oasDoc).then((results) => {
     expect(results.length).toBe(1);
-    const paths = results.map(({ path }) => path.join('.'));
-    expect(paths).toContain('paths./test1.get.parameters.0.required');
+    expect(results).toContainMatch({
+      path: ['paths', '/test1', 'get', 'parameters', '0', 'required'],
+      message: 'List operation should have no required parameters (except path parameters)',
+    });
   });
 });
 

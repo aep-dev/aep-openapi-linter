@@ -1,4 +1,5 @@
 const { linterForAepRule } = require('../utils');
+require('../matchers');
 
 let linter;
 
@@ -46,9 +47,14 @@ test('aep-133-unknown-optional-params should find errors', () => {
   };
   return linter.run(oasDoc).then((results) => {
     expect(results.length).toBe(2);
-    const paths = results.map(({ path }) => path.join('.'));
-    expect(paths).toContain('paths./test1.post.parameters.0.name');
-    expect(paths).toContain('paths./test2.parameters.0.name');
+    expect(results).toContainMatch({
+      path: ['paths', '/test1', 'post', 'parameters', '0', 'name'],
+      message: 'A create operation should not have unknown optional parameters.',
+    });
+    expect(results).toContainMatch({
+      path: ['paths', '/test2', 'parameters', '0', 'name'],
+      message: 'A create operation should not have unknown optional parameters.',
+    });
   });
 });
 
