@@ -1,4 +1,5 @@
 const { linterForAepRule } = require('../utils');
+require('../matchers');
 
 let linter;
 
@@ -28,7 +29,10 @@ test('aep-132-http-body should find errors', () => {
   };
   return linter.run(oasDoc).then((results) => {
     expect(results.length).toBe(1);
-    expect(results[0].path.join('.')).toBe('paths./test1.get.requestBody');
+    expect(results).toContainMatch({
+      path: ['paths', '/test1', 'get', 'requestBody'],
+      message: 'A list operation must not accept a request body.',
+    });
   });
 });
 

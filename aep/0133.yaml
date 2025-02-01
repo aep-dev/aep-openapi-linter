@@ -33,7 +33,7 @@ rules:
 
   aep-133-operation-id:
     description: The operation ID should be Create{resource-singular}.
-    message: The operation ID does not conform to AEP-133
+    message: The operation ID does not conform to AEP-133.
     severity: error
     formats: ['oas2', 'oas3']
     given: '#CreateOperation'

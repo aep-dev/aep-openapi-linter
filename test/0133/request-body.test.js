@@ -1,4 +1,5 @@
 const { linterForAepRule } = require('../utils');
+require('../matchers');
 
 let linter;
 
@@ -74,11 +75,22 @@ test('aep-133-request-body should find errors', () => {
   };
   return linter.run(oasDoc).then((results) => {
     expect(results.length).toBe(4);
-    const paths = results.map(({ path }) => path.join('.'));
-    expect(paths).toContain('paths./test1.post');
-    expect(paths).toContain('paths./test2.post.requestBody');
-    expect(paths).toContain('paths./test3.post.requestBody.content.application/json.schema');
-    expect(paths).toContain('paths./test4.post.requestBody.content.application/json.schema');
+    expect(results).toContainMatch({
+      path: ['paths', '/test1', 'post'],
+      message: 'The request body is not an AEP resource.',
+    });
+    expect(results).toContainMatch({
+      path: ['paths', '/test2', 'post', 'requestBody'],
+      message: 'The request body is not an AEP resource.',
+    });
+    expect(results).toContainMatch({
+      path: ['paths', '/test3', 'post', 'requestBody', 'content', 'application/json', 'schema'],
+      message: 'The request body is not an AEP resource.',
+    });
+    expect(results).toContainMatch({
+      path: ['paths', '/test4', 'post', 'requestBody', 'content', 'application/json', 'schema'],
+      message: 'The request body is not an AEP resource.',
+    });
   });
 });
 

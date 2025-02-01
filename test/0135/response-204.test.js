@@ -1,4 +1,5 @@
 const { linterForAepRule } = require('../utils');
+require('../matchers');
 
 let linter;
 
@@ -24,7 +25,10 @@ test('aep-135-response-204 should find errors', () => {
   };
   return linter.run(myOpenApiDocument).then((results) => {
     expect(results.length).toBe(1);
-    expect(results[0].path.join('.')).toBe('paths./api/Paths/{id}.delete.responses');
+    expect(results).toContainMatch({
+      path: ['paths', '/api/Paths/{id}', 'delete', 'responses'],
+      message: 'A delete operation should have a `204` response.',
+    });
   });
 });
 

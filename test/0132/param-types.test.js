@@ -1,4 +1,5 @@
 const { linterForAepRule } = require('../utils');
+require('../matchers');
 
 let linter;
 
@@ -30,8 +31,10 @@ test('aep-132-param-types should find errors', () => {
     // This rule currently triggers multiple times on the same parameter
     // That isn't ideal but it does trigger so for now we'll let this pass
     expect(results.length).toBeGreaterThan(1);
-    const paths = results.map(({ path }) => path.join('.'));
-    expect(paths).toContain('paths./test1.get.parameters.0');
+    expect(results).toContainMatch({
+      path: ['paths', '/test1', 'get', 'parameters', '0', 'schema', 'type'],
+      message: 'List operation must use the correct type for any optional parameters.',
+    });
   });
 });
 

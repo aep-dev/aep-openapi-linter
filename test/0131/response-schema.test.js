@@ -1,4 +1,5 @@
 const { linterForAepRule } = require('../utils');
+require('../matchers');
 
 let linter;
 
@@ -62,9 +63,14 @@ test('aep-131-response-schema should find errors', () => {
   };
   return linter.run(oasDoc).then((results) => {
     expect(results.length).toBe(2);
-    const paths = results.map(({ path }) => path.join('.'));
-    expect(paths).toContain('paths./test1/{id}.get.responses.200.content.application/json.schema');
-    expect(paths).toContain('paths./test2/{id}.get.responses.200.content.application/json.schema');
+    expect(results).toContainMatch({
+      path: ['paths', '/test1/{id}', 'get', 'responses', '200', 'content', 'application/json', 'schema'],
+      message: 'The response body is not an AEP resource.',
+    });
+    expect(results).toContainMatch({
+      path: ['paths', '/test2/{id}', 'get', 'responses', '200', 'content', 'application/json', 'schema'],
+      message: 'The response body is not an AEP resource.',
+    });
   });
 });
 

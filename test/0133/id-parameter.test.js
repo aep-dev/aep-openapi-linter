@@ -1,4 +1,5 @@
 const { linterForAepRule } = require('../utils');
+require('../matchers');
 
 let linter;
 
@@ -35,9 +36,14 @@ test('aep-133-id-parameter should find errors', () => {
   };
   return linter.run(oasDoc).then((results) => {
     expect(results.length).toBe(2);
-    const paths = results.map(({ path }) => path.join('.'));
-    expect(paths).toContain('paths./test1.post');
-    expect(paths).toContain('paths./test2.post.parameters');
+    expect(results).toContainMatch({
+      path: ['paths', '/test1', 'post'],
+      message: 'The id parameter is missing.',
+    });
+    expect(results).toContainMatch({
+      path: ['paths', '/test2', 'post', 'parameters'],
+      message: 'The id parameter is missing.',
+    });
   });
 });
 

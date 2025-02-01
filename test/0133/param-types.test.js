@@ -1,4 +1,5 @@
 const { linterForAepRule } = require('../utils');
+require('../matchers');
 
 let linter;
 
@@ -43,9 +44,14 @@ test('aep-133-param-types should find errors', () => {
   };
   return linter.run(oasDoc).then((results) => {
     expect(results.length).toBe(2);
-    const paths = results.map(({ path }) => path.join('.'));
-    expect(paths).toContain('paths./test1.post.parameters.0.in');
-    expect(paths).toContain('paths./test2.post.parameters.0.schema.type');
+    expect(results).toContainMatch({
+      path: ['paths', '/test1', 'post', 'parameters', '0', 'in'],
+      message: 'The id parameter should be a query parameter of type string.',
+    });
+    expect(results).toContainMatch({
+      path: ['paths', '/test2', 'post', 'parameters', '0', 'schema', 'type'],
+      message: 'The id parameter should be a query parameter of type string.',
+    });
   });
 });
 
