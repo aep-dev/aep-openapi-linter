@@ -43,6 +43,7 @@
                                   'type': 'object',
                                   'properties':
                                     {
+                                      'next_page_token': { 'type': 'string' },
                                       'results':
                                         {
                                           'type': 'array',
@@ -171,6 +172,7 @@
                                   'type': 'object',
                                   'properties':
                                     {
+                                      'next_page_token': { 'type': 'string' },
                                       'results':
                                         {
                                           'type': 'array',
@@ -407,6 +409,7 @@
                                   'type': 'object',
                                   'properties':
                                     {
+                                      'next_page_token': { 'type': 'string' },
                                       'results':
                                         {
                                           'type': 'array',
@@ -675,6 +678,7 @@
                                   'type': 'object',
                                   'properties':
                                     {
+                                      'next_page_token': { 'type': 'string' },
                                       'results':
                                         {
                                           'type': 'array',
