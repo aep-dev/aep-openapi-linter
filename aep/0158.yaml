@@ -1,0 +1,143 @@
+aliases:
+  ListOperation:
+    description: A list operation is a get on path that does not end in a path parameter
+    targets:
+      - formats: ['oas2', 'oas3']
+        given:
+          # first condition excludes custom methods and second condition excludes paths ending in a path parameter
+          - $.paths[?(!@property.match(/:[^/]*$/) && !@property.match(/\}$/))].get
+
+rules:
+  aep-158-max-page-size-parameter:
+    description: Operations that return collections should define an integer max_page_size parameter.
+    severity: warn
+    formats: ['oas3']
+    given:
+      - '#ListOperation'
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          required: ['parameters']
+          properties:
+            parameters:
+              type: array
+              contains:
+                type: object
+                required: ['name', 'schema']
+                properties:
+                  name:
+                    enum: ['max_page_size']
+                  schema:
+                    type: object
+                    required: ['type']
+                    properties:
+                      type:
+                        enum: ['integer']
+
+  aep-158-page-token-parameter:
+    description: Operations that return collections should define a string page_token parameter.
+    severity: warn
+    formats: ['oas3']
+    given:
+      - '#ListOperation'
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          required: ['parameters']
+          properties:
+            parameters:
+              type: array
+              contains:
+                type: object
+                required: ['name', 'schema']
+                properties:
+                  name:
+                    enum: ['page_token']
+                  schema:
+                    type: object
+                    required: ['type']
+                    properties:
+                      type:
+                        enum: ['string']
+
+  aep-158-page-token-parameter-optional:
+    description: The page_token parameter must not be required.
+    severity: error
+    formats: ['oas3']
+    given:
+      - '#ListOperation.parameters[?(@.name == "page_token")]'
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          properties:
+            required:
+              not:
+                enum: [true]
+
+  aep-158-response-array-property:
+    description: The response schema must include an array property.
+    severity: error
+    formats: ['oas3']
+    given:
+      - '#ListOperation.responses.200.content.application/json.schema.properties'
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          # You can use this pattern to get an object contains constraint
+          type: object
+          not:
+            additionalProperties:
+              not:
+                type: object
+                required: ['type']
+                properties:
+                  type:
+                    enum: ['array']
+
+  aep-158-response-next-page-token-property:
+    description: The response schema must include a string next_page_token property.
+    severity: error
+    formats: ['oas3']
+    given:
+      - '#ListOperation.responses.200.content.application/json.schema.properties'
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          required: ['next_page_token']
+          properties:
+            next_page_token:
+              type: object
+              required: ['type']
+              properties:
+                type:
+                  enum: ['string']
+
+  aep-158-skip-parameter:
+    description: Operations that return collections may define an integer skip parameter.
+    message: The skip parameter must be an integer.
+    severity: warn
+    formats: ['oas3']
+    given:
+      - '#ListOperation.parameters[?(@.name == "skip")]'
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          required: ['schema']
+          properties:
+            schema:
+              type: object
+              required: ['type']
+              properties:
+                type:
+                  enum: ['integer']
