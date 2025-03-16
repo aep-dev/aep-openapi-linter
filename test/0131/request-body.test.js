@@ -4,11 +4,11 @@ require('../matchers');
 let linter;
 
 beforeAll(async () => {
-  linter = await linterForAepRule('0131', 'aep-131-http-body');
+  linter = await linterForAepRule('0131', 'aep-131-request-body');
   return linter;
 });
 
-test('aep-131-http-body should find errors', () => {
+test('aep-131-request-body should find errors', () => {
   const oasDoc = {
     openapi: '3.0.3',
     paths: {
@@ -36,7 +36,7 @@ test('aep-131-http-body should find errors', () => {
   });
 });
 
-test('aep-131-http-body should find no errors', () => {
+test('aep-131-request-body should find no errors', () => {
   const oasDoc = {
     openapi: '3.0.3',
     paths: {

@@ -8,15 +8,6 @@ aliases:
           - $.paths[?(!@property.match(/:[^/]*$/) && @property.match(/\}$/))].get
 
 rules:
-  aep-131-http-body:
-    description: A get operation must not accept a request body.
-    severity: error
-    formats: ['oas3']
-    given:
-      - '#GetOperation.requestBody'
-    then:
-      function: falsy
-
   aep-131-operation-id:
     description: The operation ID should be Get{resource-singular}.
     message: The operation ID does not conform to AEP-131
@@ -34,8 +25,28 @@ rules:
               pattern: '^[Gg][Ee][Tt][A-Z].*$'
           required: ['operationId']
 
-  aep-131-response-schema:
-    description: The response should include the AEP resource.
+  aep-131-request-body:
+    description: A get operation must not accept a request body.
+    severity: error
+    formats: ['oas3']
+    given:
+      - '#GetOperation.requestBody'
+    then:
+      function: falsy
+
+  aep-131-required-params:
+    description: A standard Get method must not have any required parameters other than path parameters.
+    severity: error
+    formats: ['oas2', 'oas3']
+    given:
+      - '#GetOperation.parameters[?(@.in != "path")]'
+      - '#GetOperation^.parameters[?(@.in != "path")]' # parameters at path item level
+    then:
+      field: required
+      function: falsy
+
+  aep-131-response-body:
+    description: The response must be the AEP resource.
     message: The response body is not an AEP resource.
     severity: error
     formats: ['oas3']
@@ -46,3 +57,22 @@ rules:
         schema:
           type: object
           required: ['x-aep-resource']
+
+  aep-131-unknown-optional-params:
+    description: A standard Get method should not have unknown optional parameters.
+    severity: warn
+    formats: ['oas2', 'oas3']
+    given:
+      - '#GetOperation.parameters[?(@.in == "query")]' # only check query parameters
+      - '#GetOperation^.parameters[?(@.in == "query")]' # parameters at path item level
+    then:
+      # Use schema function on name so that the error points to the name field
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          properties:
+            name:
+              enum:
+                - 'read_mask' # AEP-157 Partial responses
+                - 'view' # AEP-157 Partial responses
