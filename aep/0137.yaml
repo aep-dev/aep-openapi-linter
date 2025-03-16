@@ -1,27 +1,18 @@
 aliases:
-  UpdateOperation:
-    description: An Update method is a patch on path that ends in a path parameter
+  ApplyOperation:
+    description: An Apply method is a put on path that ends in a path parameter
     targets:
       - formats: ['oas2', 'oas3']
         given:
-          - $.paths[?(@property.match(/\}$/))].patch
+          - $.paths[?(@property.match(/\}$/))].put
 
 rules:
-  aep-134-content-type:
-    description: The request body content type should be "application/merge-patch+json"
-    severity: warn
-    formats: ['oas3']
-    given: '#UpdateOperation'
-    then:
-      field: requestBody.content.application/merge-patch+json
-      function: truthy
-
-  aep-134-operation-id:
-    description: The operation ID should be Update{resource-singular}.
-    message: The operation ID does not conform to AEP-134
+  aep-137-operation-id:
+    description: The operation ID should be Apply{resource-singular}.
+    message: The operation ID does not conform to AEP-137
     severity: error
     formats: ['oas2', 'oas3']
-    given: '#UpdateOperation'
+    given: '#ApplyOperation'
     then:
       function: schema
       functionOptions:
@@ -30,15 +21,15 @@ rules:
           properties:
             operationId:
               type: string
-              pattern: '^[Uu][Pp][Dd][Aa][Tt][Ee][A-Z].*$'
+              pattern: '^[Aa][Pp][Pp][Ll][Yy].*$'
           required: ['operationId']
 
-  aep-134-request-body:
-    description: A standard update method must accept the resource in the request body.
+  aep-137-request-body:
+    description: A standard Apply method must accept the resource in the request body.
     message: The request body is not an AEP resource.
     severity: error
     formats: ['oas3']
-    given: '#UpdateOperation'
+    given: '#ApplyOperation'
     then:
       function: schema
       functionOptions:
@@ -62,23 +53,23 @@ rules:
                         type: object
                         required: ['x-aep-resource']
 
-  aep-134-required-params:
-    description: A standard update method must not have any required parameters other than path parameters.
+  aep-137-required-params:
+    description: A standard Apply method must not have any required parameters other than path parameters.
     severity: error
     formats: ['oas2', 'oas3']
     given:
-      - '#UpdateOperation.parameters[?(@.in != "path")]'
-      - '#UpdateOperation^.parameters[?(@.in != "path")]' # parameters at path item level
+      - '#ApplyOperation.parameters[?(@.in != "path")]'
+      - '#ApplyOperation^.parameters[?(@.in != "path")]' # parameters at path item level
     then:
       field: required
       function: falsy
 
-  aep-134-response-body:
-    description: The success response for a standard Update method must be the updated AEP resource.
+  aep-137-response-body:
+    description: The success response for a standard Apply method must be the AEP resource.
     message: The response body is not an AEP resource.
     severity: error
     formats: ['oas3']
-    given: '#UpdateOperation'
+    given: '#ApplyOperation'
     then:
       function: schema
       functionOptions:
@@ -105,13 +96,13 @@ rules:
                             type: object
                             required: ['x-aep-resource']
 
-  aep-134-unknown-optional-params:
-    description: A standard Update method should not have unknown optional parameters.
+  aep-137-unknown-optional-params:
+    description: A standard Apply method should not have unknown optional parameters.
     severity: warn
     formats: ['oas2', 'oas3']
     given:
-      - '#UpdateOperation.parameters[?(@.in == "query")]' # only check query parameters
-      - '#UpdateOperation^.parameters[?(@.in == "query")]' # parameters at path item level
+      - '#ApplyOperation.parameters[?(@.in == "query")]' # only check query parameters
+      - '#ApplyOperation^.parameters[?(@.in == "query")]' # parameters at path item level
     then:
       # Use schema function on name so that the error points to the name field
       function: schema
@@ -120,5 +111,5 @@ rules:
           type: object
           properties:
             name:
-              # Update has no defined optional parameters
+              # Apply has no defined optional parameters
               enum: [null]
