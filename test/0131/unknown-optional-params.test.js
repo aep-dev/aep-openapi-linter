@@ -1,4 +1,3 @@
-const { it } = require('@jest/globals');
 const { linterForAepRule } = require('../utils');
 require('../matchers');
 
@@ -69,11 +68,11 @@ test('aep-131-unknown-optional-params should find no errors', () => {
       },
       // required path parameters, allowed optional parameters
       // optional header parameters
-      '/test1/{testId}/test2/{id}': {
+      '/test1/{test_id}/test2/{id}': {
         get: {
           parameters: [
             {
-              name: 'testId',
+              name: 'test_id',
               in: 'path',
               required: true,
               schema: {
