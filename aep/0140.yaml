@@ -1,0 +1,17 @@
+rules:
+  aep-140-boolean-field-naming:
+    description: 'Boolean fields should omit the prefix "is".'
+    severity: warn
+    given: '$..[?(@.type == "boolean" && (@property.match(/^is/)))]~'
+    then:
+      field: '@key'
+      function: pattern
+      functionOptions:
+        match: '^is[A-Z].*$'
+
+  aep-140-uri-field-naming:
+    description: 'Fields representing URLs or URIs should be named "uri" rather than "url".'
+    severity: warn
+    given: '$..[?(@.type == "string" && (@property.match(/url$/)))]~'
+    then:
+      function: falsy
