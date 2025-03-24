@@ -1,0 +1,65 @@
+aliases:
+  CustomOperation:
+    description: A custom method is identified by a path containing a colon (:) before the verb
+    targets:
+      - formats: ['oas2', 'oas3']
+        given:
+          # condition excludes custom methods Update Array custom operations defined in AEP-144, as different list of rules applies to them
+          - $.paths[?(@property.match(/:(?!add|remove)([^/]*)$/))]
+
+rules:
+  aep-136-http-method:
+    description: Custom methods should use POST or GET.
+    severity: warn
+    formats: ['oas2', 'oas3']
+    given: '#CustomOperation'
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          properties:
+            post: {}
+            get: {}
+          additionalProperties: false
+
+  aep-136-no-patch-delete:
+    description: Custom methods should not use PATCH or DELETE.
+    severity: warn
+    formats: ['oas2', 'oas3']
+    given: '#CustomOperation'
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          not:
+            type: object
+            properties:
+              patch: {}
+              delete: {}
+            additionalProperties: false
+
+  aep-136-get-idempotency:
+    description: GET-based custom methods must be idempotent and have no request body.
+    severity: error
+    formats: ['oas3']
+    given: '#CustomOperation.get.requestBody'
+    then:
+      function: falsy
+
+  aep-136-custom-operation-id:
+    description: The operation ID should start with a colon and a capital letter.
+    message: The operation ID does not conform to AEP-136
+    severity: warn
+    formats: ['oas2', 'oas3']
+    given: '#CustomOperation[*]'
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          properties:
+            operationId:
+              type: string
+              pattern: '^:[A-Z].*$'
+          required: ['operationId']
