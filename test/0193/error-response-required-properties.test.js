@@ -168,7 +168,7 @@ test('aep-193-error-response-schema should find no warnings', () => {
                 },
               },
             },
-          }
+          },
         },
       },
       '/test2/{id}': {
@@ -189,7 +189,7 @@ test('aep-193-error-response-schema should find no warnings', () => {
                 },
               },
             },
-          }
+          },
         },
       },
     },
