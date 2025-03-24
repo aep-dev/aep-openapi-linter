@@ -32,13 +32,23 @@ test('aep-140-uri-field-naming should find warning', () => {
           },
         },
       },
-    }
+    },
   };
   return linter.run(oasDoc).then((results) => {
     expect(results.length).toBe(1);
     expect(results).toContainMatch({
-      path: ['paths', '/test1', 'get', 'responses', '200', 'content',
-        'application/json', 'schema', 'properties', 'url'],
+      path: [
+        'paths',
+        '/test1',
+        'get',
+        'responses',
+        '200',
+        'content',
+        'application/json',
+        'schema',
+        'properties',
+        'url',
+      ],
       message: 'Fields representing URLs or URIs should be named "uri" rather than "url".',
     });
   });
@@ -68,7 +78,7 @@ test('aep-140-uri-field-naming should find no warnings', () => {
           },
         },
       },
-    }
+    },
   };
   return linter.run(oasDoc).then((results) => {
     expect(results.length).toBe(0);

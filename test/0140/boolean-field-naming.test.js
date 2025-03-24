@@ -32,13 +32,23 @@ test('aep-140-boolean-field-naming should find warning', () => {
           },
         },
       },
-    }
+    },
   };
   return linter.run(oasDoc).then((results) => {
     expect(results.length).toBe(1);
     expect(results).toContainMatch({
-      path: ['paths', '/test1', 'get', 'responses', '200', 'content',
-        'application/json', 'schema', 'properties', 'is_boolean'],
+      path: [
+        'paths',
+        '/test1',
+        'get',
+        'responses',
+        '200',
+        'content',
+        'application/json',
+        'schema',
+        'properties',
+        'is_boolean',
+      ],
       message: 'Boolean fields should omit the prefix "is".',
     });
   });
@@ -68,7 +78,7 @@ test('aep-140-boolean-field-naming should find no warnings', () => {
           },
         },
       },
-    }
+    },
   };
   return linter.run(oasDoc).then((results) => {
     expect(results.length).toBe(0);
