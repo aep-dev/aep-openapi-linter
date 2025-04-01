@@ -4,11 +4,11 @@ require('../matchers');
 let linter;
 
 beforeAll(async () => {
-  linter = await linterForAepRule('0140', 'aep-140-boolean-field-naming');
+  linter = await linterForAepRule('0140', 'aep-140-boolean-property-naming');
   return linter;
 });
 
-test('aep-140-boolean-field-naming should find warning', () => {
+test('aep-140-boolean-property-naming should find warning', () => {
   const oasDoc = {
     openapi: '3.0.3',
     paths: {
@@ -49,12 +49,12 @@ test('aep-140-boolean-field-naming should find warning', () => {
         'properties',
         'is_boolean',
       ],
-      message: 'Boolean fields should omit the prefix "is".',
+      message: 'Boolean properties should omit the prefix "is".',
     });
   });
 });
 
-test('aep-140-boolean-field-naming should find no warnings', () => {
+test('aep-140-boolean-property-naming should find no warnings', () => {
   const oasDoc = {
     openapi: '3.0.3',
     paths: {

@@ -4,11 +4,11 @@ require('../matchers');
 let linter;
 
 beforeAll(async () => {
-  linter = await linterForAepRule('0140', 'aep-140-uri-field-naming');
+  linter = await linterForAepRule('0140', 'aep-140-uri-property-naming');
   return linter;
 });
 
-test('aep-140-uri-field-naming should find warning', () => {
+test('aep-140-uri-property-naming should find warnings', () => {
   const oasDoc = {
     openapi: '3.0.3',
     paths: {
@@ -24,6 +24,9 @@ test('aep-140-uri-field-naming should find warning', () => {
                       url: {
                         type: 'string',
                       },
+                      extra_url: {
+                        type: 'string',
+                      },
                     },
                   },
                 },
@@ -35,7 +38,7 @@ test('aep-140-uri-field-naming should find warning', () => {
     },
   };
   return linter.run(oasDoc).then((results) => {
-    expect(results.length).toBe(1);
+    expect(results.length).toBe(2);
     expect(results).toContainMatch({
       path: [
         'paths',
@@ -49,12 +52,27 @@ test('aep-140-uri-field-naming should find warning', () => {
         'properties',
         'url',
       ],
-      message: 'Fields representing URLs or URIs should be named "uri" rather than "url".',
+      message: 'Properties representing URLs or URIs should be named "uri" rather than "url".',
+    });
+    expect(results).toContainMatch({
+      path: [
+        'paths',
+        '/test1',
+        'get',
+        'responses',
+        '200',
+        'content',
+        'application/json',
+        'schema',
+        'properties',
+        'extra_url',
+      ],
+      message: 'Properties representing URLs or URIs should be named "uri" rather than "url".',
     });
   });
 });
 
-test('aep-140-uri-field-naming should find no warnings', () => {
+test('aep-140-uri-property-naming should find no warnings', () => {
   const oasDoc = {
     openapi: '3.0.3',
     paths: {
