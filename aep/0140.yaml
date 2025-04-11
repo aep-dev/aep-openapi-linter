@@ -1,0 +1,17 @@
+rules:
+  aep-140-boolean-property-naming:
+    description: 'Boolean properties should omit the prefix "is".'
+    severity: warn
+    given: '$..[?(@.type == "boolean")]~'
+    then:
+      field: '@key'
+      function: pattern
+      functionOptions:
+        notMatch: '^[Ii][Ss]_?[A-Za-z0-9_-]*$'
+
+  aep-140-uri-property-naming:
+    description: 'Properties representing URLs or URIs should be named "uri" rather than "url".'
+    severity: warn
+    given: '$..[?(@.type == "string" && (@property.match(/url$/)))]~'
+    then:
+      function: falsy
