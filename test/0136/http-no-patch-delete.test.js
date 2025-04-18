@@ -14,6 +14,7 @@ test('aep-136-no-patch-delete should find warnings', () => {
     paths: {
       '/test1/{id}:archive': {
         patch: {},
+        'x-custom': true,
       },
       '/test2/{id}:restart': {
         delete: {},

@@ -33,21 +33,19 @@ rules:
       functionOptions:
         schema:
           not:
-            type: object
-            properties:
-              patch: {}
-              delete: {}
-            additionalProperties: false
+            anyOf:
+              - required: ['patch']
+              - required: ['delete']
 
-  aep-136-get-idempotency:
-    description: GET-based custom methods must be idempotent and have no request body.
+  aep-136-http-body:
+    description: GET-based custom methods must have no request body.
     severity: error
     formats: ['oas3']
     given: '#CustomOperation.get.requestBody'
     then:
       function: falsy
 
-  aep-136-custom-operation-id:
+  aep-136-operation-id:
     description: The operation ID should start with a colon and a capital letter.
     message: The operation ID does not conform to AEP-136
     severity: warn
