@@ -4,11 +4,11 @@ require('../matchers');
 let linter;
 
 beforeAll(async () => {
-  linter = await linterForAepRule('0144', 'aep-144-update-array-operation-id');
+  linter = await linterForAepRule('0144', 'aep-144-operation-id');
   return linter;
 });
 
-test('aep-144-update-array-operation-id should find errors', () => {
+test('aep-144-operation-id should find errors', () => {
   const oasDoc = {
     openapi: '3.0.3',
     paths: {
@@ -37,7 +37,7 @@ test('aep-144-update-array-operation-id should find errors', () => {
   });
 });
 
-test('aep-144-update-array-operation-id should find no errors', () => {
+test('aep-144-operation-id should find no errors', () => {
   const oasDoc = {
     openapi: '3.0.3',
     paths: {

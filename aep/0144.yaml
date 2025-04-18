@@ -1,5 +1,5 @@
 aliases:
-  UpdateArrayOperation:
+  AddRemovePathItem:
     description: An Update Array operation is a post request that updates an array with add or remove operation
     targets:
       - formats: ['oas2', 'oas3']
@@ -7,27 +7,33 @@ aliases:
           - $.paths[?(@property.match(/:(add|remove)([^/]*)$/))]
 
 rules:
-  aep-144-update-array-operation-id:
+  aep-144-operation-id:
     description: The operation ID must begin with the word add or remove.
     message: The operation ID does not conform to AEP-144.
     severity: error
     formats: ['oas2', 'oas3']
-    given: '#UpdateArrayOperation[*].operationId'
+    given: '#AddRemovePathItem[*].operationId'
     then:
       function: pattern
       functionOptions:
-        match: '^(add|remove)[A-Z].*$'
+        match: '^([Aa]dd|[Rr]remove)[A-Z].*$'
 
   aep-144-http-method:
     description: An Update Array operation must be POST.
     severity: error
     formats: ['oas2', 'oas3']
-    given: '#UpdateArrayOperation'
+    given: '#AddRemovePathItem'
     then:
       function: schema
       functionOptions:
         schema:
-          type: object
-          properties:
-            post: {}
-          additionalProperties: false
+          # trigger if any method is not POST
+          not:
+            anyOf:
+              - required: ['delete']
+              - required: ['get']
+              - required: ['head']
+              - required: ['options']
+              - required: ['patch']
+              - required: ['put']
+              - required: ['trace']
