@@ -4,11 +4,11 @@ require('../matchers');
 let linter;
 
 beforeAll(async () => {
-  linter = await linterForAepRule('0136', 'aep-136-custom-operation-id');
+  linter = await linterForAepRule('0136', 'aep-136-operation-id');
   return linter;
 });
 
-test('aep-136-custom-operation-id should find warnings', () => {
+test('aep-136-operation-id should find warnings', () => {
   const oasDoc = {
     openapi: '3.0.3',
     paths: {
@@ -28,7 +28,7 @@ test('aep-136-custom-operation-id should find warnings', () => {
   });
 });
 
-test('aep-136-custom-operation-id should find no warnings', () => {
+test('aep-136-operation-id should find no warnings', () => {
   const oasDoc = {
     openapi: '3.0.3',
     paths: {

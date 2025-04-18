@@ -4,11 +4,11 @@ require('../matchers');
 let linter;
 
 beforeAll(async () => {
-  linter = await linterForAepRule('0136', 'aep-136-get-idempotency');
+  linter = await linterForAepRule('0136', 'aep-136-http-body');
   return linter;
 });
 
-test('aep-136-get-idempotency should find errors', () => {
+test('aep-136-http-body should find errors', () => {
   const oasDoc = {
     openapi: '3.0.3',
     paths: {
@@ -31,12 +31,12 @@ test('aep-136-get-idempotency should find errors', () => {
     expect(results.length).toBe(1);
     expect(results).toContainMatch({
       path: ['paths', '/test1/{id}:custom', 'get', 'requestBody'],
-      message: 'GET-based custom methods must be idempotent and have no request body.',
+      message: 'GET-based custom methods must have no request body.',
     });
   });
 });
 
-test('aep-136-get-idempotency should find no errors', () => {
+test('aep-136-http-body should find no errors', () => {
   const oasDoc = {
     openapi: '3.0.3',
     paths: {

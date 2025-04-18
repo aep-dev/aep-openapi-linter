@@ -8,6 +8,14 @@ aliases:
           - $.paths[?(@property.match(/:(?!add|remove)([^/]*)$/))]
 
 rules:
+  aep-136-http-body:
+    description: GET-based custom methods must have no request body.
+    severity: error
+    formats: ['oas3']
+    given: '#CustomOperation.get.requestBody'
+    then:
+      function: falsy
+
   aep-136-http-method:
     description: Custom methods should use POST or GET.
     severity: warn
@@ -17,33 +25,15 @@ rules:
       function: schema
       functionOptions:
         schema:
-          type: object
-          properties:
-            post: {}
-            get: {}
-          additionalProperties: false
-
-  aep-136-no-patch-delete:
-    description: Custom methods should not use PATCH or DELETE.
-    severity: warn
-    formats: ['oas2', 'oas3']
-    given: '#CustomOperation'
-    then:
-      function: schema
-      functionOptions:
-        schema:
+          # trigger if any method is not POST or GET
           not:
             anyOf:
-              - required: ['patch']
               - required: ['delete']
-
-  aep-136-http-body:
-    description: GET-based custom methods must have no request body.
-    severity: error
-    formats: ['oas3']
-    given: '#CustomOperation.get.requestBody'
-    then:
-      function: falsy
+              - required: ['head']
+              - required: ['options']
+              - required: ['patch']
+              - required: ['put']
+              - required: ['trace']
 
   aep-136-operation-id:
     description: The operation ID should start with a colon and a capital letter.
