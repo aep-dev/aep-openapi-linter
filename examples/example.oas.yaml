@@ -126,6 +126,20 @@
                             },
                         },
                     },
+                  '404':
+                    {
+                      'description': 'Not Found',
+                      'content':
+                        {
+                          'application/json':
+                            {
+                              'schema':
+                                {
+                                  '$ref': '#/components/schemas/not-found-response',
+                                },
+                            },
+                        },
+                    },
                 },
             },
         },
@@ -975,6 +989,18 @@
                   'patterns': ['publishers/{publisher}'],
                 },
               'x-aep-field-numbers': { '1': 'description', '10018': 'path' },
+            },
+          'not-found-response':
+            {
+              'type': 'object',
+              'properties':
+                {
+                  'type': { 'type': 'string' },
+                  'status': { 'type': 'integer' },
+                  'title': { 'type': 'string' },
+                  'detail': { 'type': 'string' },
+                  'instance': { 'type': 'string' },
+                },
             },
         },
     },
