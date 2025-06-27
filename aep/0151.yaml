@@ -1,0 +1,137 @@
+aliases:
+  LongRunningOperation:
+    description: An operation that returns 202 Accepted for long-running operations
+    targets:
+      - formats: ['oas2', 'oas3']
+        given:
+          - $.paths[*].[post,put,patch,delete].responses.202
+
+functionsDir: ../functions
+functions:
+  - 202-only-success
+  - operations-endpoint
+
+rules:
+  aep-151-no-200-success:
+    description: Long-running operations must return 202 as the only success status code, not 200
+    message: '{{error}}'
+    severity: error
+    formats: ['oas2', 'oas3']
+    given:
+      - $.paths[*].[post,put,patch,delete].responses
+    then:
+      function: 202-only-success
+      functionOptions:
+        forbidden: '200'
+
+  aep-151-no-201-success:
+    description: Long-running operations must return 202 as the only success status code, not 201
+    message: '{{error}}'
+    severity: error
+    formats: ['oas2', 'oas3']
+    given:
+      - $.paths[*].[post,put,patch,delete].responses
+    then:
+      function: 202-only-success
+      functionOptions:
+        forbidden: '201'
+
+  aep-151-no-204-success:
+    description: Long-running operations must return 202 as the only success status code, not 204
+    message: '{{error}}'
+    severity: error
+    formats: ['oas2', 'oas3']
+    given:
+      - $.paths[*].[post,put,patch,delete].responses
+    then:
+      function: 202-only-success
+      functionOptions:
+        forbidden: '204'
+
+  aep-151-operation-schema:
+    description: 202 response must define an application/json response body with Operation schema
+    message: 202 response must define an application/json response body with Operation schema
+    severity: error
+    formats: ['oas3']
+    given:
+      - '#LongRunningOperation.content'
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          required: ['application/json']
+          properties:
+            'application/json':
+              type: object
+              required: ['schema']
+              properties:
+                schema:
+                  type: object
+                  required: ['type', 'properties']
+                  properties:
+                    type:
+                      enum: ['object']
+                    properties:
+                      type: object
+                      required: ['path', 'done', 'error', 'response']
+                      properties:
+                        path:
+                          type: object
+                        done:
+                          type: object
+                        error:
+                          type: object
+                        response:
+                          type: object
+
+  aep-151-operation-properties:
+    description: Operation schema must have correct property types
+    message: Operation schema properties must have correct types
+    severity: error
+    formats: ['oas3']
+    given:
+      - '#LongRunningOperation.content.application/json.schema.properties'
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          required: ['path', 'done', 'error', 'response']
+          properties:
+            path:
+              type: object
+              required: ['type']
+              properties:
+                type:
+                  enum: ['string']
+            done:
+              type: object
+              required: ['type']
+              properties:
+                type:
+                  enum: ['boolean']
+            error:
+              type: object
+            response:
+              type: object
+
+  aep-151-operations-endpoint:
+    description: Services with long-running operations must define an operations endpoint
+    message: '{{error}}'
+    severity: error
+    formats: ['oas2', 'oas3']
+    given: $.paths
+    then:
+      function: operations-endpoint
+
+  aep-151-202-content-required:
+    description: 202 response must define a content property
+    message: 202 response must define an application/json response body with Operation schema
+    severity: error
+    formats: ['oas3']
+    given:
+      - '#LongRunningOperation'
+    then:
+      field: content
+      function: truthy 
