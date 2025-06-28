@@ -10,7 +10,7 @@ function normalizePath(str) {
   if (!str) return '';
   // Remove leading/trailing whitespace, ensure leading slash, remove duplicate slashes
   let s = str.trim();
-  if (!s.startsWith('/')) s = '/' + s;
+  if (!s.startsWith('/')) s = `/${s}`;
   s = s.replace(/\/+/g, '/');
   return s;
 }
@@ -26,7 +26,7 @@ function getSingletonPatterns(oasDoc) {
   }
   const singletonPatterns = [];
   const { schemas } = oasDoc.components;
-  Object.values(schemas).forEach(schema => {
+  Object.values(schemas).forEach((schema) => {
     if (
       schema &&
       schema['x-aep-resource'] &&
@@ -49,11 +49,9 @@ function pathMatchesSingletonPattern(pathString, oasDoc) {
   if (!pathString) return false;
   const normalizedPath = normalizePath(pathString);
   const singletonPatterns = getSingletonPatterns(oasDoc);
-  return singletonPatterns.some(pattern => {
+  return singletonPatterns.some((pattern) => {
     const normalizedPattern = normalizePath(pattern);
-    const regexPattern = `^${normalizedPattern
-      .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-      .replace(/\{[^/]+\}/g, '[^/]+')}$`;
+    const regexPattern = `^${normalizedPattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\{[^/]+\}/g, '[^/]+')}$`;
     const regex = new RegExp(regexPattern);
     return regex.test(normalizedPath);
   });
@@ -69,7 +67,7 @@ function pathMatchesSingletonListPattern(pathString, oasDoc) {
   if (!pathString) return false;
   const normalizedPath = normalizePath(pathString);
   const singletonPatterns = getSingletonPatterns(oasDoc);
-  return singletonPatterns.some(pattern => {
+  return singletonPatterns.some((pattern) => {
     // Convert singleton pattern to list pattern: {parent}/{parent-id}/{singleton} -> {parent}/-/configs
     const listPattern = pattern.replace(/\/[^/]+$/, '/-/configs');
     const normalizedListPattern = normalizePath(listPattern);
@@ -85,5 +83,5 @@ module.exports = {
   getSingletonPatterns,
   pathMatchesSingletonPattern,
   pathMatchesSingletonListPattern,
-  normalizePath
-}; 
+  normalizePath,
+};

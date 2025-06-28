@@ -15,7 +15,7 @@ test('aep-151-202-content-required should find errors when content property is m
       '/test': {
         post: {
           responses: {
-            '202': {
+            202: {
               description: 'Accepted',
               // missing content
             },
@@ -27,9 +27,7 @@ test('aep-151-202-content-required should find errors when content property is m
   return linter.run(oasDoc).then((results) => {
     expect(results.length).toBe(1);
     expect(results).toContainMatch({
-      path: [
-        'paths', '/test', 'post', 'responses', '202'
-      ],
+      path: ['paths', '/test', 'post', 'responses', '202'],
       message: '202 response must define an application/json response body with Operation schema',
     });
   });
@@ -42,7 +40,7 @@ test('aep-151-202-content-required should find no errors when content property i
       '/test': {
         post: {
           responses: {
-            '202': {
+            202: {
               description: 'Accepted',
               content: {
                 'application/json': {
@@ -66,4 +64,4 @@ test('aep-151-202-content-required should find no errors when content property i
   return linter.run(oasDoc).then((results) => {
     expect(results.length).toBe(0);
   });
-}); 
+});

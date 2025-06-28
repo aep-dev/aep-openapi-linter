@@ -134,4 +134,4 @@ rules:
       - '#LongRunningOperation'
     then:
       field: content
-      function: truthy 
+      function: truthy

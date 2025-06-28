@@ -13,10 +13,12 @@ module.exports = (responses, opts, context) => {
     Object.prototype.hasOwnProperty.call(responses, '202') &&
     Object.prototype.hasOwnProperty.call(responses, forbidden)
   ) {
-    return [{
-      message: `Long-running operations must return 202 as the only success status code, not ${forbidden}`,
-      path: context.path.concat([forbidden]),
-    }];
+    return [
+      {
+        message: `Long-running operations must return 202 as the only success status code, not ${forbidden}`,
+        path: context.path.concat([forbidden]),
+      },
+    ];
   }
   return [];
-}; 
+};

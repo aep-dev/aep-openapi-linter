@@ -18,10 +18,10 @@ test('aep-151-202-only-success should find errors when other success codes are p
       '/test': {
         post: {
           responses: {
-            '200': {
+            200: {
               description: 'OK',
             },
-            '202': {
+            202: {
               description: 'Accepted',
             },
           },
@@ -30,10 +30,10 @@ test('aep-151-202-only-success should find errors when other success codes are p
       '/test2': {
         put: {
           responses: {
-            '201': {
+            201: {
               description: 'Created',
             },
-            '202': {
+            202: {
               description: 'Accepted',
             },
           },
@@ -42,10 +42,10 @@ test('aep-151-202-only-success should find errors when other success codes are p
       '/test3': {
         delete: {
           responses: {
-            '204': {
+            204: {
               description: 'No Content',
             },
-            '202': {
+            202: {
               description: 'Accepted',
             },
           },
@@ -53,11 +53,7 @@ test('aep-151-202-only-success should find errors when other success codes are p
       },
     },
   };
-  return Promise.all([
-    linter200.run(oasDoc),
-    linter201.run(oasDoc),
-    linter204.run(oasDoc),
-  ]).then((resultsArr) => {
+  return Promise.all([linter200.run(oasDoc), linter201.run(oasDoc), linter204.run(oasDoc)]).then((resultsArr) => {
     const results = resultsArr.flat();
     expect(results.length).toBe(3);
     expect(results).toContainMatch({
@@ -82,13 +78,13 @@ test('aep-151-202-only-success should find no errors when only 202 is present', 
       '/test': {
         post: {
           responses: {
-            '202': {
+            202: {
               description: 'Accepted',
             },
-            '400': {
+            400: {
               description: 'Bad Request',
             },
-            '500': {
+            500: {
               description: 'Internal Server Error',
             },
           },
@@ -97,7 +93,7 @@ test('aep-151-202-only-success should find no errors when only 202 is present', 
       '/test2': {
         put: {
           responses: {
-            '202': {
+            202: {
               description: 'Accepted',
             },
           },
@@ -105,11 +101,7 @@ test('aep-151-202-only-success should find no errors when only 202 is present', 
       },
     },
   };
-  return Promise.all([
-    linter200.run(oasDoc),
-    linter201.run(oasDoc),
-    linter204.run(oasDoc),
-  ]).then((resultsArr) => {
+  return Promise.all([linter200.run(oasDoc), linter201.run(oasDoc), linter204.run(oasDoc)]).then((resultsArr) => {
     const results = resultsArr.flat();
     expect(results.length).toBe(0);
   });
@@ -122,7 +114,7 @@ test('aep-151-202-only-success should find no errors when no 202 response is pre
       '/test': {
         post: {
           responses: {
-            '200': {
+            200: {
               description: 'OK',
             },
           },
@@ -131,7 +123,7 @@ test('aep-151-202-only-success should find no errors when no 202 response is pre
       '/test2': {
         get: {
           responses: {
-            '200': {
+            200: {
               description: 'OK',
             },
           },
@@ -139,11 +131,7 @@ test('aep-151-202-only-success should find no errors when no 202 response is pre
       },
     },
   };
-  return Promise.all([
-    linter200.run(oasDoc),
-    linter201.run(oasDoc),
-    linter204.run(oasDoc),
-  ]).then((resultsArr) => {
+  return Promise.all([linter200.run(oasDoc), linter201.run(oasDoc), linter204.run(oasDoc)]).then((resultsArr) => {
     const results = resultsArr.flat();
     expect(results.length).toBe(0);
   });
@@ -170,11 +158,7 @@ test('aep-151-202-only-success should handle falsy responses gracefully', () => 
       },
     },
   };
-  return Promise.all([
-    linter200.run(oasDoc),
-    linter201.run(oasDoc),
-    linter204.run(oasDoc),
-  ]).then((resultsArr) => {
+  return Promise.all([linter200.run(oasDoc), linter201.run(oasDoc), linter204.run(oasDoc)]).then((resultsArr) => {
     const results = resultsArr.flat();
     expect(results.length).toBe(0);
   });
@@ -201,12 +185,8 @@ test('aep-151-202-only-success should handle non-object responses gracefully', (
       },
     },
   };
-  return Promise.all([
-    linter200.run(oasDoc),
-    linter201.run(oasDoc),
-    linter204.run(oasDoc),
-  ]).then((resultsArr) => {
+  return Promise.all([linter200.run(oasDoc), linter201.run(oasDoc), linter204.run(oasDoc)]).then((resultsArr) => {
     const results = resultsArr.flat();
     expect(results.length).toBe(0);
   });
-}); 
+});

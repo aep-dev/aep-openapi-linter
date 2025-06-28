@@ -15,7 +15,7 @@ test('aep-151-operations-endpoint should find errors when operations endpoint is
       '/test': {
         post: {
           responses: {
-            '202': {
+            202: {
               description: 'Accepted',
             },
           },
@@ -40,7 +40,7 @@ test('aep-151-operations-endpoint should find errors when operations list endpoi
       '/test': {
         post: {
           responses: {
-            '202': {
+            202: {
               description: 'Accepted',
             },
           },
@@ -70,7 +70,7 @@ test('aep-151-operations-endpoint should find errors when operations get endpoin
       '/test': {
         post: {
           responses: {
-            '202': {
+            202: {
               description: 'Accepted',
             },
           },
@@ -100,7 +100,7 @@ test('aep-151-operations-endpoint should find no errors with valid operations en
       '/test': {
         post: {
           responses: {
-            '202': {
+            202: {
               description: 'Accepted',
             },
           },
@@ -130,7 +130,7 @@ test('aep-151-operations-endpoint should find no errors when no 202 response is 
       '/test': {
         post: {
           responses: {
-            '200': {
+            200: {
               description: 'OK',
             },
           },
@@ -142,4 +142,4 @@ test('aep-151-operations-endpoint should find no errors when no 202 response is 
   return linter.run(oasDoc).then((results) => {
     expect(results.length).toBe(0);
   });
-}); 
+});

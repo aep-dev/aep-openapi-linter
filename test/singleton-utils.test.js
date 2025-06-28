@@ -37,28 +37,25 @@ describe('singleton-utils', () => {
             Config: {
               'x-aep-resource': {
                 singleton: true,
-                patterns: ['/configs/{config-id}/config']
-              }
+                patterns: ['/configs/{config-id}/config'],
+              },
             },
             Settings: {
               'x-aep-resource': {
                 singleton: true,
-                patterns: ['/settings/{setting-id}/settings']
-              }
+                patterns: ['/settings/{setting-id}/settings'],
+              },
             },
             RegularSchema: {
               type: 'object',
-              properties: {}
-            }
-          }
-        }
+              properties: {},
+            },
+          },
+        },
       };
 
       const patterns = singletonUtils.getSingletonPatterns(oasDoc);
-      expect(patterns).toEqual([
-        '/configs/{config-id}/config',
-        '/settings/{setting-id}/settings'
-      ]);
+      expect(patterns).toEqual(['/configs/{config-id}/config', '/settings/{setting-id}/settings']);
     });
 
     test('should return empty array when no components', () => {
@@ -77,10 +74,10 @@ describe('singleton-utils', () => {
           schemas: {
             RegularSchema: {
               type: 'object',
-              properties: {}
-            }
-          }
-        }
+              properties: {},
+            },
+          },
+        },
       };
       expect(singletonUtils.getSingletonPatterns(oasDoc)).toEqual([]);
     });
@@ -90,9 +87,9 @@ describe('singleton-utils', () => {
         components: {
           schemas: {
             Schema1: { type: 'object' },
-            Schema2: { type: 'string' }
-          }
-        }
+            Schema2: { type: 'string' },
+          },
+        },
       };
       expect(singletonUtils.getSingletonPatterns(oasDoc)).toEqual([]);
     });
@@ -104,11 +101,11 @@ describe('singleton-utils', () => {
             Schema1: {
               'x-aep-resource': {
                 singleton: false,
-                patterns: ['/test/path']
-              }
-            }
-          }
-        }
+                patterns: ['/test/path'],
+              },
+            },
+          },
+        },
       };
       expect(singletonUtils.getSingletonPatterns(oasDoc)).toEqual([]);
     });
@@ -119,11 +116,11 @@ describe('singleton-utils', () => {
           schemas: {
             Schema1: {
               'x-aep-resource': {
-                singleton: true
-              }
-            }
-          }
-        }
+                singleton: true,
+              },
+            },
+          },
+        },
       };
       expect(singletonUtils.getSingletonPatterns(oasDoc)).toEqual([]);
     });
@@ -141,11 +138,11 @@ describe('singleton-utils', () => {
           Config: {
             'x-aep-resource': {
               singleton: true,
-              patterns: ['/configs/{config-id}/config']
-            }
-          }
-        }
-      }
+              patterns: ['/configs/{config-id}/config'],
+            },
+          },
+        },
+      },
     };
 
     test('should handle falsy path', () => {
@@ -166,11 +163,11 @@ describe('singleton-utils', () => {
             Config: {
               'x-aep-resource': {
                 singleton: true,
-                patterns: []
-              }
-            }
-          }
-        }
+                patterns: [],
+              },
+            },
+          },
+        },
       };
       expect(singletonUtils.pathMatchesSingletonPattern('/configs/123/config', emptyPatternsOasDoc)).toBe(false);
     });
@@ -188,11 +185,11 @@ describe('singleton-utils', () => {
           Config: {
             'x-aep-resource': {
               singleton: true,
-              patterns: ['/configs/{config-id}/config']
-            }
-          }
-        }
-      }
+              patterns: ['/configs/{config-id}/config'],
+            },
+          },
+        },
+      },
     };
 
     test('should handle falsy path', () => {
@@ -213,11 +210,11 @@ describe('singleton-utils', () => {
             Config: {
               'x-aep-resource': {
                 singleton: true,
-                patterns: []
-              }
-            }
-          }
-        }
+                patterns: [],
+              },
+            },
+          },
+        },
       };
       expect(singletonUtils.pathMatchesSingletonListPattern('/configs/123/-/configs', emptyPatternsOasDoc)).toBe(false);
     });
@@ -233,4 +230,4 @@ describe('singleton-utils', () => {
       expect(typeof result).toBe('boolean');
     });
   });
-}); 
+});

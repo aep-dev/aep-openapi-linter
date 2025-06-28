@@ -15,7 +15,7 @@ test('aep-151-operation-schema should find errors when required properties are m
       '/test': {
         post: {
           responses: {
-            '202': {
+            202: {
               description: 'Accepted',
               content: {
                 'application/json': {
@@ -42,9 +42,7 @@ test('aep-151-operation-schema should find errors when required properties are m
   return linter.run(oasDoc).then((results) => {
     expect(results.length).toBe(1);
     expect(results).toContainMatch({
-      path: [
-        'paths', '/test', 'post', 'responses', '202', 'content', 'application/json', 'schema', 'properties'
-      ],
+      path: ['paths', '/test', 'post', 'responses', '202', 'content', 'application/json', 'schema', 'properties'],
       message: '202 response must define an application/json response body with Operation schema',
     });
   });
@@ -57,7 +55,7 @@ test('aep-151-operation-schema should find no errors with valid Operation schema
       '/test': {
         post: {
           responses: {
-            '202': {
+            202: {
               description: 'Accepted',
               content: {
                 'application/json': {
@@ -98,7 +96,7 @@ test('aep-151-operation-schema should find no errors when no 202 response is pre
       '/test': {
         post: {
           responses: {
-            '200': {
+            200: {
               description: 'OK',
             },
           },
@@ -109,4 +107,4 @@ test('aep-151-operation-schema should find no errors when no 202 response is pre
   return linter.run(oasDoc).then((results) => {
     expect(results.length).toBe(0);
   });
-}); 
+});
