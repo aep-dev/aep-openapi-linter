@@ -8,45 +8,25 @@ aliases:
 
 functionsDir: ../functions
 functions:
-  - 202-only-success
   - operations-endpoint
 
 rules:
-  aep-151-no-200-success:
-    description: Long-running operations must return 202 as the only success status code, not 200
-    message: '{{error}}'
+  aep-151-202-only-success:
+    description: Long-running operations must return 202 as the only success status code
+    message: Long-running operations must return 202 as the only success status code
     severity: error
     formats: ['oas2', 'oas3']
     given:
       - '#LongRunningOperation.responses'
     then:
-      function: 202-only-success
+      function: schema
       functionOptions:
-        forbidden: '200'
-
-  aep-151-no-201-success:
-    description: Long-running operations must return 202 as the only success status code, not 201
-    message: '{{error}}'
-    severity: error
-    formats: ['oas2', 'oas3']
-    given:
-      - $.paths[*].[post,put,patch,delete].responses
-    then:
-      function: 202-only-success
-      functionOptions:
-        forbidden: '201'
-
-  aep-151-no-204-success:
-    description: Long-running operations must return 202 as the only success status code, not 204
-    message: '{{error}}'
-    severity: error
-    formats: ['oas2', 'oas3']
-    given:
-      - $.paths[*].[post,put,patch,delete].responses
-    then:
-      function: 202-only-success
-      functionOptions:
-        forbidden: '204'
+        schema:
+          not:
+            anyOf:
+              - required: ['200']
+              - required: ['201']
+              - required: ['204']
 
   aep-151-operation-schema:
     description: 202 response must define an application/json response body with Operation schema
