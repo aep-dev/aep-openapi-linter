@@ -1,7 +1,9 @@
 const { linterForAepRule } = require('../utils');
 require('../matchers');
 
-let linter200, linter201, linter204;
+let linter200;
+let linter201;
+let linter204;
 
 beforeAll(async () => {
   linter200 = await linterForAepRule('0151', 'aep-151-no-200-success');
@@ -133,6 +135,68 @@ test('aep-151-202-only-success should find no errors when no 202 response is pre
               description: 'OK',
             },
           },
+        },
+      },
+    },
+  };
+  return Promise.all([
+    linter200.run(oasDoc),
+    linter201.run(oasDoc),
+    linter204.run(oasDoc),
+  ]).then((resultsArr) => {
+    const results = resultsArr.flat();
+    expect(results.length).toBe(0);
+  });
+});
+
+test('aep-151-202-only-success should handle falsy responses gracefully', () => {
+  const oasDoc = {
+    openapi: '3.0.3',
+    paths: {
+      '/test': {
+        post: {
+          responses: null,
+        },
+      },
+      '/test2': {
+        put: {
+          responses: undefined,
+        },
+      },
+      '/test3': {
+        delete: {
+          responses: '',
+        },
+      },
+    },
+  };
+  return Promise.all([
+    linter200.run(oasDoc),
+    linter201.run(oasDoc),
+    linter204.run(oasDoc),
+  ]).then((resultsArr) => {
+    const results = resultsArr.flat();
+    expect(results.length).toBe(0);
+  });
+});
+
+test('aep-151-202-only-success should handle non-object responses gracefully', () => {
+  const oasDoc = {
+    openapi: '3.0.3',
+    paths: {
+      '/test': {
+        post: {
+          responses: 'not an object',
+        },
+      },
+      '/test2': {
+        put: {
+          responses: 123,
+        },
+      },
+      '/test3': {
+        delete: {
+          responses: [],
         },
       },
     },
