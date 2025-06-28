@@ -4,7 +4,7 @@ aliases:
     targets:
       - formats: ['oas2', 'oas3']
         given:
-          - $.paths[*].[post,put,patch,delete].responses.202
+          - $.paths[*].[post,put,patch,delete].responses.202^^
 
 functionsDir: ../functions
 functions:
@@ -18,7 +18,7 @@ rules:
     severity: error
     formats: ['oas2', 'oas3']
     given:
-      - $.paths[*].[post,put,patch,delete].responses
+      - '#LongRunningOperation.responses'
     then:
       function: 202-only-success
       functionOptions:
@@ -54,7 +54,7 @@ rules:
     severity: error
     formats: ['oas3']
     given:
-      - '#LongRunningOperation.content'
+      - '#LongRunningOperation.responses.202.content'
     then:
       function: schema
       functionOptions:
@@ -91,7 +91,7 @@ rules:
     severity: error
     formats: ['oas3']
     given:
-      - '#LongRunningOperation.content.application/json.schema.properties'
+      - '#LongRunningOperation.responses.202.content.application/json.schema.properties'
     then:
       function: schema
       functionOptions:
@@ -131,7 +131,7 @@ rules:
     severity: error
     formats: ['oas3']
     given:
-      - '#LongRunningOperation'
+      - '#LongRunningOperation.responses.202'
     then:
       field: content
       function: truthy
