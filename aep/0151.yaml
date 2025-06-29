@@ -28,73 +28,61 @@ rules:
               - required: ['201']
               - required: ['204']
 
-  aep-151-operation-schema:
-    description: 202 response must define an application/json response body with Operation schema
-    message: 202 response must define an application/json response body with Operation schema
+  aep-151-202-schema-required:
+    description: A 202 response must define an application/json response body with Operation schema
     severity: error
     formats: ['oas3']
     given:
-      - '#LongRunningOperation.responses.202.content'
+      - '#LongRunningOperation.responses.202'
     then:
       function: schema
       functionOptions:
         schema:
           type: object
-          required: ['application/json']
+          required: ['content']
           properties:
-            'application/json':
+            content:
               type: object
-              required: ['schema']
+              required: ['application/json']
               properties:
-                schema:
+                'application/json':
                   type: object
-                  required: ['type', 'properties']
+                  required: ['schema']
+
+  aep-151-operation-schema:
+    description: Operation schema must have correct property types
+    message: Operation schema must have correct property types
+    severity: error
+    formats: ['oas3']
+    given:
+      - '#LongRunningOperation.responses.202.content.application/json.schema'
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          required: ['properties']
+          properties:
+            properties:
+              type: object
+              required: ['path', 'done', 'error', 'response']
+              properties:
+                path:
+                  type: object
+                  required: ['type']
                   properties:
                     type:
-                      enum: ['object']
-                    properties:
-                      type: object
-                      required: ['path', 'done', 'error', 'response']
-                      properties:
-                        path:
-                          type: object
-                        done:
-                          type: object
-                        error:
-                          type: object
-                        response:
-                          type: object
-
-  aep-151-operation-properties:
-    description: Operation schema must have correct property types
-    message: Operation schema properties must have correct types
-    severity: error
-    formats: ['oas3']
-    given:
-      - '#LongRunningOperation.responses.202.content.application/json.schema.properties'
-    then:
-      function: schema
-      functionOptions:
-        schema:
-          type: object
-          required: ['path', 'done', 'error', 'response']
-          properties:
-            path:
-              type: object
-              required: ['type']
-              properties:
-                type:
-                  enum: ['string']
-            done:
-              type: object
-              required: ['type']
-              properties:
-                type:
-                  enum: ['boolean']
-            error:
-              type: object
-            response:
-              type: object
+                      enum: ['string']
+                done:
+                  type: object
+                  required: ['type']
+                  properties:
+                    type:
+                      enum: ['boolean']
+                error:
+                  type: object
+                response:
+                  type: object
 
   aep-151-operations-endpoint:
     description: Services with long-running operations must define an operations endpoint
@@ -104,14 +92,3 @@ rules:
     given: $.paths
     then:
       function: operations-endpoint
-
-  aep-151-202-content-required:
-    description: 202 response must define a content property
-    message: 202 response must define an application/json response body with Operation schema
-    severity: error
-    formats: ['oas3']
-    given:
-      - '#LongRunningOperation.responses.202'
-    then:
-      field: content
-      function: truthy

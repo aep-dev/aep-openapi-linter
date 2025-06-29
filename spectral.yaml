@@ -15,7 +15,6 @@ functionsDir: './functions'
 functions:
   - parameter-names-unique
   - operations-endpoint
-  - 202-only-success
 rules:
   openapi-tags: off
   operation-tags: off

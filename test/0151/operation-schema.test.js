@@ -8,7 +8,64 @@ beforeAll(async () => {
   return linter;
 });
 
-test('aep-151-operation-schema should find errors when required properties are missing', () => {
+test('aep-151-operation-schema should find errors when path property has wrong type', () => {
+  const oasDoc = {
+    openapi: '3.0.3',
+    paths: {
+      '/test': {
+        post: {
+          responses: {
+            202: {
+              description: 'Accepted',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      path: {
+                        type: 'boolean', // wrong type
+                      },
+                      done: {
+                        type: 'boolean',
+                      },
+                      error: {
+                        type: 'object',
+                      },
+                      response: {
+                        type: 'object',
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+  return linter.run(oasDoc).then((results) => {
+    expect(results.length).toBe(1);
+    expect(results).toContainMatch({
+      path: [
+        'paths',
+        '/test',
+        'post',
+        'responses',
+        '202',
+        'content',
+        'application/json',
+        'schema',
+        'properties',
+        'path',
+        'type',
+      ],
+      message: 'Operation schema must have correct property types',
+    });
+  });
+});
+
+test('aep-151-operation-schema should find errors when done property has wrong type', () => {
   const oasDoc = {
     openapi: '3.0.3',
     paths: {
@@ -26,9 +83,14 @@ test('aep-151-operation-schema should find errors when required properties are m
                         type: 'string',
                       },
                       done: {
-                        type: 'boolean',
+                        type: 'string', // wrong type
                       },
-                      // missing error and response properties
+                      error: {
+                        type: 'object',
+                      },
+                      response: {
+                        type: 'object',
+                      },
                     },
                   },
                 },
@@ -42,8 +104,20 @@ test('aep-151-operation-schema should find errors when required properties are m
   return linter.run(oasDoc).then((results) => {
     expect(results.length).toBe(1);
     expect(results).toContainMatch({
-      path: ['paths', '/test', 'post', 'responses', '202', 'content', 'application/json', 'schema', 'properties'],
-      message: '202 response must define an application/json response body with Operation schema',
+      path: [
+        'paths',
+        '/test',
+        'post',
+        'responses',
+        '202',
+        'content',
+        'application/json',
+        'schema',
+        'properties',
+        'done',
+        'type',
+      ],
+      message: 'Operation schema must have correct property types',
     });
   });
 });

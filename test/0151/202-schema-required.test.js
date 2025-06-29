@@ -4,11 +4,11 @@ require('../matchers');
 let linter;
 
 beforeAll(async () => {
-  linter = await linterForAepRule('0151', 'aep-151-202-content-required');
+  linter = await linterForAepRule('0151', 'aep-151-202-schema-required');
   return linter;
 });
 
-test('aep-151-202-content-required should find errors when content property is missing', () => {
+test('aep-151-202-schema-required should find errors when schema is missing', () => {
   const oasDoc = {
     openapi: '3.0.3',
     paths: {
@@ -22,18 +22,36 @@ test('aep-151-202-content-required should find errors when content property is m
           },
         },
       },
+      '/test2': {
+        post: {
+          responses: {
+            202: {
+              description: 'Accepted',
+              content: {
+                'application/json': {
+                  // missing schema
+                },
+              },
+            },
+          },
+        },
+      },
     },
   };
   return linter.run(oasDoc).then((results) => {
-    expect(results.length).toBe(1);
+    expect(results.length).toBe(2);
     expect(results).toContainMatch({
       path: ['paths', '/test', 'post', 'responses', '202'],
-      message: '202 response must define an application/json response body with Operation schema',
+      message: 'A 202 response must define an application/json response body with Operation schema',
+    });
+    expect(results).toContainMatch({
+      path: ['paths', '/test2', 'post', 'responses', '202', 'content', 'application/json'],
+      message: 'A 202 response must define an application/json response body with Operation schema',
     });
   });
 });
 
-test('aep-151-202-content-required should find no errors when content property is present', () => {
+test('aep-151-202-schema-required should find no errors when schema is present', () => {
   const oasDoc = {
     openapi: '3.0.3',
     paths: {
