@@ -1,5 +1,5 @@
 aliases:
-  LongRunningOperation:
+  AcceptedResponse:
     description: An operation that returns 202 Accepted for long-running operations
     targets:
       - formats: ['oas2', 'oas3']
@@ -17,7 +17,7 @@ rules:
     severity: error
     formats: ['oas2', 'oas3']
     given:
-      - '#LongRunningOperation.responses'
+      - '#AcceptedResponse.responses'
     then:
       function: schema
       functionOptions:
@@ -33,7 +33,7 @@ rules:
     severity: error
     formats: ['oas3']
     given:
-      - '#LongRunningOperation.responses.202'
+      - '#AcceptedResponse.responses.202'
     then:
       function: schema
       functionOptions:
@@ -55,7 +55,7 @@ rules:
     severity: error
     formats: ['oas3']
     given:
-      - '#LongRunningOperation.responses.202.content.application/json.schema'
+      - '#AcceptedResponse.responses.202.content.application/json.schema'
     then:
       function: schema
       functionOptions:
