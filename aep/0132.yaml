@@ -2,10 +2,15 @@ aliases:
   ListOperation:
     description: A list operation is a get on path that does not end in a path parameter
     targets:
-      - formats: ['oas2', 'oas3']
+      - formats: ['oas3']
         given:
-          # first condition excludes custom methods and second condition excludes paths ending in a path parameter
-          - $.paths[?(!@property.match(/:[^/]*$/) && !@property.match(/\}$/))].get
+          # the condition on paths excludes custom methods and paths ending in a path parameter
+          # this item selects get operations with no responses -- this is mostly just to simplify tests
+          - $.paths[?(!@property.match(/:[^/]*$/) && !@property.match(/\}$/))].[?(@property == 'get' && @.responses == undefined)]
+          # this item selects get operations with a 200 response but no content -- also mostly to satisfy tests
+          - $.paths[?(!@property.match(/:[^/]*$/) && !@property.match(/\}$/))].get.responses[?(@property == '200' && @.content == undefined)]^^
+          # this item selects get operations with responses that are not singleton resources
+          - $.paths[?(!@property.match(/:[^/]*$/) && !@property.match(/\}$/))].get.responses.200.content.*.[?(@property == 'schema' && @['x-aep-resource'] == undefined)]^^^^^^
 
 rules:
   aep-132-http-body:
