@@ -7,6 +7,10 @@ aliases:
           # first condition excludes custom methods and second condition excludes paths ending in a path parameter
           - $.paths[?(!@property.match(/:[^/]*$/) && !@property.match(/\}$/))].get
 
+functionsDir: ../functions
+functions:
+  - skipSingletonsSchema
+
 rules:
   aep-158-max-page-size-parameter:
     description: Operations that return collections should define an integer max_page_size parameter.
@@ -15,7 +19,7 @@ rules:
     given:
       - '#ListOperation'
     then:
-      function: schema
+      function: skipSingletonsSchema
       functionOptions:
         schema:
           type: object
@@ -43,7 +47,7 @@ rules:
     given:
       - '#ListOperation'
     then:
-      function: schema
+      function: skipSingletonsSchema
       functionOptions:
         schema:
           type: object
@@ -85,41 +89,49 @@ rules:
     severity: error
     formats: ['oas3']
     given:
-      - '#ListOperation.responses.200.content.application/json.schema.properties'
+      - '#ListOperation.responses.200.content.application/json.schema'
     then:
       function: schema
       functionOptions:
         schema:
-          # You can use this pattern to get an object contains constraint
           type: object
-          not:
-            additionalProperties:
+          required: ['properties']
+          properties:
+            properties:
+              # You can use this pattern to get an object contains constraint
+              type: object
               not:
-                type: object
-                required: ['type']
-                properties:
-                  type:
-                    enum: ['array']
+                additionalProperties:
+                  not:
+                    type: object
+                    required: ['type']
+                    properties:
+                      type:
+                        enum: ['array']
 
   aep-158-response-next-page-token-property:
     description: The response schema must include a string next_page_token property.
     severity: error
     formats: ['oas3']
     given:
-      - '#ListOperation.responses.200.content.application/json.schema.properties'
+      - '#ListOperation.responses.200.content.application/json.schema'
     then:
       function: schema
       functionOptions:
         schema:
           type: object
-          required: ['next_page_token']
+          required: ['properties']
           properties:
-            next_page_token:
+            properties:
               type: object
-              required: ['type']
+              required: ['next_page_token']
               properties:
-                type:
-                  enum: ['string']
+                next_page_token:
+                  type: object
+                  required: ['type']
+                  properties:
+                    type:
+                      enum: ['string']
 
   aep-158-skip-parameter:
     description: Operations that return collections may define an integer skip parameter.
