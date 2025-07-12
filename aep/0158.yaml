@@ -95,19 +95,29 @@ rules:
       functionOptions:
         schema:
           type: object
-          required: ['properties']
-          properties:
-            properties:
-              # You can use this pattern to get an object contains constraint
-              type: object
-              not:
-                additionalProperties:
+          anyOf:
+            - required: ['properties']
+              properties:
+                properties:
+                  # You can use this pattern to get an object contains constraint
+                  type: object
                   not:
-                    type: object
-                    required: ['type']
-                    properties:
-                      type:
-                        enum: ['array']
+                    additionalProperties:
+                      not:
+                        type: object
+                        required: ['type']
+                        properties:
+                          type:
+                            enum: ['array']
+            - # Ignore for singleton resources
+              required: ['x-aep-resource']
+              properties:
+                'x-aep-resource':
+                  type: object
+                  required: ['singleton']
+                  properties:
+                    'singleton':
+                      enum: [true]
 
   aep-158-response-next-page-token-property:
     description: The response schema must include a string next_page_token property.
@@ -120,18 +130,28 @@ rules:
       functionOptions:
         schema:
           type: object
-          required: ['properties']
-          properties:
-            properties:
-              type: object
-              required: ['next_page_token']
+          anyOf:
+            - required: ['properties']
               properties:
-                next_page_token:
+                properties:
                   type: object
-                  required: ['type']
+                  required: ['next_page_token']
                   properties:
-                    type:
-                      enum: ['string']
+                    next_page_token:
+                      type: object
+                      required: ['type']
+                      properties:
+                        type:
+                          enum: ['string']
+            - # Ignore for singleton resources
+              required: ['x-aep-resource']
+              properties:
+                'x-aep-resource':
+                  type: object
+                  required: ['singleton']
+                  properties:
+                    'singleton':
+                      enum: [true]
 
   aep-158-skip-parameter:
     description: Operations that return collections may define an integer skip parameter.
