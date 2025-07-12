@@ -62,7 +62,7 @@ test('aep-132-operation-id should find errors', () => {
       message: 'The operation ID does not conform to AEP-132',
     });
     expect(results).toContainMatch({
-      path: ['paths', '/test3'], // sadly the path is not more specific
+      path: ['paths', '/test3', 'get', 'operationId'],
       message: 'The operation ID does not conform to AEP-132',
     });
   });
