@@ -122,3 +122,39 @@ test('aep-158-response-next-page-token-property should find no errors', () => {
     expect(results.length).toBe(0);
   });
 });
+
+test('aep-158-response-next-page-token-property should not find errors for operation on singleton resource', () => {
+  const oasDoc = {
+    openapi: '3.0.3',
+    paths: {
+      '/test1': {
+        get: {
+          operationId: 'getTest',
+          responses: {
+            200: {
+              description: 'Ok',
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      id: {
+                        type: 'string',
+                      },
+                    },
+                    'x-aep-resource': {
+                      singleton: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+  return linter.run(oasDoc).then((results) => {
+    expect(results.length).toBe(0);
+  });
+});
