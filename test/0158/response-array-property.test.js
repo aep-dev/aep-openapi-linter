@@ -14,6 +14,22 @@ test('aep-158-response-array-property should find errors', () => {
     paths: {
       '/test1': {
         get: {
+          description: 'response does not have properties',
+          responses: {
+            200: {
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'string',
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      '/test2': {
+        get: {
           description: 'response does not have an array property',
           responses: {
             200: {
@@ -39,10 +55,14 @@ test('aep-158-response-array-property should find errors', () => {
     },
   };
   return linter.run(oasDoc).then((results) => {
-    expect(results.length).toBe(1);
+    expect(results.length).toBe(2);
     const message = 'The response schema must include an array property.';
     expect(results).toContainMatch({
-      path: ['paths', '/test1', 'get', 'responses', '200', 'content', 'application/json', 'schema', 'properties'],
+      path: ['paths', '/test1', 'get', 'responses', '200', 'content', 'application/json', 'schema'],
+      message,
+    });
+    expect(results).toContainMatch({
+      path: ['paths', '/test2', 'get', 'responses', '200', 'content', 'application/json', 'schema', 'properties'],
       message,
     });
   });

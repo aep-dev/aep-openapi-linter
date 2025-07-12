@@ -14,6 +14,22 @@ test('aep-158-response-next-page-token-property should find errors', () => {
     paths: {
       '/test1': {
         get: {
+          description: 'response does not have properties',
+          responses: {
+            200: {
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'string',
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      '/test2': {
+        get: {
           description: 'response does not have next_page_token property',
           responses: {
             200: {
@@ -33,7 +49,7 @@ test('aep-158-response-next-page-token-property should find errors', () => {
           },
         },
       },
-      '/test2': {
+      '/test3': {
         get: {
           description: 'next_page_token in response is not type: string',
           responses: {
@@ -60,16 +76,20 @@ test('aep-158-response-next-page-token-property should find errors', () => {
     },
   };
   return linter.run(oasDoc).then((results) => {
-    expect(results.length).toBe(2);
+    expect(results.length).toBe(3);
     const message = 'The response schema must include a string next_page_token property.';
     expect(results).toContainMatch({
-      path: ['paths', '/test1', 'get', 'responses', '200', 'content', 'application/json', 'schema', 'properties'],
+      path: ['paths', '/test1', 'get', 'responses', '200', 'content', 'application/json', 'schema'],
+      message,
+    });
+    expect(results).toContainMatch({
+      path: ['paths', '/test2', 'get', 'responses', '200', 'content', 'application/json', 'schema', 'properties'],
       message,
     });
     expect(results).toContainMatch({
       path: [
         'paths',
-        '/test2',
+        '/test3',
         'get',
         'responses',
         '200',
