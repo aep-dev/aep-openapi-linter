@@ -7,6 +7,10 @@ aliases:
           # first condition excludes custom methods and second condition excludes paths ending in a path parameter
           - $.paths[?(!@property.match(/:[^/]*$/) && !@property.match(/\}$/))].get
 
+functionsDir: ../functions
+functions:
+  - skipSingletonsSchema
+
 rules:
   aep-132-http-body:
     description: A list operation must not accept a request body.
@@ -24,7 +28,7 @@ rules:
     formats: ['oas2', 'oas3']
     given: '#ListOperation'
     then:
-      function: schema
+      function: skipSingletonsSchema
       functionOptions:
         schema:
           type: object
