@@ -25,5 +25,16 @@ module.exports = (paths, _opts, context) => {
     return [];
   }
 
+  // Check for required operations endpoints
+  const hasOperationsList = paths['/v1/operations'] && paths['/v1/operations'].get;
+  const hasOperationsGet = paths['/v1/operations/{operation}'] && paths['/v1/operations/{operation}'].get;
+
+  if (!hasOperationsList || !hasOperationsGet) {
+    errors.push({
+      message: 'Services with long-running operations must define an operations endpoint with list and get operations',
+      path: context.path || ['paths'],
+    });
+  }
+
   return errors;
 };
