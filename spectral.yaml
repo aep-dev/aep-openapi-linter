@@ -6,12 +6,15 @@ extends:
   - ./aep/0134.yaml
   - ./aep/0135.yaml
   - ./aep/0136.yaml
+  - ./aep/0137.yaml
   - ./aep/0140.yaml
   - ./aep/0144.yaml
+  - ./aep/0151.yaml
   - ./aep/0158.yaml
 functionsDir: './functions'
 functions:
   - parameter-names-unique
+  - operations-endpoint
 rules:
   openapi-tags: off
   operation-tags: off
