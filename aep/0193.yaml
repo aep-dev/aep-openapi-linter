@@ -14,10 +14,12 @@ rules:
           properties:
             type:
               type: object
-              required: ['type']
+              required: ['type', 'format']
               properties:
                 type:
                   enum: ['string']
+                format:
+                  enum: ['uri-reference']
             title:
               type: object
               required: ['type']
@@ -30,6 +32,12 @@ rules:
               properties:
                 type:
                   enum: ['integer']
+                minimum:
+                  type: integer
+                  minimum: 100
+                maximum:
+                  type: integer
+                  maximum: 599
             detail:
               type: object
               required: ['type']
@@ -38,7 +46,9 @@ rules:
                   enum: ['string']
             instance:
               type: object
-              required: ['type']
+              required: ['type', 'format']
               properties:
                 type:
                   enum: ['string']
+                format:
+                  enum: ['uri-reference']

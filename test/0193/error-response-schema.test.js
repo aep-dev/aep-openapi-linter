@@ -76,14 +76,51 @@ test('aep-193-error-response-schema should find warnings', () => {
                       },
                       type: {
                         type: 'string',
+                        format: 'uri-reference',
                       },
                       detail: {
                         type: 'integer',
                       },
                       instance: {
                         type: 'string',
+                        format: 'uri-reference',
                       },
                       title: {
+                        type: 'string',
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      '/test3/{id}': {
+        get: {
+          description: 'type property does not have format: uri-reference',
+          responses: {
+            200: {
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      results: {
+                        type: 'array',
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            404: {
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    properties: {
+                      type: {
                         type: 'string',
                       },
                     },
@@ -97,7 +134,7 @@ test('aep-193-error-response-schema should find warnings', () => {
     },
   };
   return linter.run(oasDoc).then((results) => {
-    expect(results.length).toBe(2);
+    expect(results.length).toBe(3);
     expect(results).toContainMatch({
       path: ['paths', '/test1/{id}', 'get', 'responses', '404', 'content', 'application/json', 'schema', 'properties'],
       message: '"properties" property must have required property "type"',
@@ -117,6 +154,21 @@ test('aep-193-error-response-schema should find warnings', () => {
         'type',
       ],
       message: '"type" property must be equal to one of the allowed values: "string". Did you mean "string"?',
+    });
+    expect(results).toContainMatch({
+      path: [
+        'paths',
+        '/test3/{id}',
+        'get',
+        'responses',
+        '404',
+        'content',
+        'application/json',
+        'schema',
+        'properties',
+        'type',
+      ],
+      message: '"type" property must have required property "format"',
     });
   });
 });
@@ -153,12 +205,14 @@ test('aep-193-error-response-schema should find no warnings', () => {
                       },
                       type: {
                         type: 'string',
+                        format: 'uri-reference',
                       },
                       detail: {
                         type: 'string',
                       },
                       instance: {
                         type: 'string',
+                        format: 'uri-reference',
                       },
                       title: {
                         type: 'string',
