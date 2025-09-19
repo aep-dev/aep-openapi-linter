@@ -1,0 +1,54 @@
+rules:
+  aep-193-error-response-schema:
+    description: Error response body should contain all required fields according to AEP-193.
+    message: '{{error}}'
+    severity: warn
+    formats: ['oas2', 'oas3']
+    given: $.paths[*][*].responses[?(@property >= 400)].content[*].schema.properties
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          required: ['type']
+          properties:
+            type:
+              type: object
+              required: ['type', 'format']
+              properties:
+                type:
+                  enum: ['string']
+                format:
+                  enum: ['uri-reference']
+            title:
+              type: object
+              required: ['type']
+              properties:
+                type:
+                  enum: ['string']
+            status:
+              type: object
+              required: ['type']
+              properties:
+                type:
+                  enum: ['integer']
+                minimum:
+                  type: integer
+                  minimum: 100
+                maximum:
+                  type: integer
+                  maximum: 599
+            detail:
+              type: object
+              required: ['type']
+              properties:
+                type:
+                  enum: ['string']
+            instance:
+              type: object
+              required: ['type', 'format']
+              properties:
+                type:
+                  enum: ['string']
+                format:
+                  enum: ['uri-reference']
