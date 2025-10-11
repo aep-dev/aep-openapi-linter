@@ -1,21 +1,16 @@
+functionsDir: ../functions
+functions:
+  - aep-142-time-field-type
+
 rules:
   aep-142-time-field-type:
-    description: 'Fields representing timestamps should use string type with date-time format.'
-    message: 'Timestamp field should have type "string" and format "date-time".'
+    description: 'Fields with time-related suffixes should use appropriate types and formats.'
+    message: '{{error}}'
     severity: warn
     formats: ['oas2', 'oas3']
-    given: '$..[?(@property.match(/_time$/))]'
+    given: '$..[?(@property.match(/_(time|times|date|seconds|millis|micros|nanos)$/))]'
     then:
-      function: schema
-      functionOptions:
-        schema:
-          type: object
-          properties:
-            type:
-              const: string
-            format:
-              const: date-time
-          required: ['type', 'format']
+      function: aep-142-time-field-type
 
   aep-142-time-field-names:
     description: 'Timestamp fields should use imperative mood with _time suffix, not past tense.'
@@ -27,4 +22,16 @@ rules:
       field: '@key'
       function: pattern
       functionOptions:
-        notMatch: '^(created|updated|modified|deleted|published|started|ended|completed)$'
+        notMatch: '(created|creation|updated|modified|expired|purged|deleted|published|started|ended|completed)'
+
+  aep-142-time-field-suffix:
+    description: 'Timestamp fields must end in _time suffix.'
+    message: 'Timestamp field "{{property}}" should end with "_time" suffix.'
+    severity: warn
+    formats: ['oas2', 'oas3']
+    given: '$..[?(@.type == "string" && @.format == "date-time")]~'
+    then:
+      field: '@key'
+      function: pattern
+      functionOptions:
+        match: '_time$'

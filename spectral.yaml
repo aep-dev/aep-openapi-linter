@@ -15,6 +15,7 @@ extends:
   - ./aep/0193.yaml
 functionsDir: './functions'
 functions:
+  - aep-142-time-field-type
   - parameter-names-unique
   - operations-endpoint
 rules:
