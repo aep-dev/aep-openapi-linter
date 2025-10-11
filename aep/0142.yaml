@@ -1,0 +1,30 @@
+rules:
+  aep-142-time-field-type:
+    description: 'Fields representing timestamps should use string type with date-time format.'
+    message: 'Timestamp field should have type "string" and format "date-time".'
+    severity: warn
+    formats: ['oas2', 'oas3']
+    given: '$..[?(@property.match(/_time$/))]'
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          properties:
+            type:
+              const: string
+            format:
+              const: date-time
+          required: ['type', 'format']
+
+  aep-142-time-field-names:
+    description: 'Timestamp fields should use imperative mood with _time suffix, not past tense.'
+    message: 'Use imperative mood with "_time" suffix (e.g., "{{property}}_time") instead of past tense.'
+    severity: warn
+    formats: ['oas2', 'oas3']
+    given: '$..[?(@.type == "string" && @.format == "date-time")]~'
+    then:
+      field: '@key'
+      function: pattern
+      functionOptions:
+        notMatch: '^(created|updated|modified|deleted|published|started|ended|completed)$'
