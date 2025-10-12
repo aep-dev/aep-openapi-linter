@@ -71,7 +71,7 @@ test('aep-0004-x-aep-resource-structure should find errors for invalid field for
         Publisher: {
           type: 'object',
           'x-aep-resource': {
-            type: 'library.example.com/publisher', // type name should be UpperCamelCase
+            type: 'library.example.com/Publisher', // should be lowercase
             singular: 'publisher',
             plural: 'publishers',
           },
@@ -79,7 +79,7 @@ test('aep-0004-x-aep-resource-structure should find errors for invalid field for
         Author: {
           type: 'object',
           'x-aep-resource': {
-            type: 'library.example.com/Author',
+            type: 'library.example.com/Author', // should be lowercase
             singular: 'Author', // should be kebab-case lowercase
             plural: 'authors',
           },
@@ -96,6 +96,8 @@ test('aep-0004-x-aep-resource-structure should find errors for invalid field for
     },
   };
   return linter.run(oasDoc).then((results) => {
+    // Note: schema validation stops at first error per object
+    // So we get 4 type errors, but not additional field errors
     expect(results.length).toBe(4);
     expect(results).toContainMatch({
       path: ['components', 'schemas', 'Book', 'x-aep-resource', 'type'],
@@ -104,10 +106,10 @@ test('aep-0004-x-aep-resource-structure should find errors for invalid field for
       path: ['components', 'schemas', 'Publisher', 'x-aep-resource', 'type'],
     });
     expect(results).toContainMatch({
-      path: ['components', 'schemas', 'Author', 'x-aep-resource', 'singular'],
+      path: ['components', 'schemas', 'Author', 'x-aep-resource', 'type'],
     });
     expect(results).toContainMatch({
-      path: ['components', 'schemas', 'Magazine', 'x-aep-resource', 'plural'],
+      path: ['components', 'schemas', 'Magazine', 'x-aep-resource', 'type'],
     });
   });
 });
@@ -120,7 +122,7 @@ test('aep-0004-x-aep-resource-structure should find no errors for valid minimal 
         Book: {
           type: 'object',
           'x-aep-resource': {
-            type: 'library.example.com/Book',
+            type: 'library.example.com/book',
             singular: 'book',
             plural: 'books',
           },
@@ -141,7 +143,7 @@ test('aep-0004-x-aep-resource-structure should find no errors for valid complete
         Book: {
           type: 'object',
           'x-aep-resource': {
-            type: 'library.example.com/Book',
+            type: 'library.example.com/book',
             singular: 'book',
             plural: 'books',
             patterns: ['publishers/{publisher_id}/books/{book_id}'],
@@ -151,7 +153,7 @@ test('aep-0004-x-aep-resource-structure should find no errors for valid complete
         Publisher: {
           type: 'object',
           'x-aep-resource': {
-            type: 'library.example.com/Publisher',
+            type: 'library.example.com/publisher',
             singular: 'publisher',
             plural: 'publishers',
             patterns: ['publishers/{publisher_id}'],
@@ -160,7 +162,7 @@ test('aep-0004-x-aep-resource-structure should find no errors for valid complete
         Library: {
           type: 'object',
           'x-aep-resource': {
-            type: 'library.example.com/Library',
+            type: 'library.example.com/library',
             singular: 'library',
             plural: 'libraries',
             patterns: ['library'],
@@ -183,7 +185,7 @@ test('aep-0004-x-aep-resource-structure should allow kebab-case in type names', 
         BookEdition: {
           type: 'object',
           'x-aep-resource': {
-            type: 'library.example.com/BookEdition',
+            type: 'library.example.com/book-edition',
             singular: 'book-edition',
             plural: 'book-editions',
           },

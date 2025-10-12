@@ -15,7 +15,7 @@ rules:
           properties:
             type:
               type: string
-              pattern: '^[a-z0-9][a-z0-9.-]*[a-z0-9]/[A-Z][a-zA-Z0-9]*$'
+              pattern: '^[a-z0-9][a-z0-9.-]*[a-z0-9]/[a-z][a-z0-9-]*$'
             singular:
               type: string
               pattern: '^[a-z][a-z0-9-]*$'

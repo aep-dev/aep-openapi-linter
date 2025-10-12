@@ -62,7 +62,7 @@ test('aep-0004-x-aep-resource-structure should validate mixed scenarios', () => 
         Book: {
           type: 'object',
           'x-aep-resource': {
-            type: 'library.example.com/Book',
+            type: 'library.example.com/book',
             singular: 'book',
             plural: 'books',
           },
