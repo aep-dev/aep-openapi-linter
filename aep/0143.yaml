@@ -1,0 +1,23 @@
+functionsDir: ../functions
+functions:
+  - standardized-codes
+  - standardized-codes-string-type
+
+rules:
+  aep-143-standardized-codes:
+    description: Field names for standardized codes must follow AEP-143 conventions.
+    message: '{{error}}'
+    severity: error
+    formats: ['oas2', 'oas3']
+    given: $.components.schemas[*]
+    then:
+      function: standardized-codes
+
+  aep-143-string-type:
+    description: Standardized code fields must be of type string.
+    message: '{{error}}'
+    severity: error
+    formats: ['oas2', 'oas3']
+    given: $.components.schemas[*]
+    then:
+      function: standardized-codes-string-type

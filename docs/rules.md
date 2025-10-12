@@ -10,6 +10,7 @@
 - [Rules for AEP-137](./0137.md)
 - [Rules for AEP-140](./0140.md)
 - [Rules for AEP-142](./0142.md)
+- [Rules for AEP-143](./0143.md)
 - [Rules for AEP-144](./0144.md)
 - [Rules for AEP-151](./0151.md)
 - [Rules for AEP-158](./0158.md)
