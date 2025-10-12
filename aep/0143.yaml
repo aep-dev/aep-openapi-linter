@@ -13,7 +13,7 @@ rules:
     then:
       function: standardized-codes
 
-  aep-143-string-type:
+  aep-143-standardized-codes-string-type:
     description: Standardized code fields must be of type string.
     message: '{{error}}'
     severity: error
