@@ -4,11 +4,11 @@ require('../matchers');
 let linter;
 
 beforeAll(async () => {
-  linter = await linterForAepRule('0143', 'aep-143-string-type');
+  linter = await linterForAepRule('0143', 'aep-143-standardized-codes-string-type');
   return linter;
 });
 
-describe('aep-143-string-type', () => {
+describe('aep-143-standardized-codes-string-type', () => {
   test('should flag "language_code" with non-string type', () => {
     const oasDoc = {
       openapi: '3.0.3',
