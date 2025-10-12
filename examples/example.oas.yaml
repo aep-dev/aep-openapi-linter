@@ -37,6 +37,7 @@ components:
         - published
       type: object
       x-aep-resource:
+        type: "bookstore.example.com/Book"
         parents:
           - publisher
         patterns:
@@ -56,6 +57,7 @@ components:
         - display_name
       type: object
       x-aep-resource:
+        type: "bookstore.example.com/BookEdition"
         parents:
           - book
         patterns:
@@ -71,6 +73,7 @@ components:
           type: string
       type: object
       x-aep-resource:
+        type: "bookstore.example.com/Isbn"
         patterns:
           - isbns/{isbn_id}
         plural: isbns
@@ -95,6 +98,7 @@ components:
         - price
       type: object
       x-aep-resource:
+        type: "bookstore.example.com/Item"
         parents:
           - store
         patterns:
@@ -112,6 +116,7 @@ components:
           type: string
       type: object
       x-aep-resource:
+        type: "bookstore.example.com/Publisher"
         patterns:
           - publishers/{publisher_id}
         plural: publishers
@@ -131,6 +136,7 @@ components:
         - name
       type: object
       x-aep-resource:
+        type: "bookstore.example.com/Store"
         patterns:
           - stores/{store_id}
         plural: stores
