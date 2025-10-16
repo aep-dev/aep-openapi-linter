@@ -1,0 +1,31 @@
+rules:
+  aep-0004-x-aep-resource-structure:
+    description: x-aep-resource must have correct structure with required fields (type, singular, plural)
+    message: The x-aep-resource extension does not conform to AEP-4 requirements
+    severity: error
+    formats: ['oas2', 'oas3']
+    given: $.components.schemas[?(@['x-aep-resource'] && @['x-aep-resource'] != true)]
+    then:
+      field: x-aep-resource
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          required: [type, singular, plural]
+          properties:
+            type:
+              type: string
+              pattern: '^[a-z0-9][a-z0-9.-]*[a-z0-9]/[a-z][a-z0-9-]*$'
+            singular:
+              type: string
+              pattern: '^[a-z][a-z0-9-]*$'
+            plural:
+              type: string
+              pattern: '^[a-z][a-z0-9-]*$'
+            patterns:
+              type: array
+            parents:
+              type: array
+            singleton:
+              type: boolean
+          additionalProperties: false
