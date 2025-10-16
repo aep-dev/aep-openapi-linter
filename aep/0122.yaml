@@ -1,0 +1,149 @@
+aliases:
+  AepResource:
+    description: A schema that represents an AEP resource
+    targets:
+      - formats: ['oas2', 'oas3']
+        given:
+          - $.components.schemas[?(@.x-aep-resource)]
+          - $.definitions[?(@.x-aep-resource)]
+
+rules:
+  aep-122-resource-path-field:
+    description: Resources must have a 'path' field of type string.
+    message: Resource schema must include a 'path' property of type 'string'
+    severity: error
+    formats: ['oas2', 'oas3']
+    given:
+      - $.components.schemas[?(@['x-aep-resource'])]
+      - $.definitions[?(@['x-aep-resource'])]
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          properties:
+            properties:
+              type: object
+              properties:
+                path:
+                  type: object
+                  properties:
+                    type:
+                      const: string
+                  required: ['type']
+              required: ['path']
+          required: ['properties']
+
+  aep-122-path-field-required:
+    description: The 'path' field must be in the required array.
+    message: The 'path' field must be listed in the 'required' array
+    severity: error
+    formats: ['oas2', 'oas3']
+    given:
+      - $.components.schemas[?(@['x-aep-resource'])]
+      - $.definitions[?(@['x-aep-resource'])]
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          properties:
+            required:
+              type: array
+              contains:
+                const: path
+          required: ['required']
+
+  aep-122-collection-identifier-kebab-case:
+    description: Collection identifiers in paths must use kebab-case.
+    message:
+      Collection identifiers must be in kebab-case (e.g., 'electronic-books', not 'electronicBooks' or
+      'electronic_books')
+    severity: error
+    formats: ['oas2', 'oas3']
+    given: $.paths.*~
+    then:
+      function: pattern
+      functionOptions:
+        # Match paths that alternate between collection (kebab-case) and resource ID (path parameter)
+        # Valid: /publishers/{publisher}/books/{book}
+        # Invalid: /Publishers/{publisher} or /electronic_books/{book} or /electronicBooks/{book}
+        notMatch: '/(([A-Z]|.*[A-Z].*|.*_.*)/\{[^}]+\}|([A-Z]|.*[A-Z].*|.*_.*)$)'
+
+  aep-122-collection-identifier-format:
+    description:
+      Collection identifiers must begin with a lowercase letter and contain only lowercase letters, numbers, and
+      hyphens.
+    message: Collection identifiers must match the pattern /[a-z][a-z0-9-]*/
+    severity: error
+    formats: ['oas2', 'oas3']
+    given: $.paths.*~
+    then:
+      function: pattern
+      functionOptions:
+        # Ensure collection segments start with lowercase letter
+        # and only contain lowercase letters, numbers, and hyphens
+        match: '^(/[a-z][a-z0-9-]*(/\{[^}]+\})?)+$'
+
+  aep-122-parent-field-type:
+    description: Parent fields in request parameters must be of type string.
+    message: The 'parent' parameter must be of type 'string'
+    severity: error
+    formats: ['oas2', 'oas3']
+    given:
+      - $.paths.*.*.parameters[?(@.name == 'parent')]
+      - $.paths.*.parameters[?(@.name == 'parent')]
+      - $.components.parameters[?(@.name == 'parent')]
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          properties:
+            schema:
+              type: object
+              properties:
+                type:
+                  const: string
+
+  aep-122-resource-id-type:
+    description: All resource ID fields must be of type string.
+    message: Resource ID fields (ending in '_id' or named 'id') must be of type 'string'
+    severity: error
+    formats: ['oas2', 'oas3']
+    given:
+      - $.components.schemas[?(@['x-aep-resource'])].properties[?(@property.match(/_id$/) || @property == 'id')]
+      - $.definitions[?(@['x-aep-resource'])].properties[?(@property.match(/_id$/) || @property == 'id')]
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          properties:
+            type:
+              const: string
+
+  aep-122-no-path-suffix:
+    description: Field names should not use the '_path' suffix unless necessary for disambiguation.
+    message:
+      "Avoid using '_path' suffix in field names; use the field name directly (e.g., 'book' instead of 'book_path')"
+    severity: warn
+    formats: ['oas2', 'oas3']
+    given:
+      - $.components.schemas.*.properties.*~
+      - $.definitions.*.properties.*~
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: '_path$'
+
+  aep-122-no-self-links:
+    description: Resources must not have a 'self_link' field.
+    message: Resources must not contain a 'self_link' field; use 'path' instead
+    severity: error
+    formats: ['oas2', 'oas3']
+    given:
+      - $.components.schemas[?(@['x-aep-resource'])].properties.self_link
+      - $.definitions[?(@['x-aep-resource'])].properties.self_link
+    then:
+      function: falsy
