@@ -62,7 +62,15 @@ module.exports = (field, _opts, context) => {
 
   // Validate timestamp fields (_time, _times)
   if (timestampSuffixes.includes(suffix)) {
-    if (field.type !== 'string' || field.format !== 'date-time') {
+    // For _times (plural), allow arrays of timestamps
+    if (suffix === 'times' && field.type === 'array') {
+      // Check that array items are strings with date-time format
+      if (!field.items || field.items.type !== 'string' || field.items.format !== 'date-time') {
+        errors.push({
+          message: `Field "${fieldName}" should be an array with items of type "string" and format "date-time" (RFC 3339 timestamp).`,
+        });
+      }
+    } else if (field.type !== 'string' || field.format !== 'date-time') {
       errors.push({
         message: `Field "${fieldName}" should have type "string" and format "date-time" (RFC 3339 timestamp).`,
       });

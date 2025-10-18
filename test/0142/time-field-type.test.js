@@ -113,7 +113,7 @@ test('aep-142-time-field-type should validate _times suffix (array)', () => {
   return linter.run(oasDoc).then((results) => {
     expect(results.length).toBe(1);
     expect(results).toContainMatch({
-      message: 'Field "sample_times" should have type "string" and format "date-time" (RFC 3339 timestamp).',
+      message: 'Field "sample_times" should be an array with items of type "string" and format "date-time" (RFC 3339 timestamp).',
     });
   });
 });
@@ -310,6 +310,13 @@ test('aep-142-time-field-type should find no warnings for correct timestamp form
                       update_time: {
                         type: 'string',
                         format: 'date-time',
+                      },
+                      more_times: {
+                        type: 'array',
+                        items: {
+                          type: 'string',
+                          format: 'date-time',
+                        },
                       },
                     },
                   },

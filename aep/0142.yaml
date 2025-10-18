@@ -8,7 +8,7 @@ rules:
     message: '{{error}}'
     severity: warn
     formats: ['oas2', 'oas3']
-    given: '$..[?(@property.match(/_(time|times|date|seconds|millis|micros|nanos)$/))]'
+    given: '$..properties[?(@property.match(/_(time|times|date|seconds|millis|micros|nanos)$/))]'
     then:
       function: aep-142-time-field-type
 
