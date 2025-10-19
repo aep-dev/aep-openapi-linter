@@ -5,7 +5,6 @@ let linter;
 
 beforeAll(async () => {
   linter = await linterForAepRule('0122', 'aep-122-resource-path-field');
-  return linter;
 });
 
 test('aep-122-resource-path-field should find errors when path field is missing', () => {

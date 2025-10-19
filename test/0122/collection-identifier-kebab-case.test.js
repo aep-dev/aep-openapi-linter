@@ -5,7 +5,6 @@ let linter;
 
 beforeAll(async () => {
   linter = await linterForAepRule('0122', 'aep-122-collection-identifier-kebab-case');
-  return linter;
 });
 
 test('aep-122-collection-identifier-kebab-case should find errors with camelCase', () => {

@@ -5,7 +5,6 @@ let linter;
 
 beforeAll(async () => {
   linter = await linterForAepRule('0122', 'aep-122-no-self-links');
-  return linter;
 });
 
 test('aep-122-no-self-links should find errors when resource has self_link field', () => {

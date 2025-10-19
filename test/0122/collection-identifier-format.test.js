@@ -5,7 +5,6 @@ let linter;
 
 beforeAll(async () => {
   linter = await linterForAepRule('0122', 'aep-122-collection-identifier-format');
-  return linter;
 });
 
 test('aep-122-collection-identifier-format should find errors when not starting with lowercase letter', () => {

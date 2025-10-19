@@ -5,7 +5,6 @@ let linter;
 
 beforeAll(async () => {
   linter = await linterForAepRule('0122', 'aep-122-resource-id-type');
-  return linter;
 });
 
 test('aep-122-resource-id-type should find errors when id fields are not strings', () => {

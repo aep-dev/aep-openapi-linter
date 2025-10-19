@@ -5,7 +5,6 @@ let linter;
 
 beforeAll(async () => {
   linter = await linterForAepRule('0122', 'aep-122-parent-field-type');
-  return linter;
 });
 
 test('aep-122-parent-field-type should find errors when parent is not a string', () => {

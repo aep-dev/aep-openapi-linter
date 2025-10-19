@@ -5,7 +5,6 @@ let linter;
 
 beforeAll(async () => {
   linter = await linterForAepRule('0122', 'aep-122-path-field-required');
-  return linter;
 });
 
 test('aep-122-path-field-required should find errors when path is not in required array', () => {

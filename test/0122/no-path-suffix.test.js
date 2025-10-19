@@ -5,7 +5,6 @@ let linter;
 
 beforeAll(async () => {
   linter = await linterForAepRule('0122', 'aep-122-no-path-suffix');
-  return linter;
 });
 
 test('aep-122-no-path-suffix should find warnings for _path suffix in AEP resources', () => {
