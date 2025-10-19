@@ -1,6 +1,7 @@
 extends:
   - spectral:oas
   - ./aep/0122.yaml
+  - ./aep/0126.yaml
   - ./aep/0131.yaml
   - ./aep/0132.yaml
   - ./aep/0133.yaml
@@ -16,6 +17,10 @@ extends:
   - ./aep/0193.yaml
 functionsDir: './functions'
 functions:
+  - aep-126-enum-case-consistent
+  - aep-126-enum-null-first
+  - aep-126-enum-nullable-declaration
+  - aep-126-no-standard-value-enums
   - aep-142-time-field-type
   - parameter-names-unique
   - operations-endpoint
