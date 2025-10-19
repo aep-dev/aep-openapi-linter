@@ -67,7 +67,9 @@ module.exports = (field, _opts, context) => {
       // Check that array items are strings with date-time format
       if (!field.items || field.items.type !== 'string' || field.items.format !== 'date-time') {
         errors.push({
-          message: `Field "${fieldName}" should be an array with items of type "string" and format "date-time" (RFC 3339 timestamp).`,
+          message:
+            `Field "${fieldName}" should be an array with items of type "string" ` +
+            `and format "date-time" (RFC 3339 timestamp).`,
         });
       }
     } else if (field.type !== 'string' || field.format !== 'date-time') {
