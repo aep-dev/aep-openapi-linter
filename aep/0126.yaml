@@ -1,0 +1,65 @@
+functionsDir: ../functions
+functions:
+  - aep-126-enum-case-consistent
+  - aep-126-enum-null-first
+  - aep-126-enum-nullable-declaration
+  - aep-126-no-standard-value-enums
+
+rules:
+  aep-126-enum-type-string:
+    description: Enumerated fields should use type string, not integer or other types.
+    message: Enum field "{{property}}" should have type "string", not "{{error}}".
+    severity: error
+    formats: ['oas2', 'oas3']
+    given: $..[?(@property === 'enum')]^
+    then:
+      field: type
+      function: pattern
+      functionOptions:
+        match: '^string$'
+
+  aep-126-enum-case-consistent:
+    description: All enum values in a field should use consistent case format.
+    message: '{{error}}'
+    severity: warn
+    formats: ['oas2', 'oas3']
+    given: $..[?(@property === 'enum')]^
+    then:
+      function: aep-126-enum-case-consistent
+
+  aep-126-enum-null-first:
+    description: If enum is nullable, null should be the first value in the enum array.
+    message: '{{error}}'
+    severity: warn
+    formats: ['oas2', 'oas3']
+    given: $..[?(@property === 'enum')]^
+    then:
+      function: aep-126-enum-null-first
+
+  aep-126-enum-nullable-declaration:
+    description: If enum contains null, field must declare nullable true.
+    message: '{{error}}'
+    severity: error
+    formats: ['oas2', 'oas3']
+    given: $..[?(@property === 'enum')]^
+    then:
+      function: aep-126-enum-nullable-declaration
+
+  aep-126-no-standard-value-enums:
+    description: Fields should not enumerate standard codes (language, country, currency, media types).
+    message: '{{error}}'
+    severity: warn
+    formats: ['oas2', 'oas3']
+    given: $..[?(@property === 'enum')]^
+    then:
+      function: aep-126-no-standard-value-enums
+
+  aep-126-enum-has-description:
+    description: Enum fields should include a description explaining their purpose.
+    message: Enum field "{{property}}" should have a description.
+    severity: info
+    formats: ['oas2', 'oas3']
+    given: $..[?(@property === 'enum')]^
+    then:
+      field: description
+      function: truthy
