@@ -31,6 +31,7 @@ components:
         published:
           type: boolean
       required:
+        - path
         - edition
         - isbn
         - price
@@ -53,6 +54,7 @@ components:
             the service.
           type: string
       required:
+        - path
         - display_name
       type: object
       x-aep-resource:
@@ -69,6 +71,8 @@ components:
             The server-assigned path of the resource, which is unique within
             the service.
           type: string
+      required:
+        - path
       type: object
       x-aep-resource:
         patterns:
@@ -90,6 +94,7 @@ components:
           format: double
           type: number
       required:
+        - path
         - title
         - condition
         - price
@@ -110,6 +115,8 @@ components:
             The server-assigned path of the resource, which is unique within
             the service.
           type: string
+      required:
+        - path
       type: object
       x-aep-resource:
         patterns:
@@ -128,6 +135,7 @@ components:
             the service.
           type: string
       required:
+        - path
         - name
       type: object
       x-aep-resource:
