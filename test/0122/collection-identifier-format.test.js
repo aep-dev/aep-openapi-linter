@@ -88,3 +88,29 @@ test('aep-122-collection-identifier-format should find no errors with valid form
     expect(results.length).toBe(0);
   });
 });
+
+test('aep-122-collection-identifier-format should handle deeply nested resources', () => {
+  const oasDoc = {
+    openapi: '3.0.3',
+    paths: {
+      '/publishers/{publisher}/books/{book}/chapters/{chapter}': {
+        get: {
+          operationId: 'GetChapter',
+        },
+      },
+      '/orgs/{org}/projects/{project}/datasets/{dataset}/tables/{table}': {
+        get: {
+          operationId: 'GetTable',
+        },
+      },
+      '/a/{a}/b/{b}/c/{c}/d/{d}/e/{e}': {
+        get: {
+          operationId: 'GetE',
+        },
+      },
+    },
+  };
+  return linter.run(oasDoc).then((results) => {
+    expect(results.length).toBe(0);
+  });
+});
