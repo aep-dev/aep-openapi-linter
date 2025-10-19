@@ -8,14 +8,18 @@ beforeAll(async () => {
   return linter;
 });
 
-test('aep-122-no-path-suffix should find warnings for _path suffix', () => {
+test('aep-122-no-path-suffix should find warnings for _path suffix in AEP resources', () => {
   const oasDoc = {
     openapi: '3.0.3',
     components: {
       schemas: {
         Book: {
+          'x-aep-resource': true,
           type: 'object',
           properties: {
+            path: {
+              type: 'string',
+            },
             name: {
               type: 'string',
             },
@@ -26,6 +30,7 @@ test('aep-122-no-path-suffix should find warnings for _path suffix', () => {
               type: 'string',
             },
           },
+          required: ['path'],
         },
       },
     },
@@ -51,6 +56,7 @@ test('aep-122-no-path-suffix should find no warnings without _path suffix', () =
     components: {
       schemas: {
         Book: {
+          'x-aep-resource': true,
           type: 'object',
           properties: {
             path: {
@@ -65,20 +71,52 @@ test('aep-122-no-path-suffix should find no warnings without _path suffix', () =
             publisher: {
               type: 'string',
             },
-            file_path: {
-              type: 'string',
-              description: 'File path is acceptable as it needs disambiguation',
-            },
           },
+          required: ['path'],
         },
       },
     },
   };
   return linter.run(oasDoc).then((results) => {
-    // file_path will trigger a warning, but 'path' should not
-    expect(results.length).toBe(1);
-    expect(results).toContainMatch({
-      path: ['components', 'schemas', 'Book', 'properties', 'file_path'],
-    });
+    expect(results.length).toBe(0);
+  });
+});
+
+test('aep-122-no-path-suffix should not flag non-AEP resources with _path suffix', () => {
+  const oasDoc = {
+    openapi: '3.0.3',
+    components: {
+      schemas: {
+        FileInfo: {
+          type: 'object',
+          properties: {
+            file_path: {
+              type: 'string',
+              description: 'Legitimate file path field in non-AEP schema',
+            },
+            directory_path: {
+              type: 'string',
+            },
+          },
+        },
+        Book: {
+          'x-aep-resource': true,
+          type: 'object',
+          properties: {
+            path: {
+              type: 'string',
+            },
+            name: {
+              type: 'string',
+            },
+          },
+          required: ['path'],
+        },
+      },
+    },
+  };
+  return linter.run(oasDoc).then((results) => {
+    // FileInfo should NOT trigger warnings, only AEP resources are checked
+    expect(results.length).toBe(0);
   });
 });
