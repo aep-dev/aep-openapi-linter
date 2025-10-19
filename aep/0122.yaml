@@ -65,10 +65,10 @@ rules:
     then:
       function: pattern
       functionOptions:
-        # Match paths that alternate between collection (kebab-case) and resource ID (path parameter)
-        # Valid: /publishers/{publisher}/books/{book}
-        # Invalid: /Publishers/{publisher} or /electronic_books/{book} or /electronicBooks/{book}
-        notMatch: '/(([A-Z]|.*[A-Z].*|.*_.*)/\{[^}]+\}|([A-Z]|.*[A-Z].*|.*_.*)$)'
+        # Paths must not contain uppercase letters or underscores in collection identifiers
+        # Valid: /publishers/{publisher}/books/{book}, /api-keys/{key}
+        # Invalid: /Publishers/{publisher}, /electronic_books/{book}, /electronicBooks/{book}
+        notMatch: '[A-Z_]'
 
   aep-122-collection-identifier-format:
     description:
