@@ -4,8 +4,8 @@ aliases:
     targets:
       - formats: ['oas2', 'oas3']
         given:
-          - $.components.schemas[?(@.x-aep-resource)]
-          - $.definitions[?(@.x-aep-resource)]
+          - $.components.schemas[?(@['x-aep-resource'])]
+          - $.definitions[?(@['x-aep-resource'])]
 
 rules:
   aep-122-resource-path-field:
