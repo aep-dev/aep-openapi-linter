@@ -13,9 +13,7 @@ rules:
     message: Resource schema must include a 'path' property of type 'string'
     severity: error
     formats: ['oas2', 'oas3']
-    given:
-      - $.components.schemas[?(@['x-aep-resource'])]
-      - $.definitions[?(@['x-aep-resource'])]
+    given: '#AepResource'
     then:
       function: schema
       functionOptions:
@@ -94,8 +92,7 @@ rules:
     severity: error
     formats: ['oas2', 'oas3']
     given:
-      - $.components.schemas[?(@['x-aep-resource'])].properties[?(@property.match(/_id$/) || @property == 'id')]
-      - $.definitions[?(@['x-aep-resource'])].properties[?(@property.match(/_id$/) || @property == 'id')]
+      - '#AepResource.properties[?(@property.match(/_id$/) || @property == ''id'')]'
     then:
       function: schema
       functionOptions:
@@ -112,8 +109,7 @@ rules:
     severity: warn
     formats: ['oas2', 'oas3']
     given:
-      - $.components.schemas[?(@['x-aep-resource'])].properties.*~
-      - $.definitions[?(@['x-aep-resource'])].properties.*~
+      - '#AepResource.properties.*~'
     then:
       function: pattern
       functionOptions:
@@ -125,7 +121,6 @@ rules:
     severity: error
     formats: ['oas2', 'oas3']
     given:
-      - $.components.schemas[?(@['x-aep-resource'])].properties.self_link
-      - $.definitions[?(@['x-aep-resource'])].properties.self_link
+      - '#AepResource.properties.self_link'
     then:
       function: falsy
