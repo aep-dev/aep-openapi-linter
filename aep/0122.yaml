@@ -7,6 +7,10 @@ aliases:
           - $.components.schemas[?(@['x-aep-resource'])]
           - $.definitions[?(@['x-aep-resource'])]
 
+functionsDir: ../functions
+functions:
+  - aep-122-collection-identifier-kebab-case
+
 rules:
   aep-122-resource-path-field:
     description: Resources must have a 'path' field of type string.
@@ -41,12 +45,7 @@ rules:
     formats: ['oas2', 'oas3']
     given: $.paths.*~
     then:
-      function: pattern
-      functionOptions:
-        # Paths must not contain uppercase letters or underscores in collection identifiers
-        # Valid: /publishers/{publisher}/books/{book}, /api-keys/{key}
-        # Invalid: /Publishers/{publisher}, /electronic_books/{book}, /electronicBooks/{book}
-        notMatch: '[A-Z_]'
+      function: aep-122-collection-identifier-kebab-case
 
   aep-122-collection-identifier-format:
     description:

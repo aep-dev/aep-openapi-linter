@@ -16,6 +16,7 @@ extends:
   - ./aep/0193.yaml
 functionsDir: './functions'
 functions:
+  - aep-122-collection-identifier-kebab-case
   - aep-142-time-field-type
   - parameter-names-unique
   - operations-endpoint

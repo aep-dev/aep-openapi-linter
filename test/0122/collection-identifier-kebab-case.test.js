@@ -11,12 +11,12 @@ test('aep-122-collection-identifier-kebab-case should find errors with camelCase
   const oasDoc = {
     openapi: '3.0.3',
     paths: {
-      '/publishers/{publisher}/electronicBooks/{book}': {
+      '/publishers/{publisher_id}/electronicBooks/{book_id}': {
         get: {
           operationId: 'GetBook',
         },
       },
-      '/userProfiles/{profile}': {
+      '/userProfiles/{profile_id}': {
         get: {
           operationId: 'GetUserProfile',
         },
@@ -29,11 +29,11 @@ test('aep-122-collection-identifier-kebab-case should find errors with camelCase
       "not 'electronicBooks' or 'electronic_books')";
     expect(results.length).toBe(2);
     expect(results).toContainMatch({
-      path: ['paths', '/publishers/{publisher}/electronicBooks/{book}'],
+      path: ['paths', '/publishers/{publisher_id}/electronicBooks/{book_id}'],
       message: expectedMessage,
     });
     expect(results).toContainMatch({
-      path: ['paths', '/userProfiles/{profile}'],
+      path: ['paths', '/userProfiles/{profile_id}'],
       message: expectedMessage,
     });
   });
@@ -43,12 +43,12 @@ test('aep-122-collection-identifier-kebab-case should find errors with snake_cas
   const oasDoc = {
     openapi: '3.0.3',
     paths: {
-      '/electronic_books/{book}': {
+      '/electronic_books/{book_id}': {
         get: {
           operationId: 'GetBook',
         },
       },
-      '/user_profiles/{profile}': {
+      '/user_profiles/{profile_id}': {
         get: {
           operationId: 'GetUserProfile',
         },
@@ -58,10 +58,10 @@ test('aep-122-collection-identifier-kebab-case should find errors with snake_cas
   return linter.run(oasDoc).then((results) => {
     expect(results.length).toBe(2);
     expect(results).toContainMatch({
-      path: ['paths', '/electronic_books/{book}'],
+      path: ['paths', '/electronic_books/{book_id}'],
     });
     expect(results).toContainMatch({
-      path: ['paths', '/user_profiles/{profile}'],
+      path: ['paths', '/user_profiles/{profile_id}'],
     });
   });
 });
@@ -70,7 +70,7 @@ test('aep-122-collection-identifier-kebab-case should find errors with PascalCas
   const oasDoc = {
     openapi: '3.0.3',
     paths: {
-      '/Publishers/{publisher}/Books/{book}': {
+      '/Publishers/{publisher_id}/Books/{book_id}': {
         get: {
           operationId: 'GetBook',
         },
@@ -80,7 +80,7 @@ test('aep-122-collection-identifier-kebab-case should find errors with PascalCas
   return linter.run(oasDoc).then((results) => {
     expect(results.length).toBe(1);
     expect(results).toContainMatch({
-      path: ['paths', '/Publishers/{publisher}/Books/{book}'],
+      path: ['paths', '/Publishers/{publisher_id}/Books/{book_id}'],
     });
   });
 });
@@ -89,22 +89,22 @@ test('aep-122-collection-identifier-kebab-case should find no errors with kebab-
   const oasDoc = {
     openapi: '3.0.3',
     paths: {
-      '/publishers/{publisher}/books/{book}': {
+      '/publishers/{publisher_id}/books/{book_id}': {
         get: {
           operationId: 'GetBook',
         },
       },
-      '/electronic-books/{book}': {
+      '/electronic-books/{book_id}': {
         get: {
           operationId: 'GetElectronicBook',
         },
       },
-      '/user-profiles/{profile}': {
+      '/user-profiles/{profile_id}': {
         get: {
           operationId: 'GetUserProfile',
         },
       },
-      '/users/{user}/api-keys/{key}': {
+      '/users/{user_id}/api-keys/{key_id}': {
         get: {
           operationId: 'GetApiKey',
         },
@@ -120,14 +120,40 @@ test('aep-122-collection-identifier-kebab-case should allow single word collecti
   const oasDoc = {
     openapi: '3.0.3',
     paths: {
-      '/books/{book}': {
+      '/books/{book_id}': {
         get: {
           operationId: 'GetBook',
         },
       },
-      '/users/{user}': {
+      '/users/{user_id}': {
         get: {
           operationId: 'GetUser',
+        },
+      },
+    },
+  };
+  return linter.run(oasDoc).then((results) => {
+    expect(results.length).toBe(0);
+  });
+});
+
+test('aep-122-collection-identifier-kebab-case should allow underscores in path parameters', () => {
+  const oasDoc = {
+    openapi: '3.0.3',
+    paths: {
+      '/users/{user_id}': {
+        get: {
+          operationId: 'GetUser',
+        },
+      },
+      '/publishers/{publisher_id}/books/{book_id}': {
+        get: {
+          operationId: 'GetBook',
+        },
+      },
+      '/electronic-books/{electronic_book_id}/chapters/{chapter_id}': {
+        get: {
+          operationId: 'GetChapter',
         },
       },
     },
