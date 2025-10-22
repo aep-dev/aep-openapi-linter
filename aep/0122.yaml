@@ -86,6 +86,7 @@ rules:
               properties:
                 type:
                   const: string
+              required: ['type']
 
   aep-122-resource-id-type:
     description: All resource ID fields must be of type string.
