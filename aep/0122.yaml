@@ -34,26 +34,6 @@ rules:
               required: ['path']
           required: ['properties']
 
-  aep-122-path-field-required:
-    description: The 'path' field must be in the required array.
-    message: The 'path' field must be listed in the 'required' array
-    severity: error
-    formats: ['oas2', 'oas3']
-    given:
-      - $.components.schemas[?(@['x-aep-resource'])]
-      - $.definitions[?(@['x-aep-resource'])]
-    then:
-      function: schema
-      functionOptions:
-        schema:
-          type: object
-          properties:
-            required:
-              type: array
-              contains:
-                const: path
-          required: ['required']
-
   aep-122-collection-identifier-kebab-case:
     description: Collection identifiers in paths must use kebab-case.
     message:
