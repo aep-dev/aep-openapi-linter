@@ -4,15 +4,22 @@
  * Based on AEP-126 specification (https://aep.dev/126).
  *
  * @param {object} field - The field object containing the enum
+ * @param {object} _opts - Options (unused)
+ * @param {object} context - Spectral context containing the path
  * @returns {Array<object>} Array of error objects, or empty array if valid
  */
-module.exports = (field) => {
+module.exports = (field, _opts, context) => {
   if (!field || typeof field !== 'object') {
     return [];
   }
 
   // Check if field is nullable
-  if (field.nullable !== true) {
+  // OpenAPI 3.0: nullable: true
+  // OpenAPI 3.1: type: ['string', 'null'] or type: 'null'
+  const isNullable = field.nullable === true ||
+                     (Array.isArray(field.type) && field.type.includes('null'));
+
+  if (!isNullable) {
     return [];
   }
 
@@ -30,9 +37,10 @@ module.exports = (field) => {
 
   // Check if null is the first value
   if (enumValues[0] !== null) {
+    const fieldName = context.path[context.path.length - 1];
     return [
       {
-        message: 'When enum contains "null" and field is nullable, "null" must be the first value.',
+        message: `Enum field "${fieldName}" contains "null" and is nullable, but "null" must be the first value.`,
       },
     ];
   }
