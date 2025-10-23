@@ -62,7 +62,6 @@ test('aep-0004-x-aep-resource-structure should validate mixed scenarios', () => 
         Book: {
           type: 'object',
           'x-aep-resource': {
-            type: 'library.example.com/book',
             singular: 'book',
             plural: 'books',
           },
@@ -75,8 +74,7 @@ test('aep-0004-x-aep-resource-structure should validate mixed scenarios', () => 
           type: 'object',
           'x-aep-resource': {
             singular: 'author',
-            plural: 'authors',
-            // Missing 'type' - should fail
+            // Missing 'plural' - should fail
           },
         },
         ErrorResponse: {

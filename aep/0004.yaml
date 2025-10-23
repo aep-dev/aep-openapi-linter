@@ -1,6 +1,6 @@
 rules:
   aep-0004-x-aep-resource-structure:
-    description: x-aep-resource must have correct structure with required fields (type, singular, plural)
+    description: x-aep-resource must have correct structure with required fields (singular, plural)
     message: The x-aep-resource extension does not conform to AEP-4 requirements
     severity: error
     formats: ['oas2', 'oas3']
@@ -11,11 +11,8 @@ rules:
       functionOptions:
         schema:
           type: object
-          required: [type, singular, plural]
+          required: [singular, plural]
           properties:
-            type:
-              type: string
-              pattern: '^[a-z0-9][a-z0-9.-]*[a-z0-9]/[a-z][a-z0-9-]*$'
             singular:
               type: string
               pattern: '^[a-z][a-z0-9-]*$'
