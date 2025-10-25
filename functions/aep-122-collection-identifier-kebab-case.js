@@ -12,11 +12,9 @@
  * Path parameters (e.g., {user_id}) are NOT checked by this rule.
  *
  * @param {string} pathPattern - The path pattern string (e.g., "/users/{user_id}")
- * @param {object} _opts - Options (unused)
- * @param {object} context - Spectral context containing the path
  * @returns {Array<object>} Array of error objects, or empty array if valid
  */
-module.exports = (pathPattern, _opts, context) => {
+module.exports = (pathPattern) => {
   if (typeof pathPattern !== 'string') {
     return [];
   }
@@ -26,34 +24,31 @@ module.exports = (pathPattern, _opts, context) => {
 
   const errors = [];
 
-  for (const segment of segments) {
-    if (!segment) continue; // Skip empty segments
+  segments
+    .filter((segment) => segment) // Skip empty segments
+    .filter((segment) => !(segment.startsWith('{') && segment.endsWith('}'))) // Skip path parameters
+    .forEach((segment) => {
+      // Handle custom methods: /books/{book}:archive → check "books" but skip ":archive"
+      const [mainPart, customMethod] = segment.split(':');
 
-    // Skip path parameters: {id}, {user_id}, etc.
-    if (segment.startsWith('{') && segment.endsWith('}')) {
-      continue;
-    }
+      // Check the main collection part (before any :customMethod)
+      if (mainPart && !mainPart.startsWith('{')) {
+        // Check for uppercase letters or underscores
+        if (/[A-Z_]/.test(mainPart)) {
+          const message =
+            `Collection identifier "${mainPart}" must be in kebab-case ` +
+            `(e.g., 'electronic-books', not 'electronicBooks' or 'electronic_books')`;
+          errors.push({ message });
+        }
+      }
 
-    // Handle custom methods: /books/{book}:archive → check "books" but skip ":archive"
-    const [mainPart, customMethod] = segment.split(':');
-
-    // Check the main collection part (before any :customMethod)
-    if (mainPart && !mainPart.startsWith('{')) {
-      // Check for uppercase letters or underscores
-      if (/[A-Z_]/.test(mainPart)) {
+      // Check custom method part if present
+      if (customMethod && /[A-Z_]/.test(customMethod)) {
         errors.push({
-          message: `Collection identifier "${mainPart}" must be in kebab-case (e.g., 'electronic-books', not 'electronicBooks' or 'electronic_books')`,
+          message: `Custom method "${customMethod}" must be in kebab-case`,
         });
       }
-    }
-
-    // Check custom method part if present
-    if (customMethod && /[A-Z_]/.test(customMethod)) {
-      errors.push({
-        message: `Custom method "${customMethod}" must be in kebab-case`,
-      });
-    }
-  }
+    });
 
   return errors;
 };
