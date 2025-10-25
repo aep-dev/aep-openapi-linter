@@ -91,7 +91,7 @@ rules:
     severity: error
     formats: ['oas2', 'oas3']
     given:
-      - '#AepResource.properties[?(@property.match(/_id$/) || @property == ''id'')]'
+      - "#AepResource.properties[?(@property.match(/_id$/) || @property == 'id')]"
     then:
       function: schema
       functionOptions:
