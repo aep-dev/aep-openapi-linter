@@ -22,6 +22,25 @@ npm install
 npm test
 ```
 
+### The example test
+
+The input file for the `test/example/example.test.js` is taken from the
+`aep/general/example.oas.yaml` from the [aep.dev repository]. Do not modify
+this file directly in this repository. When a linting rule detects issues in
+`examples/example.oas.yaml`:
+
+1. **Confirm the issue is a true positive** - Verify the detected issue is a
+   real violation of the AEP specification.
+2. **Fix the issue upstream** - Open an issue in the [aep.dev repository]
+   describing the problem in the canonical example file.
+3. **Sync the updated file** - After the problem is corrected in the [aep.dev
+   repository], copy the updated `aep/general/example.oas.yaml` to
+   `examples/example.oas.yaml` in this repository. This ensures the example
+   file remains synchronized with the official AEP documentation and avoids
+   divergence between repositories.
+
+[aep.dev repository]: https://github.com/aep-dev/aeps
+
 ## Adding new rules to the Spectral ruleset
 
 When you add a new rule there are a number of places you should consider
