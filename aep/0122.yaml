@@ -7,10 +7,6 @@ aliases:
           - $.components.schemas[?(@['x-aep-resource'])]
           - $.definitions[?(@['x-aep-resource'])]
 
-functionsDir: ../functions
-functions:
-  - aep-122-collection-identifier-kebab-case
-
 rules:
   aep-122-resource-path-field:
     description: Resources must have a 'path' field of type string.
@@ -35,17 +31,6 @@ rules:
                   required: ['type']
               required: ['path']
           required: ['properties']
-
-  aep-122-collection-identifier-kebab-case:
-    description: Collection identifiers in paths must use kebab-case.
-    message:
-      Collection identifiers must be in kebab-case (e.g., 'electronic-books', not 'electronicBooks' or
-      'electronic_books')
-    severity: error
-    formats: ['oas2', 'oas3']
-    given: $.paths.*~
-    then:
-      function: aep-122-collection-identifier-kebab-case
 
   aep-122-collection-identifier-format:
     description:
