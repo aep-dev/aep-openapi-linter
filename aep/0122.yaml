@@ -45,8 +45,8 @@ rules:
       functionOptions:
         # Ensure collection segments start with lowercase letter
         # and only contain lowercase letters, numbers, and hyphens
-        # Optionally allow custom method suffix like :archive or :move
-        match: '^(/[a-z][a-z0-9-]*(/\{[^}]+\})?)+(:[ a-z][a-z0-9-]*)?$'
+        # Allow optional custom method suffix (e.g., :archive) without validating its format
+        match: '^(/[a-z][a-z0-9-]*(/\{[^}]+\})?)+(:[^/]*)?$'
 
   aep-122-parent-field-type:
     description: Parent fields in request parameters must be of type string.
