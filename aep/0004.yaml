@@ -21,8 +21,12 @@ rules:
               pattern: '^[a-z][a-z0-9-]*$'
             patterns:
               type: array
+              items:
+                type: string
             parents:
               type: array
+              items:
+                type: string
             singleton:
               type: boolean
           additionalProperties: false
