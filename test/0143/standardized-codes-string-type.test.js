@@ -29,7 +29,7 @@ describe('aep-143-standardized-codes-string-type', () => {
       expect(results.length).toBe(1);
       expect(results).toContainMatch({
         path: ['components', 'schemas', 'Book', 'properties', 'language_code', 'type'],
-        message: expect.stringContaining('should be of type "string"'),
+        message: expect.stringContaining('must be type "string"'),
       });
     });
   });
@@ -54,7 +54,7 @@ describe('aep-143-standardized-codes-string-type', () => {
       expect(results.length).toBe(1);
       expect(results).toContainMatch({
         path: ['components', 'schemas', 'Address', 'properties', 'region_code', 'type'],
-        message: expect.stringContaining('should be of type "string"'),
+        message: expect.stringContaining('must be type "string"'),
       });
     });
   });
@@ -79,7 +79,7 @@ describe('aep-143-standardized-codes-string-type', () => {
       expect(results.length).toBe(1);
       expect(results).toContainMatch({
         path: ['components', 'schemas', 'Price', 'properties', 'currency_code', 'type'],
-        message: expect.stringContaining('should be of type "string"'),
+        message: expect.stringContaining('must be type "string"'),
       });
     });
   });
@@ -104,7 +104,7 @@ describe('aep-143-standardized-codes-string-type', () => {
       expect(results.length).toBe(1);
       expect(results).toContainMatch({
         path: ['components', 'schemas', 'File', 'properties', 'content_type', 'type'],
-        message: expect.stringContaining('should be of type "string"'),
+        message: expect.stringContaining('must be type "string"'),
       });
     });
   });
@@ -129,7 +129,7 @@ describe('aep-143-standardized-codes-string-type', () => {
       expect(results.length).toBe(1);
       expect(results).toContainMatch({
         path: ['components', 'schemas', 'Event', 'properties', 'time_zone', 'type'],
-        message: expect.stringContaining('should be of type "string"'),
+        message: expect.stringContaining('must be type "string"'),
       });
     });
   });
@@ -154,7 +154,7 @@ describe('aep-143-standardized-codes-string-type', () => {
       expect(results.length).toBe(1);
       expect(results).toContainMatch({
         path: ['components', 'schemas', 'TimeInfo', 'properties', 'utc_offset', 'type'],
-        message: expect.stringContaining('should be of type "string"'),
+        message: expect.stringContaining('must be type "string"'),
       });
     });
   });

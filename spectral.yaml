@@ -21,7 +21,6 @@ functions:
   - parameter-names-unique
   - operations-endpoint
   - standardized-codes
-  - standardized-codes-string-type
 rules:
   openapi-tags: off
   operation-tags: off
