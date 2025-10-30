@@ -7,14 +7,18 @@ const fieldNameVariants = {
   mime: 'content_type',
   mimetype: 'content_type',
   mime_type: 'content_type',
+  media_type: 'content_type',
+  mediatype: 'content_type',
   // Countries/Regions
   country: 'region_code',
   country_code: 'region_code',
+  region: 'region_code',
   // Currency
   currency: 'currency_code',
   // Language
   lang: 'language_code',
   language: 'language_code',
+  locale: 'language_code',
   // Time zones
   tz: 'time_zone',
   timezone: 'time_zone',

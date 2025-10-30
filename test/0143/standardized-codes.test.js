@@ -205,6 +205,106 @@ describe('aep-143-standardized-codes', () => {
     });
   });
 
+  test('should flag "region" and suggest "region_code"', () => {
+    const oasDoc = {
+      openapi: '3.0.3',
+      components: {
+        schemas: {
+          Address: {
+            type: 'object',
+            properties: {
+              region: {
+                type: 'string',
+              },
+            },
+          },
+        },
+      },
+    };
+    return linter.run(oasDoc).then((results) => {
+      expect(results.length).toBe(1);
+      expect(results).toContainMatch({
+        path: ['components', 'schemas', 'Address', 'properties', 'region'],
+        message: 'Use "region_code" instead of "region" for standardized code fields.',
+      });
+    });
+  });
+
+  test('should flag "locale" and suggest "language_code"', () => {
+    const oasDoc = {
+      openapi: '3.0.3',
+      components: {
+        schemas: {
+          Book: {
+            type: 'object',
+            properties: {
+              locale: {
+                type: 'string',
+              },
+            },
+          },
+        },
+      },
+    };
+    return linter.run(oasDoc).then((results) => {
+      expect(results.length).toBe(1);
+      expect(results).toContainMatch({
+        path: ['components', 'schemas', 'Book', 'properties', 'locale'],
+        message: 'Use "language_code" instead of "locale" for standardized code fields.',
+      });
+    });
+  });
+
+  test('should flag "media_type" and suggest "content_type"', () => {
+    const oasDoc = {
+      openapi: '3.0.3',
+      components: {
+        schemas: {
+          File: {
+            type: 'object',
+            properties: {
+              media_type: {
+                type: 'string',
+              },
+            },
+          },
+        },
+      },
+    };
+    return linter.run(oasDoc).then((results) => {
+      expect(results.length).toBe(1);
+      expect(results).toContainMatch({
+        path: ['components', 'schemas', 'File', 'properties', 'media_type'],
+        message: 'Use "content_type" instead of "media_type" for standardized code fields.',
+      });
+    });
+  });
+
+  test('should flag "mediatype" and suggest "content_type"', () => {
+    const oasDoc = {
+      openapi: '3.0.3',
+      components: {
+        schemas: {
+          File: {
+            type: 'object',
+            properties: {
+              mediatype: {
+                type: 'string',
+              },
+            },
+          },
+        },
+      },
+    };
+    return linter.run(oasDoc).then((results) => {
+      expect(results.length).toBe(1);
+      expect(results).toContainMatch({
+        path: ['components', 'schemas', 'File', 'properties', 'mediatype'],
+        message: 'Use "content_type" instead of "mediatype" for standardized code fields.',
+      });
+    });
+  });
+
   test('should not flag correct standardized field names', () => {
     const oasDoc = {
       openapi: '3.0.3',
