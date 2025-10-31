@@ -28,14 +28,15 @@ module.exports = (field, _opts, context) => {
   // Check if nullable is declared
   // OpenAPI 3.0: nullable: true
   // OpenAPI 3.1: type: ['string', 'null'] or type: 'null'
-  const isNullable = field.nullable === true ||
-                     (Array.isArray(field.type) && field.type.includes('null'));
+  const isNullable = field.nullable === true || (Array.isArray(field.type) && field.type.includes('null'));
 
   if (!isNullable) {
     const fieldName = context.path[context.path.length - 1];
     return [
       {
-        message: `Enum field "${fieldName}" contains "null" value but does not declare nullable (use "nullable: true" in OAS 3.0 or "type: ['string', 'null']" in OAS 3.1).`,
+        message:
+          `Enum field "${fieldName}" contains "null" value but does not declare nullable ` +
+          `(use "nullable: true" in OAS 3.0 or "type: ['string', 'null']" in OAS 3.1).`,
       },
     ];
   }
