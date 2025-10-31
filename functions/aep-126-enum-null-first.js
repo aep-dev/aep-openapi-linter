@@ -16,8 +16,7 @@ module.exports = (field, _opts, context) => {
   // Check if field is nullable
   // OpenAPI 3.0: nullable: true
   // OpenAPI 3.1: type: ['string', 'null'] or type: 'null'
-  const isNullable = field.nullable === true ||
-                     (Array.isArray(field.type) && field.type.includes('null'));
+  const isNullable = field.nullable === true || (Array.isArray(field.type) && field.type.includes('null'));
 
   if (!isNullable) {
     return [];
