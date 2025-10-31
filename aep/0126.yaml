@@ -14,9 +14,15 @@ rules:
     given: $..[?(@property === 'enum')]^
     then:
       field: type
-      function: pattern
+      function: schema
       functionOptions:
-        match: '^string$'
+        schema:
+          oneOf:
+            - const: string
+            - type: array
+              contains:
+                const: string
+              maxItems: 2
 
   aep-126-enum-case-consistent:
     description: All enum values in a field should use consistent case format.
