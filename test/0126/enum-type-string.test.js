@@ -106,3 +106,50 @@ test('aep-126-enum-type-string should allow nullable string enums', () => {
     expect(results.length).toBe(0);
   });
 });
+
+test('aep-126-enum-type-string should allow OAS 3.1 type array with string and null', () => {
+  const oasDoc = {
+    openapi: '3.1.0',
+    components: {
+      schemas: {
+        Book: {
+          type: 'object',
+          properties: {
+            format: {
+              type: ['string', 'null'],
+              enum: [null, 'HARDCOVER', 'PAPERBACK', 'EBOOK'],
+            },
+          },
+        },
+      },
+    },
+  };
+  return linter.run(oasDoc).then((results) => {
+    expect(results.length).toBe(0);
+  });
+});
+
+test('aep-126-enum-type-string should reject OAS 3.1 type array with integer', () => {
+  const oasDoc = {
+    openapi: '3.1.0',
+    components: {
+      schemas: {
+        Product: {
+          type: 'object',
+          properties: {
+            status: {
+              type: ['integer', 'null'],
+              enum: [null, 0, 1, 2],
+            },
+          },
+        },
+      },
+    },
+  };
+  return linter.run(oasDoc).then((results) => {
+    expect(results.length).toBeGreaterThan(0);
+    expect(results).toContainMatch({
+      message: expect.stringMatching(/type.*string/i),
+    });
+  });
+});
