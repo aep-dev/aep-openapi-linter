@@ -1,0 +1,31 @@
+functionsDir: ../functions
+functions:
+  - standardized-codes
+
+rules:
+  aep-143-standardized-codes:
+    description: Field names for standardized codes must follow AEP-143 conventions.
+    message: '{{error}}'
+    severity: error
+    formats: ['oas2', 'oas3']
+    given: $.components.schemas[*]
+    then:
+      function: standardized-codes
+
+  aep-143-standardized-codes-string-type:
+    description: Standardized code fields must be of type "string".
+    message: 'Standardized code field "{{property}}" must be type "string"'
+    severity: error
+    formats: ['oas2', 'oas3']
+    given:
+      - $.components.schemas[*].properties[?(@property in ['content_type', 'currency_code', 'language_code'])]
+      - $.components.schemas[*].properties[?(@property in ['region_code', 'time_zone', 'utc_offset'])]
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          required: ['type']
+          properties:
+            type:
+              const: string
