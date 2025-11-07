@@ -11,7 +11,7 @@ rules:
       functionOptions:
         schema:
           type: object
-          required: [singular, plural]
+          required: [singular, plural, patterns]
           properties:
             singular:
               type: string
@@ -21,8 +21,10 @@ rules:
               pattern: '^[a-z][a-z0-9-]*$'
             patterns:
               type: array
+              minItems: 1
               items:
                 type: string
+                pattern: '^[a-z][a-z0-9_-]*(/([a-z][a-z0-9_-]*|\{[a-z][a-z0-9_-]*\}))*$'
             parents:
               type: array
               items:
