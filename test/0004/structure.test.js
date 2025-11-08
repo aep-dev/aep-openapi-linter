@@ -246,3 +246,25 @@ test('aep-0004-x-aep-resource-structure should find error for invalid pattern fo
     });
   });
 });
+
+test('aep-0004-x-aep-resource-structure should allow optional type field', () => {
+  const oasDoc = {
+    openapi: '3.0.3',
+    components: {
+      schemas: {
+        Book: {
+          type: 'object',
+          'x-aep-resource': {
+            type: 'library.example.com/book',
+            singular: 'book',
+            plural: 'books',
+            patterns: ['books/{book_id}'],
+          },
+        },
+      },
+    },
+  };
+  return linter.run(oasDoc).then((results) => {
+    expect(results.length).toBe(0);
+  });
+});

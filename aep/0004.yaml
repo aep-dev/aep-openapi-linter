@@ -13,6 +13,8 @@ rules:
           type: object
           required: [singular, plural, patterns]
           properties:
+            type:
+              type: string
             singular:
               type: string
               pattern: '^[a-z][a-z0-9-]*$'
