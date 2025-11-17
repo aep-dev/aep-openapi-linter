@@ -3,8 +3,8 @@
 Linter for OpenAPI definitions to check compliance to [AEPs].
 
 This repository contains a [Spectral](https://github.com/stoplightio/spectral)
-ruleset to check an [OpenAPI] document for conformance to the [API
-Enhancement Proposals].
+ruleset to check an [OpenAPI] document for conformance to the [API Enhancement
+Proposals].
 
 [AEPs]: https://aep.dev
 [API Enhancement Proposals]: https://aep.dev
@@ -54,10 +54,10 @@ extension.
 3. Set `spectral.rulesetFile` to the name of this configuration file in your
    VSCode settings.
 
-Now when you open an OpenAPI document in this project, it should highlight lines
-with errors. You can also get a full list of problems in the file by opening
-the "Problems panel" with "View / Problems". In the Problems panel you can
-filter to show or hide errors, warnings, or infos.
+Now when you open an OpenAPI document in this project, it should highlight
+lines with errors. You can also get a full list of problems in the file by
+opening the "Problems panel" with "View / Problems". In the Problems panel you
+can filter to show or hide errors, warnings, or infos.
 
 ## Contributing
 
