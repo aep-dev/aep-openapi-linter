@@ -64,6 +64,7 @@ test('aep-0004-x-aep-resource-structure should validate mixed scenarios', () => 
           'x-aep-resource': {
             singular: 'book',
             plural: 'books',
+            patterns: ['books/{book_id}'],
           },
         },
         Publisher: {
