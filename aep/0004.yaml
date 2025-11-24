@@ -11,7 +11,7 @@ rules:
       functionOptions:
         schema:
           type: object
-          required: [singular, plural, patterns]
+          required: [singular, plural, patterns, type]
           properties:
             type:
               type: string
