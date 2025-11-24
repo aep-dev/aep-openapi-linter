@@ -15,6 +15,7 @@ rules:
           properties:
             type:
               type: string
+              pattern: '^[a-z0-9][a-z0-9.-]*/[a-z0-9][-a-z0-9]*$'
             singular:
               type: string
               pattern: '^[a-z][a-z0-9-]*$'
@@ -26,11 +27,12 @@ rules:
               minItems: 1
               items:
                 type: string
-                pattern: '^[a-z][a-z0-9_-]*(/([a-z][a-z0-9_-]*|\{[a-z][a-z0-9_-]*\}))*$'
+                pattern: '^[a-z][a-z0-9-]*(/([a-z][a-z0-9-]*|\{[a-z][a-z0-9_]*\}))*$'
             parents:
               type: array
               items:
                 type: string
+                pattern: '^[a-z0-9][a-z0-9.-]*/[a-z0-9][-a-z0-9]*$'
             singleton:
               type: boolean
           additionalProperties: false
