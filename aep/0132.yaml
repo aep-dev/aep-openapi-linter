@@ -10,16 +10,18 @@ aliases:
 functionsDir: ../functions
 functions:
   - skipSingletonsSchema
+  - get-no-request-body
 
 rules:
   aep-132-http-body:
     description: A list operation must not accept a request body.
+    message: '{{error}}'
     severity: error
     formats: ['oas3']
     given:
-      - '#ListOperation.requestBody'
+      - $.paths[*]
     then:
-      function: falsy
+      function: get-no-request-body
 
   aep-132-operation-id:
     description: The operation ID should be List{resource-singular}.

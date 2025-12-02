@@ -17,6 +17,7 @@ test('aep-parameter-names-unique should find errors', () => {
     openapi: '3.0.3',
     paths: {
       '/test1/{p1}': {
+        'x-aep-resource': 'example.com/Test1',
         parameters: [
           {
             name: 'p1',
@@ -93,6 +94,7 @@ test('aep-parameter-names-unique should find no errors', () => {
     openapi: '3.0.3',
     paths: {
       '/test1/{id}': {
+        'x-aep-resource': 'example.com/Test1',
         parameters: [
           {
             name: 'id',
@@ -129,6 +131,32 @@ test('aep-parameter-names-unique should find no errors', () => {
         name: 'skip',
         in: 'query',
         type: 'integer',
+      },
+    },
+  };
+  return linter.run(oasDoc).then((results) => {
+    expect(results.length).toBe(0);
+  });
+});
+
+test('aep-parameter-names-unique should not apply without x-aep-resource', () => {
+  const oasDoc = {
+    openapi: '3.0.3',
+    paths: {
+      '/test1/{p1}': {
+        // No x-aep-resource, so rule should not apply even though this violates the rule
+        parameters: [
+          {
+            name: 'p1',
+            in: 'path',
+            type: 'string',
+          },
+          {
+            name: 'p1',
+            in: 'query',
+            type: 'string',
+          },
+        ],
       },
     },
   };
