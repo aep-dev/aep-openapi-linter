@@ -12,8 +12,7 @@ test('aep-132-http-body should find errors', () => {
   const oasDoc = {
     openapi: '3.0.3',
     paths: {
-      '/test1': {
-        'x-aep-resource': 'example.com/Test',
+      '/users': {
         get: {
           requestBody: {
             content: {
@@ -24,6 +23,28 @@ test('aep-132-http-body should find errors', () => {
               },
             },
           },
+          responses: {
+            200: {
+              content: {
+                'application/json': {
+                  schema: {
+                    $ref: '#/components/schemas/User',
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    components: {
+      schemas: {
+        User: {
+          'x-aep-resource': 'example.com/User',
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+          },
         },
       },
     },
@@ -31,54 +52,40 @@ test('aep-132-http-body should find errors', () => {
   return linter.run(oasDoc).then((results) => {
     expect(results.length).toBe(1);
     expect(results).toContainMatch({
-      path: ['paths', '/test1', 'get', 'requestBody'],
+      path: ['paths', '/users', 'get', 'requestBody'],
       message: 'A list operation must not accept a request body.',
     });
   });
 });
 
-test('aep-132-http-body should find no errors', () => {
+test('aep-132-http-body should find no errors for valid GET', () => {
   const oasDoc = {
     openapi: '3.0.3',
     paths: {
-      '/test1': {
-        'x-aep-resource': 'example.com/Test',
-        get: {},
+      '/users': {
+        get: {
+          responses: {
+            200: {
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'array',
+                    items: {
+                      $ref: '#/components/schemas/User',
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       },
-      '/test3': {
-        'x-aep-resource': 'example.com/Test3',
-        post: {
-          requestBody: {
-            content: {
-              'application/json': {
-                schema: {
-                  type: 'string',
-                },
-              },
-            },
-          },
-        },
-        put: {
-          requestBody: {
-            content: {
-              'application/json': {
-                schema: {
-                  type: 'string',
-                },
-              },
-            },
-          },
-        },
-        patch: {
-          requestBody: {
-            content: {
-              'application/json': {
-                schema: {
-                  type: 'string',
-                },
-              },
-            },
-          },
+    },
+    components: {
+      schemas: {
+        User: {
+          'x-aep-resource': 'example.com/User',
+          type: 'object',
         },
       },
     },
@@ -92,8 +99,7 @@ test('aep-132-http-body should not apply without x-aep-resource', () => {
   const oasDoc = {
     openapi: '3.0.3',
     paths: {
-      '/test1': {
-        // No x-aep-resource, so rule should not apply even though this violates the rule
+      '/users': {
         get: {
           requestBody: {
             content: {
@@ -103,6 +109,28 @@ test('aep-132-http-body should not apply without x-aep-resource', () => {
                 },
               },
             },
+          },
+          responses: {
+            200: {
+              content: {
+                'application/json': {
+                  schema: {
+                    $ref: '#/components/schemas/User',
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    components: {
+      schemas: {
+        User: {
+          // No x-aep-resource, so rule should not apply
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
           },
         },
       },
