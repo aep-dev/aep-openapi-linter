@@ -13,6 +13,7 @@ test('aep-132-http-body should find errors', () => {
     openapi: '3.0.3',
     paths: {
       '/test1': {
+        'x-aep-resource': 'example.com/Test',
         get: {
           requestBody: {
             content: {
@@ -41,9 +42,11 @@ test('aep-132-http-body should find no errors', () => {
     openapi: '3.0.3',
     paths: {
       '/test1': {
+        'x-aep-resource': 'example.com/Test',
         get: {},
       },
       '/test3': {
+        'x-aep-resource': 'example.com/Test3',
         post: {
           requestBody: {
             content: {
@@ -67,6 +70,31 @@ test('aep-132-http-body should find no errors', () => {
           },
         },
         patch: {
+          requestBody: {
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'string',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+  return linter.run(oasDoc).then((results) => {
+    expect(results.length).toBe(0);
+  });
+});
+
+test('aep-132-http-body should not apply without x-aep-resource', () => {
+  const oasDoc = {
+    openapi: '3.0.3',
+    paths: {
+      '/test1': {
+        // No x-aep-resource, so rule should not apply even though this violates the rule
+        get: {
           requestBody: {
             content: {
               'application/json': {

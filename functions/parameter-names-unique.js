@@ -26,6 +26,12 @@ module.exports = (pathItem, _opts, paths) => {
   if (pathItem === null || typeof pathItem !== 'object') {
     return [];
   }
+
+  // Only apply this rule if x-aep-resource is present
+  if (!pathItem['x-aep-resource']) {
+    return [];
+  }
+
   const path = paths.path || paths.target || [];
 
   const errors = [];
