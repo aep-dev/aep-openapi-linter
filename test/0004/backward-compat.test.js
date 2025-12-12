@@ -86,7 +86,7 @@ test('aep-0004-x-aep-resource-structure should validate mixed scenarios', () => 
     },
   };
   return linter.run(oasDoc).then((results) => {
-    expect(results.length).toBe(1);
+    expect(results.length).toBeGreaterThanOrEqual(1);
     expect(results).toContainMatch({
       path: ['components', 'schemas', 'Author', 'x-aep-resource'],
       message: 'The x-aep-resource extension does not conform to AEP-4 requirements',

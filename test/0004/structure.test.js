@@ -50,6 +50,7 @@ test('aep-0004-x-aep-resource-structure should find errors for invalid field for
         Author: {
           type: 'object',
           'x-aep-resource': {
+            type: 'book-store.example.com/author',
             singular: 'Author', // should be kebab-case lowercase
             plural: 'authors',
             patterns: ['authors/{author_id}'],
@@ -58,6 +59,7 @@ test('aep-0004-x-aep-resource-structure should find errors for invalid field for
         Magazine: {
           type: 'object',
           'x-aep-resource': {
+            type: 'book-store.example.com/magazine',
             singular: 'magazine',
             plural: 'Magazines', // should be kebab-case lowercase
             patterns: ['magazines/{magazine_id}'],
@@ -66,6 +68,7 @@ test('aep-0004-x-aep-resource-structure should find errors for invalid field for
         BookStore: {
           type: 'object',
           'x-aep-resource': {
+            type: 'book-store.example.com/book-store',
             singular: 'book_store', // should use hyphens not underscores
             plural: 'book-stores',
             patterns: ['book-stores/{book_store_id}'],
@@ -96,6 +99,7 @@ test('aep-0004-x-aep-resource-structure should find no errors for valid minimal 
         Book: {
           type: 'object',
           'x-aep-resource': {
+            type: 'book-store.example.com/book',
             singular: 'book',
             plural: 'books',
             patterns: ['books/{book_id}'],
@@ -117,6 +121,7 @@ test('aep-0004-x-aep-resource-structure should find no errors for valid complete
         Book: {
           type: 'object',
           'x-aep-resource': {
+            type: 'book-store.example.com/book',
             singular: 'book',
             plural: 'books',
             patterns: ['publishers/{publisher_id}/books/{book_id}'],
@@ -126,6 +131,7 @@ test('aep-0004-x-aep-resource-structure should find no errors for valid complete
         Publisher: {
           type: 'object',
           'x-aep-resource': {
+            type: 'book-store.example.com/publisher',
             singular: 'publisher',
             plural: 'publishers',
             patterns: ['publishers/{publisher_id}'],
@@ -134,6 +140,7 @@ test('aep-0004-x-aep-resource-structure should find no errors for valid complete
         Library: {
           type: 'object',
           'x-aep-resource': {
+            type: 'book-store.example.com/library',
             singular: 'library',
             plural: 'libraries',
             patterns: ['library'],
@@ -156,6 +163,7 @@ test('aep-0004-x-aep-resource-structure should allow kebab-case in singular and 
         BookEdition: {
           type: 'object',
           'x-aep-resource': {
+            type: 'book-store.example.com/book-edition',
             singular: 'book-edition',
             plural: 'book-editions',
             patterns: ['book-editions/{book-edition_id}'],
@@ -177,6 +185,7 @@ test('aep-0004-x-aep-resource-structure should find error for missing patterns f
         Book: {
           type: 'object',
           'x-aep-resource': {
+            type: 'book-store.example.com/book',
             singular: 'book',
             plural: 'books',
             // missing 'patterns' field
@@ -202,6 +211,7 @@ test('aep-0004-x-aep-resource-structure should find error for empty patterns arr
         Book: {
           type: 'object',
           'x-aep-resource': {
+            type: 'book-store.example.com/book',
             singular: 'book',
             plural: 'books',
             patterns: [], // empty array
@@ -226,6 +236,7 @@ test('aep-0004-x-aep-resource-structure should find error for invalid pattern fo
         Book: {
           type: 'object',
           'x-aep-resource': {
+            type: 'book-store.example.com/book',
             singular: 'book',
             plural: 'books',
             patterns: [
@@ -244,27 +255,5 @@ test('aep-0004-x-aep-resource-structure should find error for invalid pattern fo
     expect(results).toContainMatch({
       path: ['components', 'schemas', 'Book', 'x-aep-resource', 'patterns', '1'],
     });
-  });
-});
-
-test('aep-0004-x-aep-resource-structure should allow optional type field', () => {
-  const oasDoc = {
-    openapi: '3.0.3',
-    components: {
-      schemas: {
-        Book: {
-          type: 'object',
-          'x-aep-resource': {
-            type: 'library.example.com/book',
-            singular: 'book',
-            plural: 'books',
-            patterns: ['books/{book_id}'],
-          },
-        },
-      },
-    },
-  };
-  return linter.run(oasDoc).then((results) => {
-    expect(results.length).toBe(0);
   });
 });
