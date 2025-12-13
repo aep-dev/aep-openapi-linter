@@ -158,7 +158,7 @@ test('aep-0004-x-aep-resource-structure should allow kebab-case in singular and 
           'x-aep-resource': {
             singular: 'book-edition',
             plural: 'book-editions',
-            patterns: ['book-editions/{book-edition_id}'],
+            patterns: ['book-editions/{book_edition_id}'],
           },
         },
       },
