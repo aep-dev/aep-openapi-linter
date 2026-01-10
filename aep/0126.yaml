@@ -37,7 +37,7 @@ rules:
     description: If enum is nullable, null should be the first value in the enum array.
     message: '{{error}}'
     severity: warn
-    formats: ['oas2', 'oas3']
+    formats: ['oas3']
     given: $..[?(@property === 'enum')]^
     then:
       function: aep-126-enum-null-first
@@ -46,19 +46,27 @@ rules:
     description: If enum contains null, field must declare nullable true.
     message: '{{error}}'
     severity: error
-    formats: ['oas2', 'oas3']
+    formats: ['oas3']
     given: $..[?(@property === 'enum')]^
     then:
       function: aep-126-enum-nullable-declaration
 
   aep-126-no-standard-value-enums:
     description: Fields should not enumerate standard codes (language, country, currency, media types).
-    message: '{{error}}'
     severity: warn
     formats: ['oas2', 'oas3']
-    given: $..[?(@property === 'enum')]^
+    given:
+      - $..properties[[?(@property == 'language' || @property == 'language_code')]]
+      - $..properties[[?(@property == 'country' || @property == 'country_code' || @property == 'region_code')]]
+      - $..properties[[?(@property == 'currency' || @property == 'currency_code')]]
+      - $..properties[[?(@property == 'media_type' || @property == 'content_type')]]
     then:
-      function: aep-126-no-standard-value-enums
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          not:
+            required: ['enum']
 
   aep-126-enum-has-description:
     description: Enum fields should include a description explaining their purpose.
