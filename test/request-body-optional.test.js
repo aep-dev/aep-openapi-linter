@@ -12,6 +12,7 @@ test('aep-request-body-optional should find errors', () => {
     openapi: '3.0.3',
     paths: {
       '/test1': {
+        'x-aep-resource': 'example.com/Test1',
         put: {
           requestBody: {
             content: {
@@ -25,6 +26,7 @@ test('aep-request-body-optional should find errors', () => {
         },
       },
       '/test2': {
+        'x-aep-resource': 'example.com/Test2',
         patch: {
           requestBody: {
             content: {
@@ -38,6 +40,7 @@ test('aep-request-body-optional should find errors', () => {
         },
       },
       '/test3': {
+        'x-aep-resource': 'example.com/Test3',
         post: {
           requestBody: {
             content: {
@@ -65,6 +68,7 @@ test('aep-request-body-optional should find no errors', () => {
     openapi: '3.0.3',
     paths: {
       '/test1': {
+        'x-aep-resource': 'example.com/Test1',
         put: {
           requestBody: {
             required: true,
@@ -79,6 +83,7 @@ test('aep-request-body-optional should find no errors', () => {
         },
       },
       '/test2': {
+        'x-aep-resource': 'example.com/Test2',
         patch: {
           requestBody: {
             required: true,
@@ -93,9 +98,35 @@ test('aep-request-body-optional should find no errors', () => {
         },
       },
       '/test3': {
+        'x-aep-resource': 'example.com/Test3',
         post: {
           requestBody: {
             required: true,
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'string',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+  return linter.run(oasDoc).then((results) => {
+    expect(results.length).toBe(0);
+  });
+});
+
+test('aep-request-body-optional should not apply without x-aep-resource', () => {
+  const oasDoc = {
+    openapi: '3.0.3',
+    paths: {
+      '/test1': {
+        // No x-aep-resource, so rule should not apply even though this violates the rule
+        put: {
+          requestBody: {
             content: {
               'application/json': {
                 schema: {

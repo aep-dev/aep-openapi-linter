@@ -22,6 +22,7 @@ functions:
   - parameter-names-unique
   - operations-endpoint
   - standardized-codes
+  - request-body-required
 rules:
   openapi-tags: off
   operation-tags: off
@@ -40,11 +41,9 @@ rules:
 
   aep-request-body-optional:
     description: Flag optional request body -- common oversight.
-    message: The body parameter is not marked as required.
+    message: '{{error}}'
     severity: info
     formats: ['oas3']
-    given:
-      - $.paths[*].[put,post,patch].requestBody
+    given: $.paths[*]
     then:
-      field: required
-      function: truthy
+      function: request-body-required

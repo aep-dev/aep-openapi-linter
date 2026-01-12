@@ -7,15 +7,21 @@ aliases:
           # first condition excludes custom methods and second condition matches paths ending in a path parameter
           - $.paths[?(!@property.match(/:[^/]*$/) && @property.match(/\}$/))].delete
 
+functionsDir: ../functions
+functions:
+  - delete-no-request-body
+  - delete-response-204
+
 rules:
   aep-135-http-body:
     description: A delete operation must not accept a request body.
+    message: '{{error}}'
     severity: error
     formats: ['oas3']
     given:
-      - '#DeleteOperation.requestBody'
+      - $.paths[*]
     then:
-      function: falsy
+      function: delete-no-request-body
 
   aep-135-operation-id:
     description: The operation ID should be Delete{resource-singular}.
@@ -36,14 +42,9 @@ rules:
 
   aep-135-response-204:
     description: A delete operation should have a 204 response.
-    message: A delete operation should have a `204` response.
+    message: '{{error}}'
     severity: warn
     formats: ['oas2', 'oas3']
-    given: '#DeleteOperation.responses'
+    given: $.paths[*]
     then:
-      function: schema
-      functionOptions:
-        schema:
-          oneOf:
-            - required: ['204']
-            - required: ['202']
+      function: delete-response-204
