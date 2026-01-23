@@ -1,0 +1,55 @@
+name: Create Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_type:
+        description: 'Release type (major, minor, patch)'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+jobs:
+  version-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Bump version
+        id: bump_version
+        run: |
+          new_version=$(npm version ${{ github.event.inputs.release_type }} --git-tag-version false)
+          echo "new_version=$new_version" >> $GITHUB_ENV
+
+      - name: Commit and Tag
+        env:
+          NEW_VERSION: ${{ env.new_version }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit -am "chore: Bump version to $NEW_VERSION"
+          git tag $NEW_VERSION
+          git push origin main --tags
+
+      - name: Create GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ env.new_version }}
+          body: 'Automated release ${{ env.new_version }}.'
