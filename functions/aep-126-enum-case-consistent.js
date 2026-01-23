@@ -28,29 +28,26 @@ module.exports = (field, _opts, context) => {
     return [];
   }
 
-  // Filter out null values - they don't have case
-  const stringValues = enumValues.filter((v) => v !== null && typeof v === 'string');
-
-  // If less than 2 string values, no consistency check needed
-  if (stringValues.length < 2) {
-    return [];
-  }
-
   /**
    * Detect the case style of a string value.
-   * Returns one of: 'UPPER', 'lower', 'camelCase', 'PascalCase', 'kebab-case', 'snake_case', 'UPPER_SNAKE', 'mixed'
+   * Returns one of:
+   * - 'UPPER', 'UPPER_SNAKE', 'UPPER-KEBAB',
+   * - 'lower', 'snake_case', 'kebab-case',
+   * - 'PascalCase',
+   * - 'camelCase',
+   * - 'unknown' (not a string or empty or unrecognized format)
    */
   const detectCase = (str) => {
     if (!str || typeof str !== 'string') return 'unknown';
 
-    // Check for all uppercase (UPPERCASE or UPPER_SNAKE_CASE)
+    // Check for all uppercase (UPPER, UPPER_SNAKE, or UPPER-KEBAB)
     if (str === str.toUpperCase()) {
       if (str.includes('_')) return 'UPPER_SNAKE';
       if (str.includes('-')) return 'UPPER-KEBAB';
       return 'UPPER';
     }
 
-    // Check for all lowercase
+    // Check for all lowercase (lower, snake_case, or kebab-case)
     if (str === str.toLowerCase()) {
       if (str.includes('_')) return 'snake_case';
       if (str.includes('-')) return 'kebab-case';
@@ -58,63 +55,73 @@ module.exports = (field, _opts, context) => {
     }
 
     // Check for PascalCase (starts with uppercase, has mixed case, no separators)
-    if (/^[A-Z][a-zA-Z0-9]*$/.test(str) && str !== str.toUpperCase()) {
+    if (/^[A-Z]([a-z0-9]+[A-Z]?)*[a-z0-9]*$/.test(str)) {
       return 'PascalCase';
     }
 
     // Check for camelCase (starts with lowercase, has mixed case, no separators)
-    if (/^[a-z][a-zA-Z0-9]*$/.test(str)) {
+    if (/^[a-z]([a-z0-9]+[A-Z]?)*[A-Z][a-zA-Z0-9]*$/.test(str)) {
       return 'camelCase';
     }
 
-    // Mixed case with separators
-    if (str.includes('_')) return 'Mixed_Snake';
-    if (str.includes('-')) return 'Mixed-Kebab';
-
-    return 'mixed';
+    return 'unknown';
   };
 
-  // Detect case for all string values
-  const cases = stringValues.map((value) => ({
-    value,
-    case: detectCase(value),
-  }));
-
-  // Get unique case styles
+  const cases = enumValues
+    .filter((v) => v !== null)
+    .map((v) => ({
+      value: v,
+      case: detectCase(v),
+    }));
   const caseStyles = [...new Set(cases.map((c) => c.case))];
 
-  // Normalize compatible case styles
-  // Lowercase variants (lower, kebab-case, snake_case) are compatible
-  // Uppercase variants (UPPER, UPPER_SNAKE, UPPER-KEBAB) are compatible
-  const normalizedStyles = caseStyles.map((style) => {
-    if (style === 'lower' || style === 'kebab-case' || style === 'snake_case') {
-      return 'lowercase-family';
-    }
-    if (style === 'UPPER' || style === 'UPPER_SNAKE' || style === 'UPPER-KEBAB') {
-      return 'uppercase-family';
-    }
-    return style;
-  });
+  // Check for valid combinations explicitly
+  let isValid = false;
 
-  const uniqueNormalizedStyles = [...new Set(normalizedStyles)];
+  if (caseStyles.length === 1 && !caseStyles.includes('unknown')) {
+    // Single known case style is valid
+    isValid = true;
+    // Two case styles - check valid combinations
+  } else if (caseStyles.every((c) => ['UPPER', 'UPPER_SNAKE'].includes(c))) {
+    isValid = true;
+  } else if (caseStyles.every((c) => ['UPPER', 'UPPER-KEBAB'].includes(c))) {
+    isValid = true;
+  } else if (caseStyles.every((c) => ['lower', 'snake_case'].includes(c))) {
+    isValid = true;
+  } else if (caseStyles.every((c) => ['lower', 'kebab-case'].includes(c))) {
+    isValid = true;
+  } else if (caseStyles.every((c) => ['lower', 'camelCase'].includes(c))) {
+    isValid = true;
+  }
 
-  // If more than one normalized case style, report inconsistency
-  if (uniqueNormalizedStyles.length > 1) {
+  if (!isValid) {
     const fieldName = context.path[context.path.length - 1];
+
+    if (caseStyles.includes('unknown')) {
+      const unknownValues = cases
+        .filter((c) => c.case === 'unknown')
+        .map((c) => `"${c.value}"`)
+        .slice(0, 3)
+        .join(', ');
+      const suffix = cases.filter((c) => c.case === 'unknown').length > 3 ? ', ...' : '';
+      return [
+        {
+          message: `Enum field "${fieldName}" contains values with unknown case styles: ${unknownValues}${suffix}`,
+        },
+      ];
+    }
+
     const caseExamples = cases
       .map((c) => `"${c.value}" (${c.case})`)
       .slice(0, 3)
       .join(', ');
-
     const suffix = cases.length > 3 ? ', ...' : '';
-    const message =
-      `Enum field "${fieldName}" has inconsistent case formatting. ` +
-      `Found: ${caseExamples}${suffix}. ` +
-      `All values should use the same case style.`;
 
     return [
       {
-        message,
+        message:
+          `Enum field "${fieldName}" contains values with inconsistent case styles. ` +
+          `Found: ${caseExamples}${suffix}. `,
       },
     ];
   }
