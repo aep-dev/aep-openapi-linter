@@ -1,0 +1,70 @@
+# This workflow automatically publishes a release in GitHub after a version bump
+# is merged to main. It triggers when package.json is updated on the main branch,
+# checks if the commit is a version bump, then creates a GitHub release with a tag
+# and publishes the package to npm.
+
+name: Publish Release and NPM Package
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'package.json'
+
+jobs:
+  create-release-and-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check if version bump commit
+        id: check_commit
+        run: |
+          commit_message=$(git log -1 --pretty=%B)
+          if [[ "$commit_message" =~ ^chore:\ Bump\ version\ to ]]; then
+            echo "is_version_bump=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_version_bump=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Get version from package.json
+        if: steps.check_commit.outputs.is_version_bump == 'true'
+        id: get_version
+        run: |
+          version=$(node -p "require('./package.json').version")
+          echo "version=v$version" >> $GITHUB_OUTPUT
+
+      - name: Set up Node.js
+        if: steps.check_commit.outputs.is_version_bump == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        if: steps.check_commit.outputs.is_version_bump == 'true'
+        run: npm install
+
+      - name: Create GitHub Release
+        if: steps.check_commit.outputs.is_version_bump == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.get_version.outputs.version }}
+          name: Release ${{ steps.get_version.outputs.version }}
+          body: 'Automated release ${{ steps.get_version.outputs.version }}'
+          draft: false
+          prerelease: false
+
+      - name: Publish to npm
+        if: steps.check_commit.outputs.is_version_bump == 'true'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish
