@@ -58,7 +58,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           tag="${{ steps.get_version.outputs.version }}"
-          if git ls-remote --tags origin | grep -q "refs/tags/$tag$"; then
+          if git ls-remote --tags origin | grep -q "refs/tags/${tag}\$"; then
             echo "Tag $tag already exists"
             echo "tag_exists=true" >> $GITHUB_OUTPUT
           else
