@@ -51,8 +51,25 @@ jobs:
         if: steps.check_commit.outputs.is_version_bump == 'true'
         run: npm install
 
-      - name: Create GitHub Release
+      - name: Check if tag already exists
         if: steps.check_commit.outputs.is_version_bump == 'true'
+        id: check_tag
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          tag="${{ steps.get_version.outputs.version }}"
+          if git ls-remote --tags origin | grep -q "refs/tags/$tag$"; then
+            echo "Tag $tag already exists"
+            echo "tag_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "Tag $tag does not exist"
+            echo "tag_exists=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create GitHub Release
+        if: |
+          steps.check_commit.outputs.is_version_bump == 'true' &&
+          steps.check_tag.outputs.tag_exists == 'false'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: softprops/action-gh-release@v1
@@ -62,6 +79,14 @@ jobs:
           body: 'Automated release ${{ steps.get_version.outputs.version }}'
           draft: false
           prerelease: false
+
+      - name: Skip release creation
+        if: |
+          steps.check_commit.outputs.is_version_bump == 'true' &&
+          steps.check_tag.outputs.tag_exists == 'true'
+        run: |
+          version="${{ steps.get_version.outputs.version }}"
+          echo "Tag $version already exists. Skipping release creation."
 
       - name: Publish to npm
         if: steps.check_commit.outputs.is_version_bump == 'true'
