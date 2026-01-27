@@ -58,14 +58,14 @@ jobs:
 
       - name: Create Pull Request
         id: create_pr
-        uses: peter-evans/create-pull-request@v6
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: release/${{ env.new_version }}
-          title: 'chore: Release ${{ env.new_version }}'
-          body: |
-            Automated version bump to ${{ env.new_version }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create \
+            --base main \
+            --head release/${{ env.new_version }} \
+            --title "chore: Release ${{ env.new_version }}" \
+            --body "Automated version bump to ${{ env.new_version }}
 
-            This PR was automatically created by the release workflow.
-            Once merged, a GitHub release will be created automatically.
-          base: main
+          This PR was automatically created by the release workflow.
+          Once merged, a GitHub release will be created automatically."
