@@ -16,7 +16,7 @@ rules:
     then:
       function: pattern
       functionOptions:
-        match: '^([Aa]dd|[Rr]remove)[A-Z].*$'
+        match: '^([Aa]dd|[Rr]emove)[A-Z].*$'
 
   aep-144-http-method:
     description: An Update Array operation must be POST.
