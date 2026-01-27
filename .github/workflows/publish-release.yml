@@ -1,7 +1,7 @@
 # This workflow automatically publishes a release in GitHub after a version bump
 # is merged to main. It triggers when package.json is updated on the main branch,
-# checks if the commit is a version bump, then creates a GitHub release with a tag
-# and publishes the package to npm.
+# checks if the commit is a version bump, then publishes the package to npm and
+# creates a GitHub release with a tag.
 
 name: Publish Release and NPM Package
 
@@ -51,6 +51,12 @@ jobs:
         if: steps.check_commit.outputs.is_version_bump == 'true'
         run: npm install
 
+      - name: Publish to npm
+        if: steps.check_commit.outputs.is_version_bump == 'true'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish
+
       - name: Create GitHub Release
         if: steps.check_commit.outputs.is_version_bump == 'true'
         env:
@@ -62,9 +68,3 @@ jobs:
           body: 'Automated release ${{ steps.get_version.outputs.version }}'
           draft: false
           prerelease: false
-
-      - name: Publish to npm
-        if: steps.check_commit.outputs.is_version_bump == 'true'
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish
