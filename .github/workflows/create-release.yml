@@ -61,11 +61,13 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          PR_BODY="Automated version bump to ${{ env.new_version }}
+
+          This PR was automatically created by the release workflow.
+          Once merged, a GitHub release will be created automatically."
+          
           gh pr create \
             --base main \
             --head release/${{ env.new_version }} \
             --title "chore: Release ${{ env.new_version }}" \
-            --body "Automated version bump to ${{ env.new_version }}
-
-          This PR was automatically created by the release workflow.
-          Once merged, a GitHub release will be created automatically."
+            --body "$PR_BODY"
