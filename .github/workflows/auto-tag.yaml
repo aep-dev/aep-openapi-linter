@@ -40,8 +40,18 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git tag -a "${{ steps.package-version.outputs.tag }}" -m "Release ${{ steps.package-version.outputs.tag }}"
-          git push origin "${{ steps.package-version.outputs.tag }}"
+          TAG="${{ steps.package-version.outputs.tag }}"
+          # Try to create the tag; if it already exists locally, continue.
+          git tag -a "$TAG" -m "Release $TAG" || echo "Tag $TAG already exists locally, continuing."
+          # Try to push the tag. If the push fails, check if the tag now exists on the remote.
+          if ! git push origin "$TAG"; then
+            if git ls-remote --tags origin "$TAG" | grep -q "$TAG"; then
+              echo "Tag $TAG already exists on remote (likely created concurrently), skipping."
+            else
+              echo "Failed to push tag $TAG to remote."
+              exit 1
+            fi
+          fi
 
       - name: Tag already exists
         if: steps.check-tag.outputs.exists == 'true'

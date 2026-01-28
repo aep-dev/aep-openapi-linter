@@ -52,7 +52,7 @@ This script will:
 - Ensure you're on main and up to date
 - Verify the working tree is clean
 - Run tests
-- Bump the version in package.json
+- Bump the version in package.json and package-lock.json
 - Create a release branch with the new version
 - Commit and push the changes
 

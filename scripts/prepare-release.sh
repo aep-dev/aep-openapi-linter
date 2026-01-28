@@ -16,10 +16,27 @@ if [[ ! "$VERSION_TYPE" =~ ^(patch|minor|major)$ ]]; then
 fi
 
 # Ensure we're on main and up to date
-echo "Checking out main branch..."
-git checkout main
-git pull
+echo "Ensuring we are on 'main' branch..."
+current_branch=$(git rev-parse --abbrev-ref HEAD || echo "UNKNOWN")
 
+if [ "$current_branch" = "HEAD" ]; then
+  echo "Error: You are in a detached HEAD state. Please check out 'main' manually and re-run this script."
+  exit 1
+fi
+
+if [ "$current_branch" != "main" ]; then
+  echo "Checking out 'main' branch from '$current_branch'..."
+  if ! git checkout main; then
+    echo "Error: Failed to check out 'main'. Ensure you have no uncommitted changes blocking checkout and that the 'main' branch exists."
+    exit 1
+  fi
+fi
+
+echo "Updating 'main' from origin..."
+if ! git pull --rebase; then
+  echo "Error: 'git pull' failed. Please resolve any issues (e.g., merge conflicts or network problems) and re-run this script."
+  exit 1
+fi
 # Check if working tree is clean
 if [ -n "$(git status --porcelain)" ]; then
   echo "Error: Working tree is not clean. Please commit or stash changes."
@@ -30,9 +47,12 @@ fi
 echo "Running tests..."
 npm test
 
+# Run linter
+echo "Running linter..."
+npm run lint
 # Bump version
 echo "Bumping version ($VERSION_TYPE)..."
-npm version $VERSION_TYPE --no-git-tag-version
+npm version "$VERSION_TYPE" --no-git-tag-version
 
 # Get the new version
 NEW_VERSION=$(node -p "require('./package.json').version")

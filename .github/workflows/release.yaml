@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Ensure tag is on main
+      - name: Verify tagged commit is in main branch history
         run: |
           git fetch origin main
           if ! git merge-base --is-ancestor $GITHUB_SHA origin/main; then
