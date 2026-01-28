@@ -10,14 +10,14 @@ on:
 jobs:
   auto-tag:
     runs-on: ubuntu-latest
-    
+
     permissions:
       contents: write
 
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Fetch all history for tag checking
+          fetch-depth: 0 # Fetch all history for tag checking
 
       - name: Get version from package.json
         id: package-version
