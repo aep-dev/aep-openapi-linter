@@ -16,27 +16,41 @@ if [[ ! "$VERSION_TYPE" =~ ^(patch|minor|major)$ ]]; then
 fi
 
 # Ensure we're on main and up to date
-echo "Ensuring we are on 'main' branch..."
+echo "Checking current branch..."
 current_branch=$(git rev-parse --abbrev-ref HEAD || echo "UNKNOWN")
 
-if [ "$current_branch" = "HEAD" ]; then
-  echo "Error: You are in a detached HEAD state. Please check out 'main' manually and re-run this script."
-  exit 1
-fi
-
 if [ "$current_branch" != "main" ]; then
-  echo "Checking out 'main' branch from '$current_branch'..."
-  if ! git checkout main; then
-    echo "Error: Failed to check out 'main'. Ensure you have no uncommitted changes blocking checkout and that the 'main' branch exists."
-    exit 1
-  fi
-fi
-
-echo "Updating 'main' from origin..."
-if ! git pull --rebase; then
-  echo "Error: 'git pull' failed. Please resolve any issues (e.g., merge conflicts or network problems) and re-run this script."
+  echo "Error: This script must be run from the 'main' branch."
+  echo "Current branch: $current_branch"
+  echo "Please checkout 'main' and re-run this script."
   exit 1
 fi
+
+echo "Verifying 'origin' remote..."
+ORIGIN_URL=$(git remote get-url origin 2>/dev/null || echo "")
+EXPECTED_REPO="aep-dev/aep-openapi-linter"
+
+if [[ ! "$ORIGIN_URL" =~ $EXPECTED_REPO ]]; then
+  echo "Error: 'origin' remote does not point to the main repository."
+  echo "Expected: $EXPECTED_REPO"
+  echo "Found: $ORIGIN_URL"
+  echo "Please ensure 'origin' points to the upstream repository, not a fork."
+  exit 1
+fi
+
+echo "Fetching latest from origin..."
+git fetch origin main
+
+echo "Verifying branch is up to date..."
+LOCAL=$(git rev-parse main)
+REMOTE=$(git rev-parse origin/main)
+
+if [ "$LOCAL" != "$REMOTE" ]; then
+  echo "Error: Local 'main' branch is not in sync with 'origin/main'."
+  echo "Please pull the latest changes (git pull) and re-run this script."
+  exit 1
+fi
+
 # Check if working tree is clean
 if [ -n "$(git status --porcelain)" ]; then
   echo "Error: Working tree is not clean. Please commit or stash changes."
