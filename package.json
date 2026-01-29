@@ -3,10 +3,21 @@
   "version": "0.5.0",
   "description": "Linter for OpenAPI definitions to check compliance to AEPs",
   "main": "spectral.yaml",
+  "files": [
+    "aep",
+    "functions",
+    "spectral.yaml"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "lint": "prettier --check . && eslint --cache --quiet --ext '.js' functions test",
     "lint-fix": "prettier --write . && eslint --cache --quiet --ext '.js' --fix functions test",
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "release:patch": "./scripts/prepare-release.sh patch",
+    "release:minor": "./scripts/prepare-release.sh minor",
+    "release:major": "./scripts/prepare-release.sh major"
   },
   "author": "Mike Kistler",
   "license": "MIT",
