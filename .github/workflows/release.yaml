@@ -26,11 +26,16 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "tag=v$VERSION" >> $GITHUB_OUTPUT
 
-      - name: Check if tag exists
+      - name: Check if version changed
         run: |
-          if git rev-parse "v${{ steps.package-version.outputs.version }}" >/dev/null 2>&1; then
-            echo "Tag v${{ steps.package-version.outputs.version }} already exists. Skipping."
-            exit 1
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          CURRENT_TAG="v${{ steps.package-version.outputs.version }}"
+
+          if [ "$LATEST_TAG" = "$CURRENT_TAG" ]; then
+            echo "Version $CURRENT_TAG has not changed from latest tag. Skipping release."
+            exit 0
+          else
+            echo "New version detected: $CURRENT_TAG (previous: $LATEST_TAG)"
           fi
 
       - uses: actions/setup-node@v4
@@ -51,7 +56,7 @@ jobs:
           git tag -a "$TAG" -m "Release $TAG" || echo "Tag $TAG already exists locally, continuing."
           # Try to push the tag. If the push fails, bail out.
           if ! git push origin "$TAG"; then
-            echo "Failed to push tag $TAG to remote."
+            echo "Failed to push tag $TAG to remote (may already exist)."
             exit 1
           fi
 

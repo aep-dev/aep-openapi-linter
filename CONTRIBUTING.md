@@ -22,6 +22,11 @@ npm install
 npm test
 ```
 
+## Development Workflow
+
+1. Use feature branches for development.
+2. PRs for new features should target the main branch.
+
 ### The example test
 
 The input file for the `test/example/example.test.js` is taken from the

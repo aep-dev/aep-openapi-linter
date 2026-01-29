@@ -8,20 +8,6 @@ about**, with minimal tooling and clear sources of truth.
 
 ---
 
-## Overview
-
-- Development merges to the main branch until it is time to publish a release.
-- Use `npm run release:{patch,minor,major}` to create a release branch.
-  - This bumps the version in package.json/package-lock.json
-- Push that branch and open a PR to main.
-- Merging that branch triggers the `release` workflow that creates a tag
-  matching the version in package.json and publishes the release to npm and
-  GitHub.
-
-No release bots, changelog generators, or additional CLIs are required.
-
----
-
 ## Versioning
 
 This project follows **Semantic Versioning (SemVer)**:
@@ -55,11 +41,15 @@ This script will:
 
 Then create a Pull Request to merge the release branch into main.
 
-Once the PR is merged, **the tag is created automatically**.
+Once the PR is merged, the `release` workflow will run since the PR makes
+changes to package.json. This workflow will run the tests (again), and if the
+tests pass will then attempt to create a tag for the new version. If that
+succeeds, it then creates a release in both npm and GitHub.
 
-The `release` workflow monitors package.json changes on main and automatically
-creates the corresponding git tag if it doesn't exist and then creates a
-release in both npm and GitHub.
+The release branch can be deleted after the PR is merged and the releases are
+published.
+
+No release bots, changelog generators, or additional CLIs are required.
 
 ---
 
@@ -67,8 +57,8 @@ release in both npm and GitHub.
 
 ### Release Workflow
 
-The `release` workflow is triggered by a PR merge to main that updates the
-version in package.json. When triggered, it will:
+The `release` workflow is triggered by a push to 'main' (e.g. a PR merge) that
+modifies "package json'. When triggered, it
 
 1. Check if a tag already exists for this version. If so, the workflow
    terminates.
@@ -78,8 +68,8 @@ version in package.json. When triggered, it will:
 4. Publish the package to npm
 5. Create a GitHub Release with auto-generated notes
 
-This single workflow handles the entire release process and the npm and GitHub
-release are in sync and use the version from package.json
+This single workflow handles the entire release process and ensures the npm and
+GitHub releases are in sync and use the version from package.json
 
 ---
 
@@ -117,16 +107,3 @@ transparent.
 - The tag can be deleted and recreated if necessary
 - Fixes should be released as a follow-up patch version rather than overwriting
   published artifacts
-
----
-
-## Development Workflow
-
-Since releases are manually triggered:
-
-1. Work directly on the main branch (or use feature branches and merge to main)
-2. Commit and push changes as needed
-3. When you're ready to release, trigger the release workflow on the main
-   branch.
-4. The workflow will handle versioning, tagging, publishing, and updating
-   package.json
