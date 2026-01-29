@@ -64,6 +64,7 @@ npm test
 # Run linter
 echo "Running linter..."
 npm run lint
+
 # Bump version
 echo "Bumping version ($VERSION_TYPE)..."
 npm version "$VERSION_TYPE" --no-git-tag-version

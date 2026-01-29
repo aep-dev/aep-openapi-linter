@@ -2,11 +2,13 @@ name: Publish to npm
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - main
+    paths:
+      - 'package.json'
 
 jobs:
-  publish:
+  publish-release:
     runs-on: ubuntu-latest
 
     permissions:
@@ -14,13 +16,26 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all history for tag checking
 
-      - name: Verify tagged commit is in main branch history
+      - name: Get version from package.json
+        id: package-version
         run: |
-          git fetch origin main
-          if ! git merge-base --is-ancestor $GITHUB_SHA origin/main; then
-            echo "Tag is not based on main. Aborting release."
-            exit 1
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "tag=v$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Check if version changed
+        run: |
+          LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          CURRENT_TAG="v${{ steps.package-version.outputs.version }}"
+
+          if [ "$LATEST_TAG" = "$CURRENT_TAG" ]; then
+            echo "Version $CURRENT_TAG has not changed from latest tag. Skipping release."
+            exit 0
+          else
+            echo "New version detected: $CURRENT_TAG (previous: $LATEST_TAG)"
           fi
 
       - uses: actions/setup-node@v4
@@ -29,7 +44,21 @@ jobs:
           registry-url: https://registry.npmjs.org
 
       - run: npm ci
+
       - run: npm test
+
+      - name: Create and push tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          TAG="${{ steps.package-version.outputs.tag }}"
+          # Try to create the tag; if it already exists locally, continue.
+          git tag -a "$TAG" -m "Release $TAG" || echo "Tag $TAG already exists locally, continuing."
+          # Try to push the tag. If the push fails, bail out.
+          if ! git push origin "$TAG"; then
+            echo "Failed to push tag $TAG to remote (may already exist)."
+            exit 1
+          fi
 
       - name: Publish to npm
         run: npm publish

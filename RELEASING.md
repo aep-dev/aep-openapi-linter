@@ -8,20 +8,6 @@ about**, with minimal tooling and clear sources of truth.
 
 ---
 
-## Overview
-
-- Use `npm run release:{patch,minor,major}` to create a release branch.
-- Push that branch and open a PR to main.
-- Merging that branch triggers workflows that create a tag and publish the
-  release.
-  - The auto-tag workflow creates the new tag.
-  - The release workflow sees the new tag and publishes the npm and GitHub
-    releases.
-
-No release bots, changelog generators, or additional CLIs are required.
-
----
-
 ## Versioning
 
 This project follows **Semantic Versioning (SemVer)**:
@@ -30,9 +16,6 @@ This project follows **Semantic Versioning (SemVer)**:
 - **Minor** (`x.y.0`) — new rules or non-breaking enhancements
 - **Major** (`x.0.0`) — breaking changes (rule behavior changes, removals,
   stricter defaults)
-
-Versions can be updated manually in package.json or using npm’s built-in
-tooling.
 
 ---
 
@@ -58,43 +41,35 @@ This script will:
 
 Then create a Pull Request to merge the release branch into main.
 
-Once the PR is merged, **the tag is created automatically**.
+Once the PR is merged, the `release` workflow will run since the PR makes
+changes to package.json. This workflow will run the tests (again), and if the
+tests pass will then attempt to create a tag for the new version. If that
+succeeds, it then creates a release in both npm and GitHub.
 
-The `auto-tag` workflow monitors package.json changes on main and automatically
-creates the corresponding git tag if it doesn't exist.
+The release branch can be deleted after the PR is merged and the releases are
+published.
 
-When the tag is created on main, this triggers the `release` workflow, which
-will create the release in npm and in GitHub.
+No release bots, changelog generators, or additional CLIs are required.
 
 ---
 
 ## Automation (GitHub Actions)
 
-### Automatic Tagging
+### Release Workflow
 
-The `auto-tag` workflow monitors package.json changes on the main branch. When
-a version change is detected, it automatically:
+The `release` workflow is triggered by a push to 'main' (e.g. a PR merge) that
+modifies "package json'. When triggered, it
 
-1. Reads the version from package.json
-2. Checks if a tag for that version already exists
-3. Creates and pushes the tag if it doesn't exist
-
-This eliminates the manual tagging step after PR merge.
-
-### Publishing and Releases
-
-The `release` workflow listens for pushed tags matching `v*` on the main
-branch.
-
-On tag push, it will:
-
-1. Check out the repository
-2. Install dependencies
-3. Run tests
+1. Check if a tag already exists for this version. If so, the workflow
+   terminates.
+2. Install dependencies and run the tests. These should never fail since PRs
+   targeting main must pass CI, but this is an extra precaution.
+3. Create and push a git tag matching the version in package.json
 4. Publish the package to npm
-5. Create a GitHub Release for the tag
+5. Create a GitHub Release with auto-generated notes
 
-The GitHub Release is only created if npm publishing succeeds.
+This single workflow handles the entire release process and ensures the npm and
+GitHub releases are in sync and use the version from package.json
 
 ---
 
@@ -115,18 +90,6 @@ Publishing requires:
 
 - An npm automation token stored as a GitHub secret named `NPM_TOKEN`
 - `publishConfig.access` set appropriately in `package.json`
-
-Example:
-
-```json
-{
-  "publishConfig": {
-    "access": "public"
-  }
-}
-```
-
----
 
 ## Optional: Changelog
 
