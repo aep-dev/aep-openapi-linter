@@ -1,6 +1,6 @@
 {
   "name": "@aep_dev/aep-openapi-linter",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Linter for OpenAPI definitions to check compliance to AEPs",
   "main": "spectral.yaml",
   "files": [
