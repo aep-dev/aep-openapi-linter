@@ -65,7 +65,9 @@ modifies "package json'. When triggered, it
 2. Install dependencies and run the tests. These should never fail since PRs
    targeting main must pass CI, but this is an extra precaution.
 3. Create and push a git tag matching the version in package.json
-4. Publish the package to npm
+4. Publish the package to npm, using the new
+   [Trusted publishing](https://docs.npmjs.com/trusted-publishers) feature of
+   npm.
 5. Create a GitHub Release with auto-generated notes
 
 This single workflow handles the entire release process and ensures the npm and
@@ -86,10 +88,8 @@ GitHub.
 
 ## npm Configuration
 
-Publishing requires:
-
-- An npm automation token stored as a GitHub secret named `NPM_TOKEN`
-- `publishConfig.access` set appropriately in `package.json`
+Publishing requires that the GitHub action is registered as a trusted publisher
+for the package in npm.js.
 
 ## Optional: Changelog
 
