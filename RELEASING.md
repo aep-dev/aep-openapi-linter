@@ -88,10 +88,8 @@ GitHub.
 
 ## npm Configuration
 
-Publishing requires:
-
-- An npm automation token stored as a GitHub secret named `NPM_TOKEN`
-- `publishConfig.access` set appropriately in `package.json`
+Publishing requires that the GitHub action is registered as a trusted publisher
+for the package in npm.js.
 
 ## Optional: Changelog
 
