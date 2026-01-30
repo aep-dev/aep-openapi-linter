@@ -43,6 +43,10 @@ jobs:
           node-version: 20
           registry-url: https://registry.npmjs.org
 
+      # Ensure npm 11.5.1 or later is installed
+      - name: Update npm
+        run: npm install -g npm@latest
+
       - run: npm ci
 
       - run: npm test
@@ -60,10 +64,9 @@ jobs:
             exit 1
           fi
 
-      - name: Publish to npm
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # Use the Trusted Publishing feature to publish the package
+      # https://docs.npmjs.com/trusted-publishers
+      - run: npm publish
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
