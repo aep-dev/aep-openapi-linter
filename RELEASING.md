@@ -89,7 +89,7 @@ GitHub.
 ## npm Configuration
 
 Publishing requires that the GitHub action is registered as a trusted publisher
-for the package in npm.js.
+for the package on npm.
 
 ## Optional: Changelog
 
