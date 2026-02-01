@@ -335,6 +335,96 @@ test('aep-142-time-field-type should find no warnings for correct timestamp form
   });
 });
 
+// Tests for OAS 3.1 nullable patterns
+
+test('aep-142-time-field-type should accept nullable _time field using anyOf', () => {
+  const oasDoc = {
+    openapi: '3.1.0',
+    components: {
+      schemas: {
+        Resource: {
+          type: 'object',
+          properties: {
+            create_time: {
+              anyOf: [{ type: 'string', format: 'date-time' }, { type: 'null' }],
+            },
+          },
+        },
+      },
+    },
+  };
+  return linter.run(oasDoc).then((results) => {
+    expect(results.length).toBe(0);
+  });
+});
+
+test('aep-142-time-field-type should accept nullable _seconds field using oneOf', () => {
+  const oasDoc = {
+    openapi: '3.1.0',
+    components: {
+      schemas: {
+        Resource: {
+          type: 'object',
+          properties: {
+            ttl_seconds: {
+              oneOf: [{ type: 'integer' }, { type: 'null' }],
+            },
+          },
+        },
+      },
+    },
+  };
+  return linter.run(oasDoc).then((results) => {
+    expect(results.length).toBe(0);
+  });
+});
+
+test('aep-142-time-field-type should accept nullable _time field using type array', () => {
+  const oasDoc = {
+    openapi: '3.1.0',
+    components: {
+      schemas: {
+        Resource: {
+          type: 'object',
+          properties: {
+            update_time: {
+              type: ['string', 'null'],
+              format: 'date-time',
+            },
+          },
+        },
+      },
+    },
+  };
+  return linter.run(oasDoc).then((results) => {
+    expect(results.length).toBe(0);
+  });
+});
+
+test('aep-142-time-field-type should reject nullable _time field with wrong type in anyOf', () => {
+  const oasDoc = {
+    openapi: '3.1.0',
+    components: {
+      schemas: {
+        Resource: {
+          type: 'object',
+          properties: {
+            create_time: {
+              anyOf: [{ type: 'integer' }, { type: 'null' }],
+            },
+          },
+        },
+      },
+    },
+  };
+  return linter.run(oasDoc).then((results) => {
+    expect(results.length).toBe(1);
+    expect(results).toContainMatch({
+      message: 'Field "create_time" should have type "string" and format "date-time" (RFC 3339 timestamp).',
+    });
+  });
+});
+
 // Tests for non-time fields
 
 test('aep-142-time-field-type should not flag non-time fields', () => {

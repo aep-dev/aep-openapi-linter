@@ -16,6 +16,39 @@
  * @param {object} context - Spectral context containing the path
  * @returns {Array<object>} Array of error objects, or empty array if valid
  */
+
+/**
+ * Extracts type info from a field, handling OpenAPI 3.1 nullable patterns.
+ * Supports: type arrays (['string', 'null']), anyOf/oneOf with null
+ * @param {object} field - The field schema object
+ * @returns {{type: string|undefined, format: string|undefined, items: object|undefined}}
+ */
+function getFieldTypeInfo(field) {
+  if (!field || typeof field !== 'object') {
+    return {};
+  }
+  // Handle type arrays: type: ['string', 'null']
+  if (Array.isArray(field.type)) {
+    const nonNullType = field.type.find((t) => t !== 'null');
+    if (nonNullType) {
+      return { type: nonNullType, format: field.format, items: field.items };
+    }
+  }
+  // Direct type (non-null)
+  if (field.type && field.type !== 'null') {
+    return { type: field.type, format: field.format, items: field.items };
+  }
+  // Handle anyOf/oneOf nullable patterns
+  const schemas = field.anyOf || field.oneOf;
+  if (Array.isArray(schemas)) {
+    const nonNull = schemas.find((s) => s.type && s.type !== 'null');
+    if (nonNull) {
+      return { type: nonNull.type, format: nonNull.format, items: nonNull.items };
+    }
+  }
+  return { type: field.type, format: field.format, items: field.items };
+}
+
 module.exports = (field, _opts, context) => {
   if (!field || typeof field !== 'object') {
     return [];
@@ -59,20 +92,22 @@ module.exports = (field, _opts, context) => {
   }
 
   const errors = [];
+  const typeInfo = getFieldTypeInfo(field);
 
   // Validate timestamp fields (_time, _times)
   if (timestampSuffixes.includes(suffix)) {
     // For _times (plural), allow arrays of timestamps
-    if (suffix === 'times' && field.type === 'array') {
+    if (suffix === 'times' && typeInfo.type === 'array') {
       // Check that array items are strings with date-time format
-      if (!field.items || field.items.type !== 'string' || field.items.format !== 'date-time') {
+      const itemsInfo = typeInfo.items ? getFieldTypeInfo(typeInfo.items) : {};
+      if (itemsInfo.type !== 'string' || itemsInfo.format !== 'date-time') {
         errors.push({
           message:
             `Field "${fieldName}" should be an array with items of type "string" ` +
             `and format "date-time" (RFC 3339 timestamp).`,
         });
       }
-    } else if (field.type !== 'string' || field.format !== 'date-time') {
+    } else if (typeInfo.type !== 'string' || typeInfo.format !== 'date-time') {
       errors.push({
         message: `Field "${fieldName}" should have type "string" and format "date-time" (RFC 3339 timestamp).`,
       });
@@ -81,7 +116,7 @@ module.exports = (field, _opts, context) => {
 
   // Validate date fields (_date)
   else if (dateSuffixes.includes(suffix)) {
-    if (field.type !== 'string' || field.format !== 'date') {
+    if (typeInfo.type !== 'string' || typeInfo.format !== 'date') {
       errors.push({
         message: `Field "${fieldName}" should have type "string" and format "date" (RFC 3339 date).`,
       });
@@ -96,7 +131,7 @@ module.exports = (field, _opts, context) => {
     durationNanoSuffixes.includes(suffix)
   ) {
     // Duration fields should be integers (or numbers for fractional values)
-    if (field.type !== 'integer' && field.type !== 'number') {
+    if (typeInfo.type !== 'integer' && typeInfo.type !== 'number') {
       errors.push({
         message: `Field "${fieldName}" should have type "integer" or "number" for duration values.`,
       });
