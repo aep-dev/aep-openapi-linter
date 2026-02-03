@@ -90,6 +90,32 @@ echo "✓ Release branch created and pushed!"
 echo "  Branch: $BRANCH_NAME"
 echo "  Version: v$NEW_VERSION"
 echo ""
-echo "Next steps:"
-echo "  1. Create a Pull Request to merge $BRANCH_NAME into main"
-echo "  2. Once merged, the tag will be created automatically"
+
+# Check if gh CLI is installed
+if command -v gh &> /dev/null; then
+  echo "Creating Pull Request..."
+
+  PR_TITLE="Release v$NEW_VERSION"
+  PR_BODY="This PR bumps the package version to v$NEW_VERSION.
+
+Once merged, the release workflow will automatically create a git tag and publish the package to npm.
+
+**Version Type:** $VERSION_TYPE"
+
+  gh pr create \
+    --base main \
+    --head "$BRANCH_NAME" \
+    --title "$PR_TITLE" \
+    --body "$PR_BODY"
+
+  echo "✓ Pull Request created successfully!"
+else
+  echo "Note: GitHub CLI (gh) not found. Skipping automatic PR creation."
+  echo ""
+  echo "Next steps:"
+  echo "  1. Create a Pull Request to merge $BRANCH_NAME into main"
+  echo "  2. Once merged, the tag will be created automatically"
+  echo ""
+  echo "To enable automatic PR creation, install the GitHub CLI:"
+  echo "  https://cli.github.com/"
+fi

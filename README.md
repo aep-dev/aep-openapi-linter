@@ -14,30 +14,53 @@ Proposals].
 
 ### Dependencies
 
-The Spectral Ruleset requires Node version 20 or later.
+The Spectral Ruleset requires:
 
-### Install Spectral
+- Node version 20 or later.
+- The [@stoplight/spectral-cli] npm package.
 
-`npm i @stoplight/spectral-cli -g`
+[@stoplight/spectral-cli]:
+  https://www.npmjs.com/package/@stoplight/spectral-cli
+
+### Installation
+
+You can use the aep-openapi-linter as an npm package or directly from GitHub.
+
+If you choose to use it as an npm package, install it in your project as you
+would any other npm package:
+
+```sh
+npm install @aep_dev/aep-openapi-linter
+```
 
 ### Usage
 
-You can specify the ruleset directly on the command line:
+To use the aep-openapi-linter, create a Spectral configuration file
+(`.spectral.yaml`) that references the ruleset. If you installed the
+aep-openapi-linter npm package into your project, you can just reference the
+ruleset by name:
 
-`spectral lint -r https://raw.githubusercontent.com/aep-dev/aep-openapi-linter/main/spectral.yaml <api definition file>`
+```yaml
+extends:
+  - '@aep_dev/aep-openapi-linter'
+```
 
-Or you can create a Spectral configuration file (`.spectral.yaml`) that
-references the ruleset:
+Note that the quotes are required by yaml syntax.
+
+You can also bypass installing the npm aep-openapi-linter package and reference
+the ruleset directly from GitHub:
 
 ```yaml
 extends:
   - https://raw.githubusercontent.com/aep-dev/aep-openapi-linter/main/spectral.yaml
 ```
 
-### Example
+You can pin to a specific release of the ruleset by replacing `main` with the
+tag for the release. E.g.
 
-```bash
-spectral lint -r https://raw.githubusercontent.com/aep-dev/aep-openapi-linter/main/spectral.yaml petstore.yaml
+```yaml
+extends:
+  - https://raw.githubusercontent.com/aep-dev/aep-openapi-linter/refs/tags/v0.5.1/spectral.yaml
 ```
 
 ### Using the Spectral VSCode extension
