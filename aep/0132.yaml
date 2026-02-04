@@ -95,7 +95,7 @@ rules:
                       type:
                         type: string
                         enum: ['boolean']
-                    required: ['name']
+                required: ['name']
               - type: object
                 properties:
                   name:
