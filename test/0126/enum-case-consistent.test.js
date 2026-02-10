@@ -961,3 +961,33 @@ test('aep-126-enum-case-consistent should fail for enum with non-string values',
     expect(results[0].message).toMatch(/"123"/);
   });
 });
+
+test('aep-126-enum-case-consistent should not fail for operation parameter with enum', () => {
+  const oasDoc = {
+    openapi: '3.0.3',
+    paths: {
+      '/books': {
+        get: {
+          parameters: [
+            {
+              name: 'status',
+              in: 'query',
+              schema: {
+                type: 'string',
+                enum: ['PUBLISHED', 'DRAFT', 'ARCHIVED'],
+              },
+            },
+          ],
+          responses: {
+            200: {
+              description: 'Success',
+            },
+          },
+        },
+      },
+    },
+  };
+  return linter.run(oasDoc).then((results) => {
+    expect(results.length).toBe(0);
+  });
+});
