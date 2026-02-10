@@ -50,8 +50,9 @@ Each AEP ruleset file (`aep/XXXX.yaml`) contains:
 
 - **Aliases** - Reusable JSONPath patterns (e.g., `GetOperation`,
   `ListOperation`)
+- **Functions** - Custom functions specific to that AEP (if needed)
 - **Rules** - Individual validation rules with format
-  `aep-{number}-{description}`
+  `aep-{number}-{description}` listed alphabetically by rule name
 
 ### Test Organization
 
@@ -70,6 +71,8 @@ Each test uses the `linterForRule` utility to test specific rules in isolation.
 - Rules MUST be prefixed with `aep-` and listed alphabetically in
   `spectral.yaml`
 - Custom function names MUST match the rule name minus the `aep-` prefix
+- Functions declared in a file's `functions:` list MUST be used by at least one
+  rule in that same file (no unused function declarations)
 - Rule severity mapping:
   - `error` - for AEP or OpenAPI **MUST** guidelines
   - `warn` - for AEP or OpenAPI **SHOULD** guidelines
@@ -93,8 +96,7 @@ When adding a new rule, create/update these four locations:
 - Code coverage MUST be > 80% for all functions in `functions/*.js`
 - Use the `linterForRule()` utility from `test/utils.js` to test rules in
   isolation
-- Use custom matchers from `test/matchers.js` (e.g., `.toHaveNoViolations()`,
-  `.toHaveViolation()`)
+- Use custom matchers from `test/matchers.js` (e.g., `.toContainMatch()`)
 
 ### Example File Sync
 
