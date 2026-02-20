@@ -13,6 +13,7 @@ jobs:
 
     permissions:
       contents: write
+      id-token: write # Required for npm provenance and trusted publishing
 
     steps:
       - uses: actions/checkout@v4
@@ -66,7 +67,7 @@ jobs:
 
       # Use the Trusted Publishing feature to publish the package
       # https://docs.npmjs.com/trusted-publishers
-      - run: npm publish
+      - run: npm publish --provenance --access public
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
