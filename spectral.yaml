@@ -2,6 +2,7 @@ extends:
   - spectral:oas
   - ./aep/0004.yaml
   - ./aep/0122.yaml
+  - ./aep/0126.yaml
   - ./aep/0131.yaml
   - ./aep/0132.yaml
   - ./aep/0133.yaml
