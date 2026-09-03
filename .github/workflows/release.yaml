@@ -7,6 +7,9 @@ on:
     paths:
       - 'package.json'
 
+permissions:
+  contents: read
+
 jobs:
   publish-release:
     runs-on: ubuntu-latest
@@ -16,7 +19,12 @@ jobs:
       id-token: write # Required for npm provenance and trusted publishing
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           fetch-depth: 0 # Fetch all history for tag checking
 
@@ -39,7 +47,7 @@ jobs:
             echo "New version detected: $CURRENT_TAG (previous: $LATEST_TAG)"
           fi
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 20
           registry-url: https://registry.npmjs.org
@@ -70,7 +78,7 @@ jobs:
       - run: npm publish --provenance --access public
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2.6.2
         with:
           tag_name: ${{ steps.package-version.outputs.tag }}
           generate_release_notes: true
