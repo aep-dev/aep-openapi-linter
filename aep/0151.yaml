@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://spec.spotlight-rules.com/schema/v1/spectral-ruleset.schema.json
 aliases:
   LongRunningOperation:
     description: An operation that returns 202 Accepted for long-running operations

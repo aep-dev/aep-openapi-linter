@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://spec.spotlight-rules.com/schema/v1/spectral-ruleset.schema.json
 rules:
   aep-0004-x-aep-resource-structure:
     description: x-aep-resource must have correct structure with required fields (singular, plural)

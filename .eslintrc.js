@@ -13,4 +13,12 @@ module.exports = {
     // set max line length to 120
     'max-len': ['error', { code: 120 }],
   },
+  overrides: [
+    {
+      files: ['scripts/**/*.js'],
+      rules: {
+        'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
+      },
+    },
+  ],
 };

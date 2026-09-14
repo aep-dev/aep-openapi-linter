@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://spec.spotlight-rules.com/schema/v1/spectral-ruleset.schema.json
 aliases:
   ListOperation:
     description: A list operation is a get on path that does not end in a path parameter
