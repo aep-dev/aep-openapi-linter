@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://spec.spotlight-rules.com/schema/v1/spectral-ruleset.schema.json
 rules:
   aep-193-error-response-schema:
     description: Error response body should contain all required fields according to AEP-193.

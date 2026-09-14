@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://spec.spotlight-rules.com/schema/v1/spectral-ruleset.schema.json
 aliases:
   DeleteOperation:
     description: A Delete operation is a delete on path that ends in a path parameter

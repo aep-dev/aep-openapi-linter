@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://spec.spotlight-rules.com/schema/v1/spectral-ruleset.schema.json
 aliases:
   CustomOperation:
     description: A custom method is identified by a path containing a colon (:) before the verb

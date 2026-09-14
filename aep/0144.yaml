@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://spec.spotlight-rules.com/schema/v1/spectral-ruleset.schema.json
 aliases:
   AddRemovePathItem:
     description: An Update Array operation is a post request that updates an array with add or remove operation
